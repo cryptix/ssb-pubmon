@@ -15,7 +15,7 @@ import (
 	"github.com/qor/sorting"
 	"github.com/qor/widget"
 
-	"github.com/cryptix/synchrotron/db"
+	"github.com/cryptix/ssb-pubmon/db"
 )
 
 var Widgets *widget.Widgets
@@ -124,7 +124,7 @@ func initWidgets() {
 		imageRes := Admin.NewResource(&imageSetting{})
 		imageRes.Meta(&admin.Meta{Name: "Image"})
 
-		banner_editor.RegisterViewPath("github.com/cryptix/synchrotron/app/views/banner_editor")
+		banner_editor.RegisterViewPath("github.com/cryptix/ssb-pubmon/app/views/banner_editor")
 		banner_editor.RegisterElement(&banner_editor.Element{
 			Icon:     "<i class=material-icons>short_text</i>",
 			Name:     "Add Header",

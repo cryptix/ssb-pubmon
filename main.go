@@ -19,14 +19,14 @@ import (
 	"github.com/qor/widget"
 
 	"github.com/cryptix/go/logging"
-	"github.com/cryptix/synchrotron/config"
-	"github.com/cryptix/synchrotron/config/admin"
-	"github.com/cryptix/synchrotron/config/admin/bindatafs"
-	"github.com/cryptix/synchrotron/config/i18n"
-	"github.com/cryptix/synchrotron/config/routes"
-	"github.com/cryptix/synchrotron/config/utils"
-	_ "github.com/cryptix/synchrotron/db/migrations"
-	"github.com/cryptix/synchrotron/models"
+	"github.com/cryptix/ssb-pubmon/config"
+	"github.com/cryptix/ssb-pubmon/config/admin"
+	"github.com/cryptix/ssb-pubmon/config/admin/bindatafs"
+	"github.com/cryptix/ssb-pubmon/config/i18n"
+	"github.com/cryptix/ssb-pubmon/config/routes"
+	"github.com/cryptix/ssb-pubmon/config/utils"
+	_ "github.com/cryptix/ssb-pubmon/db/migrations"
+	"github.com/cryptix/ssb-pubmon/models"
 )
 
 var (

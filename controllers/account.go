@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/cryptix/synchrotron/config"
+	"github.com/cryptix/ssb-pubmon/config"
 )
 
 func AccountShow(w http.ResponseWriter, req *http.Request) {

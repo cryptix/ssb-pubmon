@@ -5,12 +5,11 @@ import (
 
 	"github.com/qor/auth"
 	"github.com/qor/auth/authority"
-	"github.com/qor/auth/providers/twitter"
 	"github.com/qor/auth_themes/clean"
 
-	"github.com/cryptix/synchrotron/config"
-	"github.com/cryptix/synchrotron/db"
-	"github.com/cryptix/synchrotron/models"
+	"github.com/cryptix/ssb-pubmon/config"
+	"github.com/cryptix/ssb-pubmon/db"
+	"github.com/cryptix/ssb-pubmon/models"
 )
 
 var (
@@ -30,11 +29,5 @@ var (
 )
 
 func init() {
-	//Auth.RegisterProvider(github.New(&config.Config.Github))
-	Auth.RegisterProvider(twitter.New(&twitter.Config{
-		ClientID:     config.Config.TWAK,
-		ClientSecret: config.Config.TWAS,
-	}))
-
 	Authority.Register("logged_in_half_hour", authority.Rule{TimeoutSinceLastLogin: time.Minute * 30})
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/qor/qor"
 	"github.com/qor/qor/utils"
 
-	"github.com/cryptix/synchrotron/config"
+	"github.com/cryptix/ssb-pubmon/config"
 )
 
 func HomeIndex(w http.ResponseWriter, req *http.Request) {

@@ -14,7 +14,7 @@ import (
 	"github.com/qor/sorting"
 	"github.com/qor/validations"
 
-	"github.com/cryptix/synchrotron/config"
+	"github.com/cryptix/ssb-pubmon/config"
 )
 
 var (

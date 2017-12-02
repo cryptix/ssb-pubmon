@@ -5,7 +5,7 @@ import (
 
 	"github.com/qor/admin"
 
-	"github.com/cryptix/synchrotron/models"
+	"github.com/cryptix/ssb-pubmon/models"
 )
 
 type Charts struct {

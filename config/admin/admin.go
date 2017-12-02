@@ -20,11 +20,11 @@ import (
 	"github.com/qor/widget"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/cryptix/synchrotron/config/admin/bindatafs"
-	"github.com/cryptix/synchrotron/config/auth"
-	"github.com/cryptix/synchrotron/config/i18n"
-	"github.com/cryptix/synchrotron/db"
-	"github.com/cryptix/synchrotron/models"
+	"github.com/cryptix/ssb-pubmon/config/admin/bindatafs"
+	"github.com/cryptix/ssb-pubmon/config/auth"
+	"github.com/cryptix/ssb-pubmon/config/i18n"
+	"github.com/cryptix/ssb-pubmon/db"
+	"github.com/cryptix/ssb-pubmon/models"
 )
 
 var Admin *admin.Admin
@@ -123,16 +123,8 @@ func init() {
 	)
 	user.EditAttrs(user.ShowAttrs())
 
-	// repos
-	repo := Admin.AddResource(&models.Repository{}, &admin.Config{Menu: []string{"Repositories"}})
-	repoTypes := []string{"Github", "Native"}
-	repo.Meta(&admin.Meta{Name: "Type", Config: &admin.SelectOneConfig{Collection: repoTypes}})
-	repo.Filter(&admin.Filter{
-		Name: "Type",
-		Config: &admin.SelectOneConfig{
-			Collection: repoTypes,
-		},
-	})
+	// pub
+	Admin.AddResource(&models.Pub{})
 
 	// Blog Management
 	article := Admin.AddResource(&models.Article{}, &admin.Config{Menu: []string{"Blog Management"}})

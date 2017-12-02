@@ -4,7 +4,7 @@ import (
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
 
-	"github.com/cryptix/synchrotron/db"
+	"github.com/cryptix/ssb-pubmon/db"
 )
 
 var I18n *i18n.I18n

@@ -1,1 +1,1 @@
-web: synchrotron
+web: ssb-pubmon

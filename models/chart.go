@@ -5,7 +5,7 @@ import (
 
 	"github.com/jinzhu/now"
 
-	"github.com/cryptix/synchrotron/db"
+	"github.com/cryptix/ssb-pubmon/db"
 )
 
 type Chart struct {

@@ -7,7 +7,7 @@ import (
 	"github.com/qor/qor"
 	"github.com/qor/roles"
 
-	"github.com/cryptix/synchrotron/models"
+	"github.com/cryptix/ssb-pubmon/models"
 )
 
 func init() {

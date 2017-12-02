@@ -4,7 +4,7 @@ import (
 	"github.com/qor/filebox"
 	"github.com/qor/roles"
 
-	"github.com/cryptix/synchrotron/config/auth"
+	"github.com/cryptix/ssb-pubmon/config/auth"
 )
 
 var Filebox *filebox.Filebox

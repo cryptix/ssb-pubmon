@@ -9,9 +9,9 @@ import (
 	"github.com/qor/transition"
 
 	"github.com/cryptix/go/logging"
-	"github.com/cryptix/synchrotron/config/admin"
-	"github.com/cryptix/synchrotron/db"
-	"github.com/cryptix/synchrotron/models"
+	"github.com/cryptix/ssb-pubmon/config/admin"
+	"github.com/cryptix/ssb-pubmon/db"
+	"github.com/cryptix/ssb-pubmon/models"
 )
 
 func init() {
@@ -21,7 +21,7 @@ func init() {
 
 	AutoMigrate(&models.User{})
 
-	AutoMigrate(&models.Repository{})
+	AutoMigrate(&models.Pub{})
 
 	AutoMigrate(&transition.StateChangeLog{})
 
