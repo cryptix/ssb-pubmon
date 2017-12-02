@@ -8,8 +8,15 @@ import (
 
 type Pub struct {
 	gorm.Model
-	Host, Key   string
-	Port        int
+	Key         string `gorm:"unique_index"`
+	Addresses   []Address
 	LastSuccess time.Time
-	Failures    int
+}
+
+// Composite primary keys can't be created on SQLite tables
+// https://github.com/jinzhu/gorm/issues/1037
+type Address struct {
+	Host  string `gorm:"primary_key"`
+	Port  int    `gorm:"primary_key"`
+	PubID uint
 }

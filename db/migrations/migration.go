@@ -21,7 +21,7 @@ func init() {
 
 	AutoMigrate(&models.User{})
 
-	AutoMigrate(&models.Pub{})
+	AutoMigrate(&models.Pub{}, &models.Address{})
 
 	AutoMigrate(&transition.StateChangeLog{})
 
