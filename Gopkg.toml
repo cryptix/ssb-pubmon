@@ -21,9 +21,9 @@
 #  version = "2.4.0"
 
 [metadata.heroku]
-  root-package = "github.com/cryptix/synchrotron"
+  root-package = "github.com/cryptix/ssb-pubmon"
   go-version = "go1.9.2"
-  install = [ "github.com/cryptix/synchrotron" ]
+  install = [ "github.com/cryptix/ssb-pubmon" ]
 
 [[constraint]]
   name = "github.com/cryptix/go"
@@ -205,3 +205,6 @@
 [[override]]
   branch = "master"
   name = "github.com/qor/publish"
+[[constraint]]
+  branch = "master"
+  name = "github.com/prasannavl/go-errors"
