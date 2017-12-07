@@ -4,16 +4,15 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/agl/ed25519"
 	"github.com/prasannavl/go-errors"
 	"github.com/qor/media/oss"
 	"github.com/qor/worker"
-	goon "github.com/shurcooL/go-goon"
 
 	"github.com/cryptix/ssb-pubmon/db"
 	"github.com/cryptix/ssb-pubmon/models"
@@ -24,7 +23,12 @@ type SimpleQueue struct {
 }
 
 func (q *SimpleQueue) Add(j worker.QorJobInterface) error {
-	return q.Worker.RunJob(j.GetJobID())
+	go func() {
+		if err := q.Worker.RunJob(j.GetJobID()); err != nil {
+			log.Printf("simpleWorker run failed: %s", err)
+		}
+	}()
+	return nil
 }
 
 func (q *SimpleQueue) Run(j worker.QorJobInterface) error {
@@ -58,29 +62,6 @@ func getWorker() *worker.Worker {
 	})
 	sq.Worker = Worker
 
-	type sendNewsletterArgument struct {
-		Subject      string
-		Content      string `sql:"size:65532"`
-		SendPassword string
-		worker.Schedule
-	}
-
-	Worker.RegisterJob(&worker.Job{
-		Name: "Send Newsletter",
-		Handler: func(argument interface{}, qorJob worker.QorJobInterface) error {
-			qorJob.AddLog("Started sending newsletters...")
-			qorJob.AddLog(fmt.Sprintf("Argument: %+v", argument.(*sendNewsletterArgument)))
-			for i := 1; i <= 100; i++ {
-				time.Sleep(100 * time.Millisecond)
-				qorJob.AddLog(fmt.Sprintf("Sending newsletter %v...", i))
-				qorJob.SetProgress(uint(i))
-			}
-			qorJob.AddLog("Finished send newsletters")
-			return nil
-		},
-		Resource: Admin.NewResource(&sendNewsletterArgument{}),
-	})
-
 	type importGossipJSONArg struct {
 		File oss.OSS
 	}
@@ -91,8 +72,6 @@ func getWorker() *worker.Worker {
 			argument := arg.(*importGossipJSONArg)
 
 			d := db.DB
-			d.LogMode(true)
-			defer d.LogMode(false)
 
 			loc := filepath.Join("public", argument.File.URL())
 			f, err := os.Open(loc)
@@ -145,9 +124,7 @@ func getWorker() *worker.Worker {
 
 				var a models.Address
 				a.PubID = p.ID
-				a.Host = jsonPub.Host
-				a.Port = jsonPub.Port
-				goon.Dump(a)
+				a.Addr = fmt.Sprintf("%s:%d", jsonPub.Host, jsonPub.Port)
 
 				if err := d.FirstOrCreate(&a, a).Error; err != nil {
 					return errors.NewWithCause("could not find/create Addr", err)

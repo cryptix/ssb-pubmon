@@ -16,7 +16,6 @@ import (
 	"github.com/qor/render"
 	"github.com/qor/session"
 	"github.com/qor/session/manager"
-	"github.com/qor/widget"
 
 	"github.com/cryptix/go/logging"
 	"github.com/cryptix/ssb-pubmon/config"
@@ -68,15 +67,6 @@ func main() {
 
 		for key, value := range admin.ActionBar.FuncMap(w, req) {
 			funcMap[key] = value
-		}
-
-		widgetContext := admin.Widgets.NewContext(&widget.Context{
-			DB:         utils.GetDB(req),
-			Options:    map[string]interface{}{"Request": req},
-			InlineEdit: utils.GetEditMode(w, req),
-		})
-		for key, fc := range widgetContext.FuncMap() {
-			funcMap[key] = fc
 		}
 
 		funcMap["flashes"] = func() []session.Message {

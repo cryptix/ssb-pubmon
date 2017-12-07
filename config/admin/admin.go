@@ -1,34 +1,32 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/qor/action_bar"
+	"github.com/qor/activity"
 	"github.com/qor/admin"
 	"github.com/qor/help"
 	"github.com/qor/i18n/exchange_actions"
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/media/media_library"
-	"github.com/qor/notification"
-	"github.com/qor/notification/channels/database"
-	"github.com/qor/page_builder"
 	"github.com/qor/publish2"
 	"github.com/qor/qor"
 	"github.com/qor/qor/resource"
 	"github.com/qor/qor/utils"
 	"github.com/qor/validations"
-	"github.com/qor/widget"
 	"golang.org/x/crypto/bcrypt"
 
 	"github.com/cryptix/ssb-pubmon/config/admin/bindatafs"
 	"github.com/cryptix/ssb-pubmon/config/auth"
 	"github.com/cryptix/ssb-pubmon/config/i18n"
+	"github.com/cryptix/ssb-pubmon/config/notify"
 	"github.com/cryptix/ssb-pubmon/db"
 	"github.com/cryptix/ssb-pubmon/models"
 )
 
-var Admin *admin.Admin
-var ActionBar *action_bar.ActionBar
+var (
+	Admin     *admin.Admin
+	ActionBar *action_bar.ActionBar
+)
 
 func init() {
 	Admin = admin.New(&admin.AdminConfig{
@@ -38,25 +36,8 @@ func init() {
 		AssetFS:  bindatafs.AssetFS.NameSpace("admin"),
 	})
 
-	// Add Notification
-	Notification := notification.New(&notification.Config{})
-	Notification.RegisterChannel(database.New(&database.Config{DB: db.DB}))
-	/* ex
-	Notification.Action(&notification.Action{
-		Name:         "Dismiss",
-		MessageTypes: []string{"order_paid_cancelled", "info", "order_processed", "order_returned"},
-		Visible: func(data *notification.QorNotification, context *admin.Context) bool {
-			return data.ResolvedAt == nil
-		},
-		Handler: func(argument *notification.ActionArgument) error {
-			return argument.Context.GetDB().Model(argument.Message).Update("resolved_at", time.Now()).Error
-		},
-		Undo: func(argument *notification.ActionArgument) error {
-			return argument.Context.GetDB().Model(argument.Message).Update("resolved_at", nil).Error
-		},
-	})
-	*/
-	Admin.NewResource(Notification)
+	notify.Init()
+	Admin.NewResource(notify.Sender)
 
 	// Add Dashboard
 	Admin.AddMenu(&admin.Menu{Name: "Dashboard", Link: "/admin"})
@@ -124,11 +105,52 @@ func init() {
 	user.EditAttrs(user.ShowAttrs())
 
 	// pub
-	Admin.AddResource(&models.Pub{})
+	pubRes := Admin.AddResource(&models.Pub{})
+	pubRes.Action(&admin.Action{
+		Name: "Try",
+		Handler: func(argument *admin.ActionArgument) error {
+			for _, pub := range argument.FindSelectedRecords() {
+				db := argument.Context.GetDB()
+				if err := models.PubHealth.Trigger("try", pub.(*models.Pub), db); err != nil {
+					return err
+				}
+				db.Select("state").Save(pub)
+			}
+			return nil
+		},
+		Visible: func(record interface{}, context *admin.Context) bool {
+			if pub, ok := record.(*models.Pub); ok {
+				return pub.State != "success"
+			}
+			return true
+		},
+		Modes: []string{"index", "show", "menu_item"},
+	})
+	pubRes.Filter(&admin.Filter{
+		Name: "State",
+		//Operations: []string{"contains"},
+		Config: &admin.SelectOneConfig{Collection: []string{"trying", "worked", "unchecked", "failed"}},
+	})
+	activity.Register(pubRes)
 
-	// Blog Management
-	article := Admin.AddResource(&models.Article{}, &admin.Config{Menu: []string{"Blog Management"}})
-	article.IndexAttrs("ID", "VersionName", "ScheduledStartAt", "ScheduledEndAt", "Author", "Title")
+	pubAddr := Admin.AddResource(&models.Address{})
+	pubAddr.ShowAttrs(
+		&admin.Section{
+			Title: "Basic Information",
+			Rows: [][]string{
+				{"Addr", "Pub"},
+				{"LastTry", "Failures", "Took"},
+			},
+		},
+	)
+	pubAddr.EditAttrs(
+		&admin.Section{
+			Title: "Basic Information",
+			Rows: [][]string{
+				{"LastTry"},
+			},
+		},
+	)
 
 	// Add Translations
 	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: 1})
@@ -148,54 +170,5 @@ func init() {
 	ActionBar = action_bar.New(Admin)
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
-	initWidgets()
-
-	PageBuilderWidgets := widget.New(&widget.Config{DB: db.DB})
-	PageBuilderWidgets.WidgetSettingResource = Admin.NewResource(&QorWidgetSetting{}, &admin.Config{Name: "PageBuilderWidgets"})
-	PageBuilderWidgets.WidgetSettingResource.NewAttrs(
-		&admin.Section{
-			Rows: [][]string{{"Kind"}, {"SerializableMeta"}},
-		},
-	)
-	PageBuilderWidgets.WidgetSettingResource.AddProcessor(&resource.Processor{
-		Handler: func(value interface{}, metaValues *resource.MetaValues, context *qor.Context) error {
-			if widgetSetting, ok := value.(*QorWidgetSetting); ok {
-				if widgetSetting.Name == "" {
-					var count int
-					context.GetDB().Set(admin.DisableCompositePrimaryKeyMode, "off").Model(&QorWidgetSetting{}).Count(&count)
-					widgetSetting.Name = fmt.Sprintf("%v %v", utils.ToString(metaValues.Get("Kind").Value), count)
-				}
-			}
-			return nil
-		},
-	})
-	Admin.AddResource(PageBuilderWidgets)
-
-	page := page_builder.New(&page_builder.Config{
-		Admin:      Admin,
-		PageModel:  &models.Page{},
-		Containers: PageBuilderWidgets,
-		// AdminConfig: &admin.Config{Name: "Campaign Pages or Builder", Menu: []string{"Sites & Campaign Pages"}, Priority: 2},
-	})
-	page.IndexAttrs("ID", "Title", "PublishLiveNow")
-
-	// page := Admin.AddResource(&models.Page{})
-	// page.Meta(&admin.Meta{
-	// 	Name: "QorWidgetSettings",
-	// 	Valuer: func(value interface{}, context *qor.Context) interface{} {
-	// 		scope := context.GetDB().NewScope(value)
-	// 		field, _ := scope.FieldByName("QorWidgetSettings")
-	// 		context.GetDB().Model(value).Where("scope = ?", "default").Related(field.Field.Addr().Interface(), "QorWidgetSettings")
-	// 		return field.Field.Interface()
-	// 	},
-	// 	Config: &admin.SelectManyConfig{
-	// 		SelectionTemplate:  "metas/form/sortable_widgets.tmpl",
-	// 		SelectMode:         "bottom_sheet",
-	// 		DefaultCreating:    true,
-	// 		RemoteDataResource: PageBuilderWidgets.WidgetSettingResource,
-	// 	}})
-	// page.Meta(&admin.Meta{Name: "QorWidgetSettingsSorter"})
-
 	initFuncMap()
-	initRouter()
 }
