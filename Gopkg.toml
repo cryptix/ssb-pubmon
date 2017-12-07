@@ -25,9 +25,15 @@
   go-version = "go1.9.2"
   install = [ "github.com/cryptix/ssb-pubmon" ]
 
+## use forks
+
 [[constraint]]
   name = "github.com/cryptix/go"
   version = "1.0.0"
+
+[[constraint]]
+  branch = "v1.0"
+  name = "github.com/cryptix/go-muxrpc"
 
 [[constraint]]
   name = "github.com/go-chi/chi"
@@ -68,22 +74,21 @@
 [[constraint]]
   branch = "master"
   name = "github.com/qor/admin"
+  source = "github.com/cryptix/qor_admin"
 
 [[constraint]]
   branch = "master"
   name = "github.com/qor/assetfs"
+  source = "github.com/cryptix/qor_assetfs"
 
 [[constraint]]
   branch = "master"
   name = "github.com/qor/auth"
+  source = "github.com/cryptix/qor_auth"
 
 [[constraint]]
   branch = "master"
   name = "github.com/qor/auth_themes"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/qor/banner_editor"
 
 [[constraint]]
   branch = "master"
@@ -112,6 +117,7 @@
 [[constraint]]
   branch = "master"
   name = "github.com/qor/mailer"
+  source = "github.com/cryptix/qor_mailer"
 
 [[constraint]]
   branch = "master"
@@ -127,19 +133,16 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/qor/page_builder"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/qor/publish2"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/qor/qor"
 
 [[constraint]]
   branch = "master"
   name = "github.com/qor/redirect_back"
+
+[[override]]
+  name = "github.com/qor/render"
+  revision="a95fd1d26b20517e985d6c3634c6dfdb3b1ad4b2"
+  source = "github.com/cryptix/qor_render"
 
 [[constraint]]
   branch = "master"
@@ -167,10 +170,6 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/qor/widget"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/qor/wildcard_router"
 
 [[constraint]]
@@ -181,11 +180,7 @@
   branch = "master"
   name = "golang.org/x/crypto"
 
-[[override]]
-  name = "github.com/qor/render"
-  source = "github.com/cryptix/qor_render"
-  version = "v1.1"
-
+# old version tags
 [[override]]
   branch = "master"
   name = "github.com/qor/serializable_meta"

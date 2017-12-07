@@ -6,6 +6,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 	"github.com/qor/auth/auth_identity"
 	"github.com/qor/auth/claims"
 	"github.com/qor/mailer"
@@ -56,7 +57,7 @@ type Config struct {
 }
 
 // New initialize Auth
-func New(config *Config) *Auth {
+func New(config *Config) (*Auth, error) {
 	if config == nil {
 		config = &Config{}
 	}
@@ -76,9 +77,13 @@ func New(config *Config) *Auth {
 	}
 
 	if config.Mailer == nil {
-		config.Mailer = mailer.New(&mailer.Config{
+		var err error
+		config.Mailer, err = mailer.New(&mailer.Config{
 			Sender: logger.New(&logger.Config{}),
 		})
+		if err != nil {
+			return nil, errors.Wrap(err, "auth: failed to create new mailer")
+		}
 	}
 
 	if config.UserStorer == nil {
@@ -113,14 +118,19 @@ func New(config *Config) *Auth {
 	}
 
 	for _, viewPath := range config.ViewPaths {
-		config.Render.RegisterViewPath(viewPath)
+		if err := config.Render.RegisterViewPath(viewPath); err != nil {
+			return nil, errors.Wrapf(err, "auth: failed to register viewPath: %s", viewPath)
+		}
 	}
 
-	config.Render.RegisterViewPath("github.com/qor/auth/views")
+	err := config.Render.RegisterViewPath("github.com/qor/auth/views")
+	if err != nil {
+		return nil, errors.Wrap(err, "auth: failed to register import viewPath")
+	}
 
 	auth := &Auth{Config: config}
 
 	auth.SessionStorerInterface = config.SessionStorer
 
-	return auth
+	return auth, nil
 }

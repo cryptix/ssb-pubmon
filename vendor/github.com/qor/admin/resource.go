@@ -20,6 +20,7 @@ import (
 type Config struct {
 	Name       string
 	Menu       []string
+	ShowMenu   []string
 	Permission *roles.Permission
 	Themes     []ThemeInterface
 	Priority   int

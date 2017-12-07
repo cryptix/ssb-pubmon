@@ -8,20 +8,39 @@ import (
 )
 
 // GetMenus get all sidebar menus for admin
-func (admin Admin) GetMenus() []*Menu {
-	return admin.menus
+func (admin Admin) GetMenus(roles []string) []*Menu {
+	var m []*Menu
+	for _, r := range roles {
+		rm, ok := admin.menus[r]
+		if !ok { // skip this role
+			continue
+		}
+
+		for _, cm := range rm {
+			if men := getMenu(rm, cm.Name); men != nil {
+				m = append(m, men)
+			}
+		}
+	}
+	return m
 }
 
 // AddMenu add a menu to admin sidebar
-func (admin *Admin) AddMenu(menu *Menu) *Menu {
-	menu.router = admin.router
-	admin.menus = appendMenu(admin.menus, menu.Ancestors, menu)
+func (admin *Admin) AddMenu(roles []string, menu *Menu) *Menu {
+	for _, role := range roles {
+		menu.router = admin.router
+		admin.menus[role] = appendMenu(admin.menus[role], menu.Ancestors, menu)
+	}
 	return menu
 }
 
 // GetMenu get sidebar menu with name
-func (admin Admin) GetMenu(name string) *Menu {
-	return getMenu(admin.menus, name)
+func (admin Admin) GetMenu(role, name string) *Menu {
+	m, ok := admin.menus[role]
+	if !ok {
+		return nil
+	}
+	return getMenu(m, name)
 }
 
 ////////////////////////////////////////////////////////////////////////////////

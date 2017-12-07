@@ -56,13 +56,9 @@ func init() {
 		return template.HTML(htmlSanitizer.Sanitize(str))
 	})
 
-	// dialer := gomail.NewDialer(Config.SMTP.Host, Config.SMTP.Port, Config.SMTP.User, Config.SMTP.Password)
-	// sender, err := dialer.Dial()
-
-	// Mailer = mailer.New(&mailer.Config{
-	// 	Sender: gomailer.New(&gomailer.Config{Sender: sender}),
-	// })
-	Mailer = mailer.New(&mailer.Config{
-		Sender: logger.New(&logger.Config{}),
+	Mailer, err = mailer.New(&mailer.Config{
+		AssetFS: bindatafs.AssetFS,
+		Sender:  logger.New(&logger.Config{}),
 	})
+	check(err)
 }

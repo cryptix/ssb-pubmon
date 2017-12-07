@@ -31,7 +31,7 @@ type AdminConfig struct {
 // Admin is a struct that used to generate admin/api interface
 type Admin struct {
 	*AdminConfig
-	menus            []*Menu
+	menus            map[string][]*Menu
 	resources        []*Resource
 	searchResources  []*Resource
 	router           *Router
@@ -42,6 +42,7 @@ type Admin struct {
 // New new admin with configuration
 func New(config interface{}) *Admin {
 	admin := Admin{
+		menus:            make(map[string][]*Menu),
 		funcMaps:         make(template.FuncMap),
 		router:           newRouter(),
 		metaConfigorMaps: defaultMetaConfigorMaps,
@@ -203,8 +204,8 @@ func (admin *Admin) AddResource(value interface{}, config ...*Config) *Resource 
 		if !res.Config.Singleton {
 			menuName = inflection.Plural(res.Name)
 		}
-		admin.AddMenu(&Menu{Name: menuName, Permissioner: res, Priority: res.Config.Priority, Ancestors: res.Config.Menu, RelativePath: res.ToParam()})
 
+		admin.AddMenu(res.Config.ShowMenu, &Menu{Name: menuName, Permissioner: res, Priority: res.Config.Priority, Ancestors: res.Config.Menu, RelativePath: res.ToParam()})
 		admin.RegisterResourceRouters(res, "create", "update", "read", "delete")
 	}
 

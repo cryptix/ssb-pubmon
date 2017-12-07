@@ -40,7 +40,7 @@ func init() {
 	Admin.NewResource(notify.Sender)
 
 	// Add Dashboard
-	Admin.AddMenu(&admin.Menu{Name: "Dashboard", Link: "/admin"})
+	Admin.AddMenu([]string{"admin"}, &admin.Menu{Name: "Dashboard", Link: "/admin"})
 
 	// Add Media Library
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})

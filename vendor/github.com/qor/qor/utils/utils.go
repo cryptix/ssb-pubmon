@@ -171,13 +171,15 @@ func Stringify(object interface{}) string {
 	scope := gorm.Scope{Value: object}
 	for _, column := range []string{"Name", "Title", "Code"} {
 		if field, ok := scope.FieldByName(column); ok {
-			result := field.Field.Interface()
-			if valuer, ok := result.(driver.Valuer); ok {
-				if result, err := valuer.Value(); err == nil {
-					return fmt.Sprint(result)
+			if field.Field.IsValid() {
+				result := field.Field.Interface()
+				if valuer, ok := result.(driver.Valuer); ok {
+					if result, err := valuer.Value(); err == nil {
+						return fmt.Sprint(result)
+					}
 				}
+				return fmt.Sprint(result)
 			}
-			return fmt.Sprint(result)
 		}
 	}
 
@@ -355,4 +357,12 @@ func GetAbsURL(req *http.Request) url.URL {
 
 	result.Parse(req.RequestURI)
 	return result
+}
+
+// Indirect returns last value that v points to
+func Indirect(v reflect.Value) reflect.Value {
+	for v.Kind() == reflect.Ptr {
+		v = reflect.Indirect(v)
+	}
+	return v
 }
