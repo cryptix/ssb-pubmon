@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
+	"cryptoscope.co/go/errors"
 	"github.com/agl/ed25519"
 	"github.com/cryptix/go-muxrpc"
 	"github.com/cryptix/go/logging"
 	"github.com/jinzhu/gorm"
 	"github.com/kr/pretty"
-	"github.com/pkg/errors"
 	"github.com/qor/notification"
 	"github.com/qor/qor"
 	"github.com/qor/transition"

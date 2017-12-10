@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"cryptoscope.co/go/errors"
 	"github.com/agl/ed25519"
-	"github.com/prasannavl/go-errors"
 	"github.com/qor/media/oss"
 	"github.com/qor/worker"
 
@@ -76,7 +76,7 @@ func getWorker() *worker.Worker {
 			loc := filepath.Join("public", argument.File.URL())
 			f, err := os.Open(loc)
 			if err != nil {
-				return errors.NewWithCause("failed to open upload", err)
+				return errors.Wrap(err, "failed to open upload")
 			}
 			defer f.Close()
 
@@ -86,7 +86,7 @@ func getWorker() *worker.Worker {
 			}
 			var pubs []gossipAddr
 			if err := json.NewDecoder(f).Decode(&pubs); err != nil {
-				return errors.NewWithCause("failed to decode uploaded file", err)
+				return errors.Wrap(err, "failed to decode uploaded file")
 			}
 
 			var heads = []worker.TableCell{
@@ -108,7 +108,7 @@ func getWorker() *worker.Worker {
 				key, err := base64.StdEncoding.DecodeString(
 					strings.TrimSuffix(strings.TrimPrefix(jsonPub.Key, "@"), ".ed25519"))
 				if err != nil {
-					return errors.NewWithCause("base64 decode of public part failed", err)
+					return errors.Wrap(err, "base64 decode of public part failed")
 				}
 
 				if len(key) != ed25519.PublicKeySize {
@@ -119,7 +119,7 @@ func getWorker() *worker.Worker {
 				p.Key = jsonPub.Key
 
 				if err := d.FirstOrCreate(&p, p).Error; err != nil {
-					return errors.NewWithCause("could not find/create Pub", err)
+					return errors.Wrap(err, "could not find/create Pub")
 				}
 
 				var a models.Address
@@ -127,7 +127,7 @@ func getWorker() *worker.Worker {
 				a.Addr = fmt.Sprintf("%s:%d", jsonPub.Host, jsonPub.Port)
 
 				if err := d.FirstOrCreate(&a, a).Error; err != nil {
-					return errors.NewWithCause("could not find/create Addr", err)
+					return errors.Wrap(err, "could not find/create Addr")
 				}
 
 				qorJob.AddLog(fmt.Sprintf("Processing %d: pub(%s)", i, p.Key))
