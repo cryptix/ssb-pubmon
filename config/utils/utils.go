@@ -41,7 +41,7 @@ func GetDB(req *http.Request) *gorm.DB {
 	if db := utils.GetDBFromRequest(req); db != nil {
 		return db
 	}
-	return db.DB
+	return db.GetBase()
 }
 
 // URLParam get url params from request

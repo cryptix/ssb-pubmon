@@ -186,7 +186,7 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 				Title:       "Long Run!",
 				Body:        fmt.Sprintf("Pub#%v attempt worked! Took:%v\n%s", pub.ID, took, pretty.Sprint(errs)),
 				MessageType: "connection_try",
-			}, &qor.Context{DB: db.DB})
+			}, &qor.Context{DB: db.GetBase()})
 			if err != nil {
 				log.Log("err", errors.Wrap(err, "failed to send notify"))
 			}

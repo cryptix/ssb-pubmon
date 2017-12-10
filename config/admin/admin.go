@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"github.com/jinzhu/gorm"
 	"github.com/qor/action_bar"
 	"github.com/qor/activity"
 	"github.com/qor/admin"
@@ -8,14 +9,14 @@ import (
 	"github.com/qor/i18n/exchange_actions"
 	"github.com/qor/media/asset_manager"
 	"github.com/qor/media/media_library"
-	"github.com/qor/publish2"
 	"github.com/qor/qor"
 	"github.com/qor/qor/resource"
 	"github.com/qor/qor/utils"
 	"github.com/qor/validations"
 	"golang.org/x/crypto/bcrypt"
 
-	"github.com/cryptix/ssb-pubmon/config/admin/bindatafs"
+	"github.com/cryptix/go/logging"
+	"github.com/cryptix/ssb-pubmon/config"
 	"github.com/cryptix/ssb-pubmon/config/auth"
 	"github.com/cryptix/ssb-pubmon/config/i18n"
 	"github.com/cryptix/ssb-pubmon/config/notify"
@@ -24,16 +25,26 @@ import (
 )
 
 var (
+	l         logging.Interface
+	inited    bool
+	admindb   *gorm.DB
 	Admin     *admin.Admin
 	ActionBar *action_bar.ActionBar
 )
 
-func init() {
+func Init(log logging.Interface) {
+	if inited {
+		return
+	}
+	l = log
+	admindb = db.GetBase()
+
 	Admin = admin.New(&admin.AdminConfig{
-		SiteName: "synChrotron Admin",
 		Auth:     auth.AdminAuth{},
-		DB:       db.DB.Set(publish2.VisibleMode, publish2.ModeOff).Set(publish2.ScheduleMode, publish2.ModeOff),
-		AssetFS:  bindatafs.AssetFS.NameSpace("admin"),
+		DB:       admindb,
+		SiteName: "ssb-pubmon Admin",
+		//AssetFS:  bindatafs.AssetFS.NameSpace("admin"),
+		SessionManager: config.SessionManager,
 	})
 
 	notify.Init()
@@ -170,5 +181,4 @@ func init() {
 	ActionBar = action_bar.New(Admin)
 	ActionBar.RegisterAction(&action_bar.Action{Name: "Admin Dashboard", Link: "/admin"})
 
-	initFuncMap()
 }

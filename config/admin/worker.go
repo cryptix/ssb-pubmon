@@ -71,7 +71,7 @@ func getWorker() *worker.Worker {
 		Handler: func(arg interface{}, qorJob worker.QorJobInterface) error {
 			argument := arg.(*importGossipJSONArg)
 
-			d := db.DB
+			d := db.GetBase()
 
 			loc := filepath.Join("public", argument.File.URL())
 			f, err := os.Open(loc)

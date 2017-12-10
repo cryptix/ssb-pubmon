@@ -12,7 +12,6 @@ import (
 	"github.com/qor/qor/resource"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
-	"github.com/qor/session/manager"
 	"github.com/theplant/cldr"
 )
 
@@ -57,7 +56,7 @@ func New(config interface{}) *Admin {
 	}
 
 	if admin.SessionManager == nil {
-		admin.SessionManager = manager.SessionManager
+		panic("qor/admin needs session manager")
 	}
 
 	if admin.Transformer == nil {

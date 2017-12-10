@@ -1,79 +1,17 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{current_locale}}">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {{ render "partial/head" . }}
+    {{ render "partial/scripts" . }}
+<body>
+  <div id="all">
+    <header>
+      {{ render "partial/nav" . }}
+    </header>
+    {{render "partial/flashmsgs" .}}
 
-    <script src="/dist/js/jquery-3.2.1.slim.min.js"></script>
-    <script src="/dist/js/popper.min.js"></script>
-    <script src="/dist/js/bootstrap.min.js"></script>
-    <script src="/dist/app.js"></script>
+    {{yield}}
 
-    <link rel="stylesheet" href="/dist/css/bootstrap.min.css">
-
-    <style>
-      /* Move down content because we have a fixed navbar that is 3.5rem tall */
-    body {
-      padding-top: 3.5rem;
-    }
-    /*.qor-actionbar { margin-top: 1em; }*/
-    </style>
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="#">synChrotron</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbars" aria-controls="navbars" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbars">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-          </li>
-        </ul>
-
-        <ul class="navbar-nav mr-auto">
-          {{ if current_user }}
-            <li class="nav-item"> <a class="nav-link" href="/account">{{(current_user).Name}}</a> </li>
-            {{ if eq current_user.Role "Admin" }}
-              <li class="nav-item"> <a class="nav-link" href="/admin">Backoffice</a> </li>
-            {{ end }}
-            <li class="nav-item"> <a class="nav-link" href="/auth/logout">{{ t "layout.header_link.logout" }}</a> </li>
-          {{ else }}
-            <li class="nav-item"> <a class="nav-link" href="/auth/login">{{ t "layout.header_link.login" }}</a> </li>
-            <li class="nav-item"> <a class="nav-link" href="/auth/register">{{ t "layout.header_link.register"}}</a> </li>
-          {{ end }}
-        </ul>
-      </div>
-    </nav>
-
-    <div class="container">
-      <div class="row">
-        {{range $message := flashes}}
-          {{if eq $message.Type "error"}}
-            <div class="alert alert-danger">{{$message.Message}}</div>
-          {{else}}
-            <div class="alert alert-success">{{$message.Message}}</div>
-          {{end}}
-        {{end}}
-      </div>
-    </div>
-
-    {{ yield }}
-
-    <footer class="container">
-      <div class="footer__change-language">
-        <p>🄯  cryptix/ssb-pubmon 2017</p>
-        <select>
-          <option {{ if (eq current_locale "de-DE") }}selected{{end}} value="/switch_locale?locale=de-DE">German</option>
-          <option {{ if (eq current_locale "en-US") }}selected{{end}} value="/switch_locale?locale=en-US">English</option>
-          <option {{ if (eq current_locale "zh-CN") }}selected{{end}} value="/switch_locale?locale=zh-CN">简体中文</option>
-        </select>
-      </div>
-    </footer>
-    <!-- fix to bottom -->
-    {{ if current_user }} {{render_action_bar}} {{end}}
-    </body>
-  </html>
+    {{ render "partial/footer" . }}
+  </div>
+</body>
+</html>

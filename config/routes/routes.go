@@ -6,7 +6,6 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/qor/publish2"
 	"github.com/qor/qor"
 	"github.com/qor/qor/utils"
 	"github.com/qor/wildcard_router"
@@ -28,7 +27,7 @@ func Router(l logging.Interface) *http.ServeMux {
 		router.Use(func(next http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 				var (
-					tx         = db.DB
+					tx         = db.GetBase()
 					qorContext = &qor.Context{Request: req, Writer: w}
 				)
 
@@ -36,7 +35,7 @@ func Router(l logging.Interface) *http.ServeMux {
 					tx = tx.Set("l10n:locale", locale)
 				}
 
-				ctx := context.WithValue(req.Context(), utils.ContextDBName, publish2.PreviewByDB(tx, qorContext))
+				ctx := context.WithValue(req.Context(), utils.ContextDBName, tx)
 				next.ServeHTTP(w, req.WithContext(ctx))
 			})
 		})

@@ -4,16 +4,13 @@ import (
 	"fmt"
 	"strings"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	"github.com/qor/auth/auth_identity"
 	"github.com/qor/auth/claims"
 	"github.com/qor/mailer"
 	"github.com/qor/mailer/logger"
-	"github.com/qor/redirect_back"
 	"github.com/qor/render"
-	"github.com/qor/session/manager"
 )
 
 // Auth auth struct
@@ -91,18 +88,11 @@ func New(config *Config) (*Auth, error) {
 	}
 
 	if config.SessionStorer == nil {
-		config.SessionStorer = &SessionStorer{
-			SessionName:    "_auth_session",
-			SessionManager: manager.SessionManager,
-			SigningMethod:  jwt.SigningMethodHS256,
-		}
+		panic("qor/auth needs SessionStorer")
 	}
 
 	if config.Redirector == nil {
-		config.Redirector = &Redirector{redirect_back.New(&redirect_back.Config{
-			SessionManager:  manager.SessionManager,
-			IgnoredPrefixes: []string{config.URLPrefix},
-		})}
+		panic("qor/auth needs redirector")
 	}
 
 	if config.LoginHandler == nil {

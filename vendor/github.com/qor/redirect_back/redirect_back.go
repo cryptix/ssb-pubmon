@@ -8,10 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/qor/middlewares"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
-	"github.com/qor/session/manager"
 )
 
 var returnToKey utils.ContextKey = "redirect_back_return_to"
@@ -29,7 +27,7 @@ type Config struct {
 // New initialize redirect back instance
 func New(config *Config) *RedirectBack {
 	if config.SessionManager == nil {
-		config.SessionManager = manager.SessionManager
+		panic("qor/redirect_back needs session manager")
 	}
 
 	if config.FallbackPath == "" {
@@ -42,14 +40,6 @@ func New(config *Config) *RedirectBack {
 
 	redirectBack := &RedirectBack{config: config}
 	redirectBack.compile()
-
-	middlewares.Use(middlewares.Middleware{
-		Name:        "redirect_back",
-		InsertAfter: []string{"session"},
-		Handler: func(handler http.Handler) http.Handler {
-			return redirectBack.Middleware(handler)
-		},
-	})
 
 	return redirectBack
 }

@@ -9,6 +9,6 @@ import (
 
 var I18n *i18n.I18n
 
-func init() {
-	I18n = i18n.New(database.New(db.DB))
+func Init() {
+	I18n = i18n.New(database.New(db.GetBase()))
 }
