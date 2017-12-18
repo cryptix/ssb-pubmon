@@ -96,7 +96,7 @@ func Init(log logging.Interface) {
 
 	View = render.New(&render.Config{
 		Layout:    "application",
-		ViewPaths: []string{filepath.Join(Root, "app")},
+		ViewPaths: []string{filepath.Join(Root, "app", "views")},
 	})
 
 	htmlSanitizer := bluemonday.UGCPolicy()

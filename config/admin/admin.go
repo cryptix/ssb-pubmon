@@ -54,7 +54,9 @@ func Init(log logging.Interface) {
 	Admin.AddMenu([]string{"admin"}, &admin.Menu{Name: "Dashboard", Link: "/admin"})
 
 	// Add Media Library
-	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{Menu: []string{"Site Management"}})
+	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{
+		ShowMenu: []string{"admin"},
+		Menu:     []string{"Site Management"}})
 
 	// Add Asset Manager, for rich editor
 	assetManager := Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
@@ -64,7 +66,7 @@ func Init(log logging.Interface) {
 	Help.GetMeta("Body").Config = &admin.RichEditorConfig{AssetManager: assetManager}
 
 	// Add User
-	user := Admin.AddResource(&models.User{}, &admin.Config{Menu: []string{"User Management"}})
+	user := Admin.AddResource(&models.User{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"User Management"}})
 	user.Meta(&admin.Meta{Name: "Role", Config: &admin.SelectOneConfig{Collection: []string{"Admin", "Maintainer", "Member"}}})
 	user.Meta(&admin.Meta{Name: "Password",
 		Type:   "password",
@@ -81,17 +83,17 @@ func Init(log logging.Interface) {
 			}
 		},
 	})
-	user.Meta(&admin.Meta{Name: "Confirmed", Valuer: func(user interface{}, ctx *qor.Context) interface{} {
-		if user.(*models.User).ID == 0 {
-			return true
-		}
+	/*
+		user.Meta(&admin.Meta{Name: "Confirmed", Valuer: func(user interface{}, ctx *qor.Context) interface{} {
+			if user.(*models.User).ID == 0 {
+				return true
+			}
 
-		/* todo: load fromauthID
-		ctx.GetDB()
-		return user.(*models.User).Confirmed
-		*/
-		return false
-	}})
+			/* todo: load fromauthID
+			ctx.GetDB()
+			return user.(*models.User).Confirmed
+		}})
+	*/
 
 	user.Filter(&admin.Filter{
 		Name: "Role",
@@ -164,15 +166,15 @@ func Init(log logging.Interface) {
 	)
 
 	// Add Translations
-	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: 1})
+	Admin.AddResource(i18n.I18n, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"Site Management"}, Priority: 1})
 
 	// Add Worker
 	Worker := getWorker()
 	exchange_actions.RegisterExchangeJobs(i18n.I18n, Worker)
-	Admin.AddResource(Worker, &admin.Config{Menu: []string{"Site Management"}})
+	Admin.AddResource(Worker, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"Site Management"}})
 
 	// Add Setting
-	Admin.AddResource(&models.Setting{}, &admin.Config{Name: "Site Managment", Singleton: true})
+	Admin.AddResource(&models.Setting{}, &admin.Config{ShowMenu: []string{"admin"}, Name: "Site Managment", Singleton: true})
 
 	// Add Search Center Resources
 	Admin.AddSearchResource(user)
