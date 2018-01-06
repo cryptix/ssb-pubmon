@@ -1,38 +1,14 @@
-
-# Gopkg.toml example
-#
-# Refer to https://github.com/golang/dep/blob/master/docs/Gopkg.toml.md
-# for detailed Gopkg.toml documentation.
-#
-# required = ["github.com/user/thing/cmd/thing"]
-# ignored = ["github.com/user/project/pkgX", "bitbucket.org/user/project/pkgA/pkgY"]
-#
-# [[constraint]]
-#   name = "github.com/user/project"
-#   version = "1.0.0"
-#
-# [[constraint]]
-#   name = "github.com/user/project2"
-#   branch = "dev"
-#   source = "github.com/myfork/project2"
-#
-# [[override]]
-#  name = "github.com/x/y"
-#  version = "2.4.0"
-
 [metadata.heroku]
   root-package = "github.com/cryptix/ssb-pubmon"
   go-version = "go1.9.2"
   install = [ "github.com/cryptix/ssb-pubmon" ]
-
-## use forks
 
 [[constraint]]
   name = "github.com/cryptix/go"
   version = "1.0.0"
 
 [[constraint]]
-  branch = "v1.0"
+  branch = "master"
   name = "github.com/cryptix/go-muxrpc"
 
 [[constraint]]
@@ -73,21 +49,6 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/qor/admin"
-  source = "github.com/cryptix/qor_admin"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/qor/assetfs"
-  source = "github.com/cryptix/qor_assetfs"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/qor/auth"
-  source = "github.com/cryptix/qor_auth"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/qor/auth_themes"
 
 [[constraint]]
@@ -116,16 +77,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/qor/mailer"
-  source = "github.com/cryptix/qor_mailer"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/qor/media"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/qor/middlewares"
 
 [[constraint]]
   branch = "master"
@@ -137,20 +89,7 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/qor/redirect_back"
-
-[[override]]
-  name = "github.com/qor/render"
-  revision="a95fd1d26b20517e985d6c3634c6dfdb3b1ad4b2"
-  source = "github.com/cryptix/qor_render"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/qor/roles"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/qor/session"
 
 [[constraint]]
   branch = "master"
@@ -180,6 +119,56 @@
   branch = "master"
   name = "golang.org/x/crypto"
 
+[[constraint]]
+  branch = "master"
+  name = "github.com/prasannavl/go-errors"
+
+# use forks
+[[override]]
+  name = "github.com/qor/admin"
+  source = "github.com/cryptix/qor_admin"
+  revision = "ddecac16575386fe88881d38ddfe8e6e6e56e874"
+
+[[override]]
+  name = "github.com/qor/assetfs"
+  source = "github.com/cryptix/qor_assetfs"
+  revision = "0690e5426d85d229d6e9c919d9637120347058d8"
+
+[[override]]
+  name = "github.com/qor/auth"
+  source = "github.com/cryptix/qor_auth"
+  revision = "35f1d6dea9a2cc13b571e6f6c557437f55655a08"
+
+[[override]]
+  name = "github.com/qor/auth_themes"
+  source = "github.com/cryptix/qor_auth_themes"
+  revision = "45a77b9ec82d221cb11936397565ed00150d1c7a"
+
+[[override]]
+  name = "github.com/qor/mailer"
+  source = "github.com/cryptix/qor_mailer"
+  revision = "2d5b212956cc0e7c81aa0e4834bfffad8c4ab6ac"
+
+[[override]]
+  name = "github.com/qor/middlewares"
+  source = "github.com/cryptix/qor_middlewares"
+  revision = "18127115fc91fd180a122c3a8e6c85078b0624e6"
+
+[[override]]
+  name = "github.com/qor/redirect_back"
+  source = "github.com/cryptix/qor_redirect_back"
+  revision = "275539f5ccf24815c8ac88ec932c1f49fd3f8c83"
+
+[[override]]
+  name = "github.com/qor/render"
+  source = "github.com/cryptix/qor_render"
+  revision="e7333e0f2548d73d4773f912e6f2c793d28f38ce"
+
+[[override]]
+  name = "github.com/qor/session"
+  source = "github.com/cryptix/qor_session"
+  revision = "33f14a897a1f40d1ba043b67e49b4070948f10c0"
+
 # old version tags
 [[override]]
   branch = "master"
@@ -200,6 +189,3 @@
 [[override]]
   branch = "master"
   name = "github.com/qor/publish"
-[[constraint]]
-  branch = "master"
-  name = "github.com/prasannavl/go-errors"

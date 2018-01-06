@@ -88,11 +88,11 @@ func New(config *Config) (*Auth, error) {
 	}
 
 	if config.SessionStorer == nil {
-		panic("qor/auth needs SessionStorer")
+		return nil, errors.New("auth: please configure a SessionStorer")
 	}
 
 	if config.Redirector == nil {
-		panic("qor/auth needs redirector")
+		return nil, errors.New("auth: please configure a Redirector")
 	}
 
 	if config.LoginHandler == nil {

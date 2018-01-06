@@ -28,7 +28,7 @@ type SMTPConfig struct {
 }
 
 type MainConfig struct {
-	CookieSecret string `env:"COOKIESecret"`
+	CookieSecret string `env:"COOKIESecret"` // dd if=/dev/urandom bs=1 count=64 | base64 -w0
 	Locale       string `default:"de-DE"`
 	HTTPHost     string `default:":7000"`
 	DB           struct {
@@ -114,6 +114,6 @@ func Init(log logging.Interface) {
 		DefaultEmailTemplate: &mailer.Email{},
 		Sender:               logger.New(nil),
 	})
-	check(err)
+	log.Log("event", "mailer.New", "err", err)
 	Mailer.RegisterViewPath(filepath.Join(Root, "app", "views"))
 }

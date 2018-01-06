@@ -1,8 +1,7 @@
 package clean
 
 import (
-	"errors"
-
+	"github.com/pkg/errors"
 	"github.com/qor/auth"
 	"github.com/qor/auth/claims"
 	"github.com/qor/auth/providers/password"
@@ -12,26 +11,26 @@ import (
 var ErrPasswordConfirmationNotMatch = errors.New("password confirmation doesn't match password")
 
 // New initialize clean theme
-func New(config *auth.Config) *auth.Auth {
+func New(config *auth.Config) (*auth.Auth, error) {
 	if config == nil {
 		config = &auth.Config{}
 	}
 	config.ViewPaths = append(config.ViewPaths, "github.com/qor/auth_themes/clean/views")
 
 	if config.DB == nil {
-		panic("Please configure *gorm.DB for Auth theme clean")
+		return nil, errors.New("cleanTheme: Please configure *gorm.DB")
 	}
 
 	if config.Render == nil {
-		panic("Please configure renderer for Auth theme clean")
+		return nil, errors.New("cleanTheme: Please configure Render")
 	}
 
-	Auth, err := auth.New(config)
+	a, err := auth.New(config)
 	if err != nil {
-		panic(err)
+		return nil, errors.Wrap(err, "cleanTheme: failed to create auth system")
 	}
 
-	Auth.RegisterProvider(password.New(&password.Config{
+	a.RegisterProvider(password.New(&password.Config{
 		Confirmable: true,
 		RegisterHandler: func(context *auth.Context) (*claims.Claims, error) {
 			context.Request.ParseForm()
@@ -44,9 +43,9 @@ func New(config *auth.Config) *auth.Auth {
 		},
 	}))
 
-	if Auth.Config.DB != nil {
+	if a.Config.DB != nil {
 		// Migrate Auth Identity model
-		Auth.Config.DB.AutoMigrate(Auth.Config.AuthIdentityModel)
+		a.Config.DB.AutoMigrate(a.Config.AuthIdentityModel)
 	}
-	return Auth
+	return a, nil
 }

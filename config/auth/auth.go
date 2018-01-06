@@ -29,7 +29,7 @@ var (
 
 func Init() {
 	var err error
-	Auth = clean.New(&auth.Config{
+	Auth, err = clean.New(&auth.Config{
 		DB:         db.GetBase(),
 		Render:     config.View,
 		ViewPaths:  []string{filepath.Join(config.Root, "app", "views")},

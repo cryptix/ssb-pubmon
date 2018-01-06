@@ -27,7 +27,7 @@ type Config struct {
 // New initialize redirect back instance
 func New(config *Config) *RedirectBack {
 	if config.SessionManager == nil {
-		panic("qor/redirect_back needs session manager")
+		panic("redirect_back: please configure a SessionManager")
 	}
 
 	if config.FallbackPath == "" {
@@ -102,8 +102,10 @@ func (redirectBack *RedirectBack) RedirectBack(w http.ResponseWriter, req *http.
 	returnTo := req.Context().Value(returnToKey)
 
 	if returnTo != nil {
-		http.Redirect(w, req, fmt.Sprint(returnTo), http.StatusSeeOther)
-		return
+		if returnToStr := fmt.Sprint(returnTo); "" != returnToStr {
+			http.Redirect(w, req, returnToStr, http.StatusSeeOther)
+			return
+		}
 	}
 
 	if referrer := req.Referer(); referrer != "" {

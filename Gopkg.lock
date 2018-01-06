@@ -10,7 +10,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/agl/ed25519"
-  packages = [".","edwards25519","extra25519"]
+  packages = [
+    ".",
+    "edwards25519",
+    "extra25519"
+  ]
   revision = "5312a61534124124185d41f09206b9fef1d88403"
 
 [[projects]]
@@ -21,20 +25,30 @@
 
 [[projects]]
   name = "github.com/cryptix/go"
-  packages = ["logging"]
+  packages = [
+    "goutils",
+    "logging"
+  ]
   revision = "c8ed48a26147d732aa261d3751677f61b038abaa"
   version = "v1"
 
 [[projects]]
   name = "github.com/cryptix/go-muxrpc"
-  packages = [".","codec"]
+  packages = [
+    ".",
+    "codec"
+  ]
   revision = "49af695da95c79ff48003a6bff213f5af3f9db33"
   version = "v1.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/cryptix/secretstream"
-  packages = [".","boxstream","secrethandshake"]
+  packages = [
+    ".",
+    "boxstream",
+    "secrethandshake"
+  ]
   revision = "a77274a95470349072b27e2d2a20933c38bd246b"
 
 [[projects]]
@@ -112,7 +126,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/jinzhu/gorm"
-  packages = [".","dialects/postgres","dialects/sqlite"]
+  packages = [
+    ".",
+    "dialects/postgres",
+    "dialects/sqlite"
+  ]
   revision = "0a51f6cdc55d1650d9ed3b4c13026cfa9133b01e"
 
 [[projects]]
@@ -154,7 +172,11 @@
 [[projects]]
   branch = "master"
   name = "github.com/lib/pq"
-  packages = [".","hstore","oid"]
+  packages = [
+    ".",
+    "hstore",
+    "oid"
+  ]
   revision = "83612a56d3dd153a94a629cd64925371c9adad78"
 
 [[projects]]
@@ -194,14 +216,12 @@
   revision = "06b5e02b7fa92664750be4526644080806febfd4"
 
 [[projects]]
-  branch = "master"
   name = "github.com/qor/admin"
   packages = ["."]
-  revision = "6f9b5ead7e945014b1b54c391d58c71448912416"
+  revision = "ddecac16575386fe88881d38ddfe8e6e6e56e874"
   source = "github.com/cryptix/qor_admin"
 
 [[projects]]
-  branch = "master"
   name = "github.com/qor/assetfs"
   packages = ["."]
   revision = "0690e5426d85d229d6e9c919d9637120347058d8"
@@ -214,22 +234,32 @@
   revision = "b7dc1e8737980ab1a3dd41851a764a983f247960"
 
 [[projects]]
-  branch = "master"
   name = "github.com/qor/auth"
-  packages = [".","auth_identity","authority","claims","providers/password","providers/password/encryptor","providers/password/encryptor/bcrypt_encryptor"]
-  revision = "dd58a032f114adf51519ba291a81235ec3c27170"
+  packages = [
+    ".",
+    "auth_identity",
+    "authority",
+    "claims",
+    "providers/password",
+    "providers/password/encryptor",
+    "providers/password/encryptor/bcrypt_encryptor"
+  ]
+  revision = "35f1d6dea9a2cc13b571e6f6c557437f55655a08"
   source = "github.com/cryptix/qor_auth"
 
 [[projects]]
-  branch = "master"
   name = "github.com/qor/auth_themes"
   packages = ["clean"]
-  revision = "d9aac462ad967a5bd0aa7a0e96803e236e23e919"
+  revision = "45a77b9ec82d221cb11936397565ed00150d1c7a"
+  source = "github.com/cryptix/qor_auth_themes"
 
 [[projects]]
   branch = "master"
   name = "github.com/qor/cache"
-  packages = [".","memory"]
+  packages = [
+    ".",
+    "memory"
+  ]
   revision = "c9d48d1f13ba2e1ad06a3f8d55be7ea3edf2d0c4"
 
 [[projects]]
@@ -247,7 +277,12 @@
 [[projects]]
   branch = "master"
   name = "github.com/qor/i18n"
-  packages = [".","backends/database","backends/yaml","exchange_actions","inline_edit"]
+  packages = [
+    ".",
+    "backends/database",
+    "exchange_actions",
+    "inline_edit"
+  ]
   revision = "07ca0134e3fd5f7a20d35e884bf16f27faeee072"
 
 [[projects]]
@@ -258,33 +293,46 @@
 
 [[projects]]
   name = "github.com/qor/mailer"
-  packages = [".","logger"]
+  packages = [
+    ".",
+    "logger"
+  ]
   revision = "2d5b212956cc0e7c81aa0e4834bfffad8c4ab6ac"
   source = "github.com/cryptix/qor_mailer"
-  version = "v1.1"
 
 [[projects]]
   branch = "master"
   name = "github.com/qor/media"
-  packages = [".","asset_manager","media_library","oss"]
+  packages = [
+    ".",
+    "asset_manager",
+    "media_library",
+    "oss"
+  ]
   revision = "8edd457135d14aceab7c5378548c72ad0ff01e7d"
 
 [[projects]]
-  branch = "master"
   name = "github.com/qor/middlewares"
   packages = ["."]
-  revision = "781378b69454a545d08058d8154aca40d079e7ab"
+  revision = "18127115fc91fd180a122c3a8e6c85078b0624e6"
+  source = "github.com/cryptix/qor_middlewares"
 
 [[projects]]
   branch = "master"
   name = "github.com/qor/notification"
-  packages = [".","channels/database"]
+  packages = [
+    ".",
+    "channels/database"
+  ]
   revision = "2a71c942089c403f7dfbd9ae602d5f8f89cd364d"
 
 [[projects]]
   branch = "master"
   name = "github.com/qor/oss"
-  packages = [".","filesystem"]
+  packages = [
+    ".",
+    "filesystem"
+  ]
   revision = "87696afb9c128d2ce6964771c1bc5ec4a7e8dc0f"
 
 [[projects]]
@@ -295,26 +343,24 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/qor/publish2"
-  packages = ["."]
-  revision = "b64a23f3f4169f5095bf5ecbe673984786cf3bf8"
-
-[[projects]]
-  branch = "master"
   name = "github.com/qor/qor"
-  packages = [".","resource","utils"]
+  packages = [
+    ".",
+    "resource",
+    "utils"
+  ]
   revision = "1c17696527773fa844a809b0ff06f79559f4d336"
 
 [[projects]]
-  branch = "master"
   name = "github.com/qor/redirect_back"
   packages = ["."]
-  revision = "b4161ed6f84819fb3a2d13d5c9e6872ef76d8128"
+  revision = "275539f5ccf24815c8ac88ec932c1f49fd3f8c83"
+  source = "github.com/cryptix/qor_redirect_back"
 
 [[projects]]
   name = "github.com/qor/render"
   packages = ["."]
-  revision = "a95fd1d26b20517e985d6c3634c6dfdb3b1ad4b2"
+  revision = "e7333e0f2548d73d4773f912e6f2c793d28f38ce"
   source = "github.com/cryptix/qor_render"
 
 [[projects]]
@@ -336,10 +382,13 @@
   revision = "b432456ad58b075008d8b5633e16bd796926b5f4"
 
 [[projects]]
-  branch = "master"
   name = "github.com/qor/session"
-  packages = [".","gorilla","manager"]
-  revision = "8206b0adab706a6ef3ee6fabba2584d34429a26a"
+  packages = [
+    ".",
+    "gorilla"
+  ]
+  revision = "33f14a897a1f40d1ba043b67e49b4070948f10c0"
+  source = "github.com/cryptix/qor_session"
 
 [[projects]]
   branch = "master"
@@ -386,31 +435,53 @@
 [[projects]]
   branch = "master"
   name = "go4.org"
-  packages = ["reflectutil","sort"]
+  packages = [
+    "reflectutil",
+    "sort"
+  ]
   revision = "034d17a462f7b2dcd1a4a73553ec5357ff6e6c6e"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/crypto"
-  packages = ["bcrypt","blowfish","curve25519","nacl/box","nacl/secretbox","poly1305","salsa20/salsa"]
+  packages = [
+    "bcrypt",
+    "blowfish",
+    "curve25519",
+    "nacl/box",
+    "nacl/secretbox",
+    "poly1305",
+    "salsa20/salsa"
+  ]
   revision = "94eea52f7b742c7cbe0b03b22f0c4c8631ece122"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/image"
-  packages = ["bmp","tiff","tiff/lzw"]
+  packages = [
+    "bmp",
+    "tiff",
+    "tiff/lzw"
+  ]
   revision = "f7e31b4ea2e3413ab91b4e7d2dc83e5f8d19a44c"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["context","html","html/atom"]
+  packages = [
+    "context",
+    "html",
+    "html/atom"
+  ]
   revision = "a8b9294777976932365dabb6640cf1468d95c70f"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/text"
-  packages = ["internal/gen","unicode/cldr"]
+  packages = [
+    "internal/gen",
+    "unicode/cldr"
+  ]
   revision = "b7c1ddf508b976c3764e2950e11f3e3d7ccc0c34"
 
 [[projects]]
@@ -428,6 +499,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c41e66a59c5c04a08ec4e8b525b8249abc0d40aa1fcfa915d8c01828426accf0"
+  inputs-digest = "ffb537c65f2384aaa3e2c3ef7b42dd6e48dc6d542d9ad3195bbb7830cfa072dd"
   solver-name = "gps-cdcl"
   solver-version = 1

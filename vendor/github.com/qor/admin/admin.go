@@ -56,7 +56,7 @@ func New(config interface{}) *Admin {
 	}
 
 	if admin.SessionManager == nil {
-		panic("qor/admin needs session manager")
+		panic("qor/admin: need SessionManager")
 	}
 
 	if admin.Transformer == nil {
