@@ -59,7 +59,11 @@ func Init(log logging.Interface) {
 	check(err)
 
 	Root, err = goutils.LocatePackage("github.com/cryptix/ssb-pubmon")
-	check(err)
+	//check(err)
+	if err != nil {
+		log.Log("event", "LocatePackage error", "err", err, "msg", "falling back to '.'")
+		Root = "."
+	}
 
 	Middlewares = new(middlewares.MiddlewareStack)
 	Middlewares.Use(middlewares.Middleware{

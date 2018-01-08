@@ -118,7 +118,7 @@ func Init(log logging.Interface) {
 	user.EditAttrs(user.ShowAttrs())
 
 	// pub
-	pubRes := Admin.AddResource(&models.Pub{})
+	pubRes := Admin.AddResource(&models.Pub{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"SSB Pubs"}})
 	pubRes.Action(&admin.Action{
 		Name: "Try",
 		Handler: func(argument *admin.ActionArgument) error {
@@ -146,7 +146,7 @@ func Init(log logging.Interface) {
 	})
 	activity.Register(pubRes)
 
-	pubAddr := Admin.AddResource(&models.Address{})
+	pubAddr := Admin.AddResource(&models.Address{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"SSB Pubs"}})
 	pubAddr.ShowAttrs(
 		&admin.Section{
 			Title: "Basic Information",

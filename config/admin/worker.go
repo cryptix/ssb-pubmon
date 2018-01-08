@@ -117,6 +117,7 @@ func getWorker() *worker.Worker {
 
 				var p models.Pub
 				p.Key = jsonPub.Key
+				p.SetState("unchecked")
 
 				if err := d.FirstOrCreate(&p, p).Error; err != nil {
 					return errors.NewWithCause("could not find/create Pub", err)

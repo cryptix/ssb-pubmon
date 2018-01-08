@@ -41,6 +41,7 @@ func Router(l logging.Interface) *http.ServeMux {
 		})
 
 		router.Get("/", controllers.HomeIndex)
+		router.Get("/hexagen", controllers.Hexagen)
 		router.Get("/switch_locale", controllers.SwitchLocale)
 
 		router.With(auth.Authority.Authorize()).Route("/account", func(r chi.Router) {
