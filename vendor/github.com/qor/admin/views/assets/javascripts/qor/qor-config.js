@@ -1,8 +1,7 @@
 // init for slideout after show event
 $.fn.qorSliderAfterShow = $.fn.qorSliderAfterShow || {};
 window.QOR = {
-    $formLoading:
-        '<div id="qor-submit-loading" class="clearfix"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div><p class="percent-complete"></p></div>'
+    $formLoading: '<div id="qor-submit-loading" class="clearfix"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div></div>'
 };
 
 // change Mustache tags from {{}} to [[]]

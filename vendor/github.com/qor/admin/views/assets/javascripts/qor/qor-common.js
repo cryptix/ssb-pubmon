@@ -195,21 +195,4 @@ $(function() {
             $('#qor-submit-loading').remove();
         }, 6000);
     };
-
-    QOR.xhrLoading = function() {
-        let xhr = new window.XMLHttpRequest();
-
-        xhr.upload.addEventListener(
-            'progress',
-            function(evt) {
-                if (evt.lengthComputable) {
-                    let percentComplete = evt.loaded / evt.total;
-
-                    $('.percent-complete').html(Math.ceil(percentComplete * 100) + '%');
-                }
-            },
-            false
-        );
-        return xhr;
-    };
 });

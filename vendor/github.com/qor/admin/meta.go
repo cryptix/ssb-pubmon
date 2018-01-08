@@ -54,8 +54,8 @@ func (meta Meta) HasPermission(mode roles.PermissionMode, context *qor.Context) 
 	for _, role := range context.Roles {
 		roles = append(roles, role)
 	}
-	if meta.Permission != nil && !meta.Permission.HasPermission(mode, roles...) {
-		return false
+	if meta.Permission != nil {
+		return meta.Permission.HasPermission(mode, roles...)
 	}
 
 	if meta.Resource != nil {

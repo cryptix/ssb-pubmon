@@ -460,3 +460,11 @@ button.qor-fieldset__add,
     /* Internet Explorer 10-11 */
     color: unquote('rgba(#{$color-black}, 0.12)');
 }
+
+.mdl-checkbox__label {
+    line-height: 22px;
+}
+.mdl-checkbox {
+    height: auto;
+    margin-bottom: 12px;
+}

@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "cryptoscope.co/go/errors"
+  packages = ["."]
+  revision = "49c6610208020b408a52a9c7bc23ebee0a12e6ec"
+
+[[projects]]
   name = "github.com/BurntSushi/toml"
   packages = ["."]
   revision = "b26d9c308763d68093482582cea63d69be07a0f0"
@@ -199,12 +205,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/prasannavl/go-errors"
-  packages = ["."]
-  revision = "78ee50aa532fa09f89e5db140ca079c50b7f6846"
-
-[[projects]]
-  branch = "master"
   name = "github.com/qor/action_bar"
   packages = ["."]
   revision = "e1b463078c284c499c35b600e7239ddb40e90d86"
@@ -218,7 +218,7 @@
 [[projects]]
   name = "github.com/qor/admin"
   packages = ["."]
-  revision = "ddecac16575386fe88881d38ddfe8e6e6e56e874"
+  revision = "e73aa4543e56cafc7a46027d3353f69b64ca91f4"
   source = "github.com/cryptix/qor_admin"
 
 [[projects]]
@@ -499,6 +499,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "ffb537c65f2384aaa3e2c3ef7b42dd6e48dc6d542d9ad3195bbb7830cfa072dd"
+  inputs-digest = "12a71fac6e9a831d1f4a5611f5a6a68625171537884ed79408cb187192c4da68"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -127,7 +127,7 @@
 [[override]]
   name = "github.com/qor/admin"
   source = "github.com/cryptix/qor_admin"
-  revision = "ddecac16575386fe88881d38ddfe8e6e6e56e874"
+  revision = "e73aa4543e56cafc7a46027d3353f69b64ca91f4"
 
 [[override]]
   name = "github.com/qor/assetfs"

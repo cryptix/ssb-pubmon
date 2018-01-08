@@ -49,6 +49,18 @@ func TestMenu(t *testing.T) {
 	} else if len(menu.Ancestors) != 1 || menu.Ancestors[0] != "management" {
 		t.Errorf("menu %v' ancestors should be correct", "Res2")
 	}
+
+	if menu := admin.GetMenu("management", "Res2"); menu == nil {
+		t.Errorf("menu %v not added", "Res2")
+	} else if menu.URL() != "/admin/res2" {
+		t.Errorf("menu %v' URL should be correct, got %v", "Res2", menu.URL())
+	} else if len(menu.Ancestors) != 1 || menu.Ancestors[0] != "management" {
+		t.Errorf("menu %v' ancestors should be correct", "Res2")
+	}
+
+	if menu := admin.GetMenu("management", "Res"); menu != nil {
+		t.Errorf("menu management>Res should not found")
+	}
 }
 
 func TestMenuPriority(t *testing.T) {

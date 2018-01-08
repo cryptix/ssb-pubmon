@@ -22,4 +22,9 @@ func (singleEditConfig SingleEditConfig) GetTemplate(context *Context, metaType 
 
 // ConfigureQorMeta configure single edit meta
 func (singleEditConfig *SingleEditConfig) ConfigureQorMeta(metaor resource.Metaor) {
+	if meta, ok := metaor.(*Meta); ok {
+		if meta.Permission != nil || meta.Resource.Permission != nil {
+			meta.Permission = meta.Permission.Concat(meta.Resource.Permission)
+		}
+	}
 }

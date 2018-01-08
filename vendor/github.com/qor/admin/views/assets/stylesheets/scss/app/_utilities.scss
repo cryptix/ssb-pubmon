@@ -5,51 +5,54 @@
 // -------------------------
 
 .clearfix {
-  @include clearfix();
+    @include clearfix();
 }
 
 .float-left {
-  float: left;
+    float: left;
 }
 
 .float-right {
-  float: right;
+    float: right;
 }
 
+.center-text {
+    text-align: center;
+}
 
 // Toggling content
 // -------------------------
 
 .shown,
 .is-shown {
-  display: block !important;
+    display: block !important;
 }
 
 .hidden,
 .is-hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .fade {
-  opacity: 0;
-  transition: opacity .2s linear;
+    opacity: 0;
+    transition: opacity 0.2s linear;
 
-  &.in {
-    opacity: 1;
-  }
+    &.in {
+        opacity: 1;
+    }
 }
 
 .collapse {
-  display: none;
+    display: none;
 
-  &.in {
-    display: block;
-  }
+    &.in {
+        display: block;
+    }
 }
 
 .collapsing {
-  position: relative;
-  height: 0;
-  overflow: hidden;
-  transition: height .3s ease;
+    position: relative;
+    height: 0;
+    overflow: hidden;
+    transition: height 0.3s ease;
 }

@@ -43,7 +43,10 @@ func (res *Resource) generateSections(values ...interface{}) []*Section {
 	for i := len(values) - 1; i >= 0; i-- {
 		value := values[i]
 		if section, ok := value.(*Section); ok {
-			sections = append(sections, uniqueSection(section, &hasColumns))
+			newSection := uniqueSection(section, &hasColumns)
+			if len(newSection.Rows) > 0 {
+				sections = append(sections, newSection)
+			}
 		} else if column, ok := value.(string); ok {
 			if strings.HasPrefix(column, "-") {
 				excludedColumns = append(excludedColumns, column)

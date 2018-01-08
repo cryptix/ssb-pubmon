@@ -23,4 +23,9 @@ func (collectionEditConfig CollectionEditConfig) GetTemplate(context *Context, m
 
 // ConfigureQorMeta configure collection edit meta
 func (collectionEditConfig *CollectionEditConfig) ConfigureQorMeta(metaor resource.Metaor) {
+	if meta, ok := metaor.(*Meta); ok {
+		if meta.Permission != nil || meta.Resource.Permission != nil {
+			meta.Permission = meta.Permission.Concat(meta.Resource.Permission)
+		}
+	}
 }

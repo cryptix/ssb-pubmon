@@ -20,7 +20,8 @@
         EVENT_ONSUBMIT = 'afterSubmitted.' + NAMESPACE,
         EVENT_CLICK = 'click.' + NAMESPACE,
         EVENT_SUBMIT = 'submit.' + NAMESPACE,
-        CLASS_CLICK_TABLE = '.qor-table-container tbody tr';
+        CLASS_TABLE = 'table tr',
+        CLASS_FORM = 'form';
 
     function QorSelectCore(element, options) {
         this.$element = $(element);
@@ -36,11 +37,11 @@
         },
 
         bind: function() {
-            this.$element.on(EVENT_CLICK, CLASS_CLICK_TABLE, this.processingData.bind(this)).on(EVENT_SUBMIT, 'form', this.submit.bind(this));
+            this.$element.on(EVENT_CLICK, CLASS_TABLE, this.processingData.bind(this)).on(EVENT_SUBMIT, CLASS_FORM, this.submit.bind(this));
         },
 
         unbind: function() {
-            this.$element.off(EVENT_CLICK, '.qor-table tbody tr').off(EVENT_SUBMIT, 'form');
+            this.$element.off(EVENT_CLICK, CLASS_TABLE).off(EVENT_SUBMIT, CLASS_FORM);
         },
 
         processingData: function(e) {
@@ -48,12 +49,17 @@
                 data = {},
                 url,
                 options = this.options,
-                onSelect = options.onSelect;
+                onSelect = options.onSelect,
+                loading = options.loading;
 
             data = $.extend({}, data, $this.data());
             data.$clickElement = $this;
 
             url = data.mediaLibraryUrl || data.url;
+
+            if (loading && $.isFunction(loading)) {
+                loading($this.closest('.qor-bottomsheets'));
+            }
 
             if (url) {
                 $.getJSON(url, function(json) {
@@ -84,6 +90,8 @@
 
             $(document).trigger(EVENT_SELECTCORE_BEFORESEND);
 
+            $form.find('.qor-fieldset--new').remove();
+
             if (FormData) {
                 e.preventDefault();
 
@@ -93,11 +101,12 @@
                     dataType: 'json',
                     processData: false,
                     contentType: false,
-                    xhr: QOR.xhrLoading,
                     beforeSend: function() {
+                        $('.qor-submit-loading').remove();
                         $loading.appendTo($submit.prop('disabled', true).closest('.qor-form__actions')).trigger('enable.qor.material');
                     },
                     success: function(json) {
+                        json.MediaOption && (json.MediaOption = JSON.parse(json.MediaOption));
                         data = json;
                         data.primaryKey = data.ID;
 

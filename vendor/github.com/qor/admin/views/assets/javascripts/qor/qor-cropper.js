@@ -29,7 +29,8 @@
         CLASS_SAVE = '.qor-cropper__save',
         CLASS_DELETE = '.qor-cropper__toggle--delete',
         CLASS_CROP = '.qor-cropper__toggle--crop',
-        CLASS_UNDO = '.qor-fieldset__undo';
+        CLASS_UNDO = '.qor-fieldset__undo',
+        HIDDEN_DATA_INPUT = 'input[name="QorResource.MediaOption"]:hidden';
 
     function capitalize(str) {
         if (typeof str === 'string') {
@@ -107,6 +108,7 @@
 
             this.$parent = $parent;
             this.$output = $parent.find(options.output);
+            this.$formCropInput = $parent.closest('form').find(HIDDEN_DATA_INPUT);
             this.$list = $parent.find(options.list);
 
             fetchUrl = this.$output.data('fetchSizedata');
@@ -115,6 +117,7 @@
                 $.getJSON(fetchUrl, function(data) {
                     imageData = JSON.parse(data.MediaOption);
                     _this.$output.val(JSON.stringify(data));
+                    _this.$formCropInput.val(JSON.stringify(data));
                     _this.data = imageData || {};
                     if (isSVG(imageData.URL || imageData.Url)) {
                         _this.resetImage();
@@ -223,6 +226,8 @@
                 data.Delete = true;
 
                 this.$output.val(JSON.stringify(data));
+                this.$formCropInput.val(JSON.stringify(data));
+
                 this.$list.hide();
 
                 $alert = $(QorCropper.ALERT);
@@ -233,6 +238,7 @@
                         this.$list.show();
                         delete data.Delete;
                         this.$output.val(JSON.stringify(data));
+                        this.$formCropInput.val(JSON.stringify(data));
                     }.bind(this)
                 );
                 this.$parent.find('.qor-fieldset').append($alert);
@@ -365,6 +371,7 @@
                     delete data.Delete;
 
                     _this.$output.val(JSON.stringify(data));
+                    _this.$formCropInput.val(JSON.stringify(data));
 
                     // callback after load complete
                     if (sizeName && data[options.key] && Object.keys(data[options.key]).length >= imageLength) {
@@ -429,7 +436,6 @@
                 scalable: false,
                 rotatable: false,
                 autoCropArea: 1,
-                checkCrossOrigin: false,
 
                 ready: function() {
                     $modal
@@ -543,6 +549,7 @@
             }
 
             this.$output.val(JSON.stringify(this.data)).trigger(EVENT_CHANGE);
+            this.$formCropInput.val(JSON.stringify(this.data));
         },
 
         preview: function($target, emulateImageData, emulateCropData) {

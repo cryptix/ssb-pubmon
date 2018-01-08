@@ -759,7 +759,9 @@ func (context *Context) getMenus() (menus []*menu) {
 				}
 
 				addMenu(menu, menu.GetSubMenus())
-				parent.SubMenus = append(parent.SubMenus, menu)
+				if len(menu.SubMenus) > 0 || menu.URL() != "" {
+					parent.SubMenus = append(parent.SubMenus, menu)
+				}
 			}
 		}
 	}

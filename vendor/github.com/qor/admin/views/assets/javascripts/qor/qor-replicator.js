@@ -96,7 +96,7 @@
         },
 
         toggleButton: function(isHide) {
-            let $button = this.$element.find(this.options.addClass);
+            let $button = this.$element.find('> .qor-field__block > .qor-fieldset__add');
 
             if (isHide) {
                 $button.hide();

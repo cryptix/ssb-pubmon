@@ -230,8 +230,8 @@
                 dataType: 'html',
                 processData: false,
                 contentType: false,
-                xhr: QOR.xhrLoading,
                 beforeSend: function() {
+                    $('.qor-submit-loading').remove();
                     $loading.appendTo($submit.prop('disabled', true).closest('.qor-form__actions')).trigger('enable.qor.material');
                     $.fn.qorSlideoutBeforeHide = null;
                 },
@@ -421,7 +421,7 @@
         },
 
         reload: function(url) {
-            this.hide(true);
+            this.hide();
             this.load(url);
         },
 
@@ -460,7 +460,7 @@
                 .trigger('afterEnable.qor.slideout');
         },
 
-        hide: function(isReload) {
+        hide: function() {
             let message = {
                 confirm: 'You have unsaved changes on this slideout. If you close this slideout, you will lose all unsaved changes. Are you sure you want to close the slideout?'
             };
@@ -470,18 +470,18 @@
                     message,
                     function(confirm) {
                         if (confirm) {
-                            this.hideSlideout(isReload);
+                            this.hideSlideout();
                         }
                     }.bind(this)
                 );
             } else {
-                this.hideSlideout(isReload);
+                this.hideSlideout();
             }
 
             this.removeSelectedClass();
         },
 
-        hideSlideout: function(isReload) {
+        hideSlideout: function() {
             var $slideout = this.$slideout;
             var hideEvent;
             var $datePicker = $('.qor-datepicker').not('.hidden');
@@ -508,7 +508,7 @@
             }
 
             $slideout.one(EVENT_TRANSITIONEND, $.proxy(this.hidden, this)).removeClass(`${CLASS_IS_SLIDED} qor-slideout__fullscreen`);
-            !isReload && $slideout.trigger(EVENT_SLIDEOUT_CLOSED);
+            $slideout.trigger(EVENT_SLIDEOUT_CLOSED);
         },
 
         hidden: function() {
