@@ -13,7 +13,7 @@ var Sender *notification.Notification
 
 func Init() {
 	Sender = notification.New(&notification.Config{})
-	Sender.RegisterChannel(database.New(&database.Config{DB: db.DB}))
+	Sender.RegisterChannel(database.New(&database.Config{DB: db.GetBase()}))
 	Sender.Action(&notification.Action{
 		Name:         "Dismiss",
 		MessageTypes: []string{"connection_try"},

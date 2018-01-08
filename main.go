@@ -3,29 +3,17 @@ package main
 import (
 	"flag"
 	"fmt"
-	"html/template"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 
-	kitlog "github.com/go-kit/kit/log"
-	"github.com/qor/i18n/inline_edit"
-	"github.com/qor/middlewares"
-	"github.com/qor/render"
-	"github.com/qor/session"
-	"github.com/qor/session/manager"
-
 	"github.com/cryptix/go/logging"
 	"github.com/cryptix/ssb-pubmon/config"
-	"github.com/cryptix/ssb-pubmon/config/admin"
 	"github.com/cryptix/ssb-pubmon/config/admin/bindatafs"
-	"github.com/cryptix/ssb-pubmon/config/i18n"
-	"github.com/cryptix/ssb-pubmon/config/routes"
-	"github.com/cryptix/ssb-pubmon/config/utils"
 	_ "github.com/cryptix/ssb-pubmon/db/migrations"
-	"github.com/cryptix/ssb-pubmon/models"
+	"github.com/cryptix/ssb-pubmon/sbmhttp"
 )
 
 var (
@@ -50,55 +38,14 @@ func main() {
 		panic(err) // logging not ready yet...
 	}
 	logging.SetupLogging(io.MultiWriter(os.Stderr, logFile))
-	log = logging.Logger("synchroserv")
+	log = logging.Logger("ssb-pubmon")
 
-	mux := http.NewServeMux()
-	mux.Handle("/", routes.Router(kitlog.With(log, "unit", "http")))
-	admin.Admin.MountTo("/admin", mux)
-	admin.Filebox.MountTo("/downloads", mux)
-
-	config.View.FuncMapMaker = func(render *render.Render, req *http.Request, w http.ResponseWriter) template.FuncMap {
-		funcMap := template.FuncMap{}
-
-		// Add `t` method
-		for key, fc := range inline_edit.FuncMap(i18n.I18n, utils.GetCurrentLocale(req), utils.GetEditMode(w, req)) {
-			funcMap[key] = fc
-		}
-
-		for key, value := range admin.ActionBar.FuncMap(w, req) {
-			funcMap[key] = value
-		}
-
-		funcMap["flashes"] = func() []session.Message {
-			return manager.SessionManager.Flashes(w, req)
-		}
-
-		// Add `action_bar` method
-		funcMap["render_action_bar"] = func() template.HTML {
-			return admin.ActionBar.Render(w, req)
-		}
-
-		funcMap["current_locale"] = func() string {
-			return utils.GetCurrentLocale(req)
-		}
-
-		funcMap["current_user"] = func() *models.User {
-			return utils.GetCurrentUser(req)
-		}
-
-		return funcMap
-	}
-
-	h := logging.InjectHandler(kitlog.With(log, "unit", "http"))(middlewares.Apply(mux))
-	h = logging.RecoveryHandler()(h)
+	var h = sbmhttp.InitServ(log, Revision)
 
 	if *compileTemplate {
 		bindatafs.AssetFS.Compile()
 		return
 	}
-	addr := fmt.Sprintf(":%d", config.Config.Port)
-	log.Log("event", "listening", "addr", addr)
-	if err := http.ListenAndServe(addr, h); err != nil {
-		panic(err)
-	}
+	log.Log("event", "init", "msg", "http listen", "addr", config.Config.HTTPHost, "version", Revision)
+	check(http.ListenAndServe(config.Config.HTTPHost, h))
 }

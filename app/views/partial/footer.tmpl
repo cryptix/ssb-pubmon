@@ -1,0 +1,42 @@
+<footer id="footer">
+  <div class="container">
+    <div class="col-md-4 col-sm-6">
+      <h4>{{ t "aboutUs" }}</h4>
+      <hr class="hidden-md hidden-lg hidden-sm">
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+      <h4>{{ t "suggestedPubs" }}</h4>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+      <h4>{{ t "chooseLanguage" }}</h4>
+      <hr class="hidden-md hidden-lg">
+      <select onchange="sysChangeLocale()" id="selectOpt">
+        <option {{ if (eq current_locale "de-DE") }}selected{{end}} value="/switch_locale?locale=de-DE">Deutsch</option>
+        <option {{ if (eq current_locale "en-US") }}selected{{end}} value="/switch_locale?locale=en-US">English</option>
+      </select>
+      <script lang="text/javascript">
+        'use strict';
+        function sysChangeLocale() {
+          var myselect = document.getElementById("selectOpt");
+          window.location = myselect.options[myselect.selectedIndex].value;
+        }
+      </script>
+      <hr class="hidden-md hidden-lg hidden-sm">
+
+    </div>
+  </div>
+</footer>
+
+<div id="copyright">
+  <div class="container">
+    <div class="col-md-12">
+      <p class="pull-left">cryptix 2017</p>
+      <p class="pull-right">
+        {{ t "templateBy" }} <a href="http://bootstrapious.com/free-templates">Bootstrapious</a>.
+        <!-- Not removing this link is part of the licence conditions of the template. Thanks for understanding :) -->
+      </p>
+    </div>
+  </div>
+</div>

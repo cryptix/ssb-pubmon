@@ -5,7 +5,6 @@ import (
 	"net/http"
 
 	"github.com/qor/auth"
-	"github.com/qor/middlewares"
 	"github.com/qor/roles"
 	"github.com/qor/session"
 )
@@ -53,13 +52,6 @@ func New(config *Config) *Authority {
 
 	authority := &Authority{Config: config}
 
-	middlewares.Use(middlewares.Middleware{
-		Name:        "authority",
-		InsertAfter: []string{"session"},
-		Handler: func(handler http.Handler) http.Handler {
-			return authority.Middleware(handler)
-		},
-	})
 	return authority
 }
 

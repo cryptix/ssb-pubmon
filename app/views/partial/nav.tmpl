@@ -1,0 +1,46 @@
+<div class="navbar-affixed-top" data-spy="affix" data-offset-top="200">
+  <div class="navbar  navbar-default yamm" role="navigation" id="navbar">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand home" href="/">
+          <img src="/img/logo.png" alt="SSB-PubMon logo" class="hidden-xs hidden-sm">
+          <img src="/img/logo-small.png" alt="SSB-PubMon logo" class="visible-xs visible-sm">
+          <span class="sr-only">{{ t "navHome" }}</span>
+        </a>
+        <div class="navbar-buttons">
+          <button type="button" class="navbar-toggle btn-template-main" data-toggle="collapse" data-target="#navigation">
+            <span class="sr-only">{{ t "navToggle" }}</span>
+              <i class="fa fa-align-justify"></i>
+          </button>
+        </div>
+      </div>
+      <!--/.navbar-header -->
+
+
+
+      <div class="column column-4 header__func {{ if current_user }}header__func-login{{end}}">
+        <ul class="nav navbar-nav navbar-right">
+          {{ if current_user }}
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{current_user.Email}} <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <li><a href="/admin">Admin</a></li>
+              <li><a href="/account">Profile</a></li>
+              <li><a href="/help">{{ t "layout.header_link.help" }}</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="/auth/logout">{{ t "layout.header_link.logout" }}</a></li>
+            </ul>
+          </li>
+
+          {{ else }}
+          <li><a href="/auth/login">{{ t "layout.header_link.sign_in" "LOGIN"}}</a></li>
+          <li><a href="/auth/register">{{ t "layout.header_link.register" "REGISTER" }}</a></li>
+          {{ end }}
+
+        </ul>
+      </div>
+    </div>
+
+    </div>
+  </div>
+</div>

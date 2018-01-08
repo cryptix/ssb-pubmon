@@ -2,7 +2,12 @@ package assetfs
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"runtime/debug"
+
+	"github.com/cryptix/go/logging"
+	"github.com/pkg/errors"
 )
 
 // Interface assetfs interface
@@ -29,8 +34,19 @@ func AssetFS() Interface {
 // SetAssetFS set assetfs
 func SetAssetFS(fs Interface) {
 	if used {
-		fmt.Println("WARNING: AssetFS is used before overwrite it!")
-		debug.PrintStack()
+		os.Mkdir("panics", os.ModePerm)
+		b, tmpErr := ioutil.TempFile("panics", "assetFSwarnUsed")
+		if tmpErr != nil {
+			panic(errors.Wrap(tmpErr, "failed to create setAssetFS log"))
+		}
+		fmt.Fprintf(b, "warning! SetAssetFS called after use!")
+		fmt.Fprintf(b, "Stack:\n%s", debug.Stack())
+
+		logging.Logger("qor/SetAssetFS").Log("event", "assetFSwarnUsed", "panicLog", b.Name())
+
+		if err := b.Close(); err != nil {
+			panic(errors.Wrap(err, "failed to close setAssetFS log"))
+		}
 	}
 
 	assetFS = fs

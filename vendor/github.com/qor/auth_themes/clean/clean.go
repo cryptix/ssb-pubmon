@@ -1,65 +1,36 @@
 package clean
 
 import (
-	"errors"
-	"fmt"
-	"html/template"
-	"io/ioutil"
-	"net/http"
-	"path/filepath"
-
+	"github.com/pkg/errors"
 	"github.com/qor/auth"
 	"github.com/qor/auth/claims"
 	"github.com/qor/auth/providers/password"
-	"github.com/qor/i18n"
-	"github.com/qor/i18n/backends/yaml"
-	"github.com/qor/qor"
-	"github.com/qor/qor/utils"
-	"github.com/qor/render"
 )
 
 // ErrPasswordConfirmationNotMatch password confirmation not match error
 var ErrPasswordConfirmationNotMatch = errors.New("password confirmation doesn't match password")
 
 // New initialize clean theme
-func New(config *auth.Config) *auth.Auth {
+func New(config *auth.Config) (*auth.Auth, error) {
 	if config == nil {
 		config = &auth.Config{}
 	}
 	config.ViewPaths = append(config.ViewPaths, "github.com/qor/auth_themes/clean/views")
 
 	if config.DB == nil {
-		fmt.Print("Please configure *gorm.DB for Auth theme clean")
+		return nil, errors.New("cleanTheme: Please configure *gorm.DB")
 	}
 
 	if config.Render == nil {
-		yamlBackend := yaml.New()
-		I18n := i18n.New(yamlBackend)
-		for _, gopath := range append([]string{filepath.Join(utils.AppRoot, "vendor")}, utils.GOPATH()...) {
-			filePath := filepath.Join(gopath, "src", "github.com/qor/auth_themes/clean/locales/en-US.yml")
-			if content, err := ioutil.ReadFile(filePath); err == nil {
-				translations, _ := yamlBackend.LoadYAMLContent(content)
-				for _, translation := range translations {
-					I18n.AddTranslation(translation)
-				}
-				break
-			}
-		}
-
-		config.Render = render.New(&render.Config{
-			FuncMapMaker: func(render *render.Render, req *http.Request, w http.ResponseWriter) template.FuncMap {
-				return template.FuncMap{
-					"t": func(key string, args ...interface{}) template.HTML {
-						return I18n.T(utils.GetLocale(&qor.Context{Request: req}), key, args...)
-					},
-				}
-			},
-		})
+		return nil, errors.New("cleanTheme: Please configure Render")
 	}
 
-	Auth := auth.New(config)
+	a, err := auth.New(config)
+	if err != nil {
+		return nil, errors.Wrap(err, "cleanTheme: failed to create auth system")
+	}
 
-	Auth.RegisterProvider(password.New(&password.Config{
+	a.RegisterProvider(password.New(&password.Config{
 		Confirmable: true,
 		RegisterHandler: func(context *auth.Context) (*claims.Claims, error) {
 			context.Request.ParseForm()
@@ -72,9 +43,9 @@ func New(config *auth.Config) *auth.Auth {
 		},
 	}))
 
-	if Auth.Config.DB != nil {
+	if a.Config.DB != nil {
 		// Migrate Auth Identity model
-		Auth.Config.DB.AutoMigrate(Auth.Config.AuthIdentityModel)
+		a.Config.DB.AutoMigrate(a.Config.AuthIdentityModel)
 	}
-	return Auth
+	return a, nil
 }

@@ -1,0 +1,15 @@
+{{$flashes := .Flashes}} {{if $flashes}}
+<ul class="list-group">
+  {{range $flash := $flashes}}
+  <li class="list-group-item">
+      {{if eq $flash.Type "error"}}
+      <div class="alert alert-danger" role="alert">
+      {{else if eq $flash.Type "success"}}
+      <div class="alert alert-success" role="alert">
+      {{else}}
+      <div class="alert alert-warning" role="alert"> <!-- type: {{$flash.Type}} -->
+      {{end}}{{$flash.Message}}</div>
+  </li>
+  {{end}}
+</ul>
+{{end}}

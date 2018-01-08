@@ -1,15 +1,15 @@
 package db
 
 import (
-	"errors"
 	"os"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"github.com/pkg/errors"
+	"github.com/qor/audited"
 	"github.com/qor/l10n"
 	"github.com/qor/media"
-	"github.com/qor/publish2"
 	"github.com/qor/sorting"
 	"github.com/qor/validations"
 
@@ -17,31 +17,45 @@ import (
 )
 
 var (
-	DB *gorm.DB
+	db *gorm.DB
 )
 
-func init() {
+func GetBase() *gorm.DB {
+	if db == nil {
+		panic("sbm-db: db is still nil")
+	}
+	return db
+}
+
+func Open() error {
+	if db != nil {
+		return nil
+	}
 	var err error
 
-	dbConfig := config.Config.DB
+	if config.Config == nil {
+		return errors.New("sbm: config not loaded")
+	}
+
 	if config.Config.DB.Adapter == "postgres" {
-		DB, err = gorm.Open("postgres", os.Getenv("DATABASE_URL"))
+		db, err = gorm.Open("postgres", os.Getenv("DATABASE_URL"))
 	} else if config.Config.DB.Adapter == "sqlite" {
-		DB, err = gorm.Open("sqlite3", dbConfig.Name)
+		db, err = gorm.Open("sqlite3", config.Config.DB.Name)
 	} else {
-		panic(errors.New("not supported database adapter"))
+		return errors.New("not supported database adapter")
 	}
 	if err != nil {
-		panic(err)
+		return errors.Wrap(err, "db.Open failed")
 	}
 
 	if os.Getenv("DEBUG") != "" {
-		DB.LogMode(true)
+		db.LogMode(true)
 	}
 
-	l10n.RegisterCallbacks(DB)
-	sorting.RegisterCallbacks(DB)
-	validations.RegisterCallbacks(DB)
-	media.RegisterCallbacks(DB)
-	publish2.RegisterCallbacks(DB)
+	l10n.RegisterCallbacks(db)
+	sorting.RegisterCallbacks(db)
+	validations.RegisterCallbacks(db)
+	audited.RegisterCallbacks(db)
+	media.RegisterCallbacks(db)
+	return nil
 }

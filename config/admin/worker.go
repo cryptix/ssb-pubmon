@@ -71,7 +71,7 @@ func getWorker() *worker.Worker {
 		Handler: func(arg interface{}, qorJob worker.QorJobInterface) error {
 			argument := arg.(*importGossipJSONArg)
 
-			d := db.DB
+			d := db.GetBase()
 
 			loc := filepath.Join("public", argument.File.URL())
 			f, err := os.Open(loc)
@@ -117,6 +117,7 @@ func getWorker() *worker.Worker {
 
 				var p models.Pub
 				p.Key = jsonPub.Key
+				p.SetState("unchecked")
 
 				if err := d.FirstOrCreate(&p, p).Error; err != nil {
 					return errors.Wrap(err, "could not find/create Pub")

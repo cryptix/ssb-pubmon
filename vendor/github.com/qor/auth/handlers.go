@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cryptix/go/logging"
 	"github.com/qor/auth/claims"
 	"github.com/qor/responder"
 	"github.com/qor/session"
@@ -18,7 +19,10 @@ import (
 
 func respondAfterLogged(claims *claims.Claims, context *Context) {
 	// login user
-	context.Auth.Login(context.Writer, context.Request, claims)
+	log := logging.FromContext(context.Request.Context())
+	if err := context.Auth.Login(context.Writer, context.Request, claims); err != nil {
+		log.Log("where", "auth/respondAfterLogged", "msg", "auth Login failed", "err", err)
+	}
 
 	responder.With("html", func() {
 		// write cookie
@@ -28,25 +32,40 @@ func respondAfterLogged(claims *claims.Claims, context *Context) {
 	}).Respond(context.Request)
 }
 
+func checkAndLog(where string, req *http.Request) (func(error), logging.Interface) {
+	log := logging.FromContext(req.Context())
+	return func(err error) {
+		if err != nil {
+			log.Log("event", "error", "err", err, "where", where)
+		}
+	}, log
+}
+
 // DefaultLoginHandler default login behaviour
 var DefaultLoginHandler = func(context *Context, authorize func(*Context) (*claims.Claims, error)) {
 	var (
 		req         = context.Request
 		w           = context.Writer
 		claims, err = authorize(context)
+		check, log  = checkAndLog("LoginHandler", context.Request)
 	)
 
 	if err == nil && claims != nil {
-		context.SessionStorer.Flash(w, req, session.Message{Message: "logged"})
+		check(context.SessionStorer.Flash(w, req, session.Message{Message: "logged in"}))
 		respondAfterLogged(claims, context)
 		return
 	}
 
-	context.SessionStorer.Flash(w, req, session.Message{Message: template.HTML(err.Error()), Type: "error"})
+	if err == nil {
+		panic("DefaultLoginHandler error is nil but no claim!")
+	}
 
+	log.Log("where", "auth/DefaultLoginHandler", "msg", "fell through authorize", "err", err)
+	check(context.SessionStorer.Flash(w, req, session.Message{Message: template.HTML(err.Error()), Type: "error"}))
+	context.Writer.WriteHeader(http.StatusBadRequest)
 	// error handling
 	responder.With("html", func() {
-		context.Auth.Config.Render.Execute("auth/login", context, req, w)
+		check(context.Auth.Config.Render.Execute("auth/login", context, req, w))
 	}).With([]string{"json"}, func() {
 		// TODO write json error
 	}).Respond(context.Request)
@@ -58,18 +77,22 @@ var DefaultRegisterHandler = func(context *Context, register func(*Context) (*cl
 		req         = context.Request
 		w           = context.Writer
 		claims, err = register(context)
+		check, log  = checkAndLog("RegisterHandler", context.Request)
 	)
 
 	if err == nil && claims != nil {
-		respondAfterLogged(claims, context)
+		check(context.SessionStorer.Flash(w, req, session.Message{Message: "registered"}))
+		http.Redirect(w, req, "/", http.StatusFound)
 		return
 	}
 
-	context.SessionStorer.Flash(w, req, session.Message{Message: template.HTML(err.Error()), Type: "error"})
+	log.Log("where", "auth/DefaultRegisterHandler", "msg", "fell through register", "err", err)
+	check(context.SessionStorer.Flash(w, req, session.Message{Message: template.HTML(err.Error()), Type: "error"}))
+	context.Writer.WriteHeader(http.StatusBadRequest)
 
 	// error handling
 	responder.With("html", func() {
-		context.Auth.Config.Render.Execute("auth/register", context, req, w)
+		check(context.Auth.Config.Render.Execute("auth/register", context, req, w))
 	}).With([]string{"json"}, func() {
 		// TODO write json error
 	}).Respond(context.Request)

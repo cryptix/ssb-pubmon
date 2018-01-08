@@ -12,7 +12,6 @@ import (
 	"github.com/cryptix/go-muxrpc"
 	"github.com/cryptix/go/logging"
 	"github.com/jinzhu/gorm"
-	"github.com/kr/pretty"
 	"github.com/qor/notification"
 	"github.com/qor/qor"
 	"github.com/qor/transition"
@@ -184,9 +183,9 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 			err := notify.Sender.Send(&notification.Message{
 				To:          "1",
 				Title:       "Long Run!",
-				Body:        fmt.Sprintf("Pub#%v attempt worked! Took:%v\n%s", pub.ID, took, pretty.Sprint(errs)),
+				Body:        fmt.Sprintf("Pub#%v attempt worked! Took:%v", pub.ID, took),
 				MessageType: "connection_try",
-			}, &qor.Context{DB: db.DB})
+			}, &qor.Context{DB: db.GetBase()})
 			if err != nil {
 				log.Log("err", errors.Wrap(err, "failed to send notify"))
 			}

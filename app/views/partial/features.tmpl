@@ -1,0 +1,27 @@
+
+<section class="bar background-white">
+    <div class="container">
+     
+      {{ range $index, $element := .Features }}
+       
+        
+		{{ if eq (mod $index 3) 0 }}
+		<div class="col-md-12">
+            <div class="row">
+		{{ end }}
+				<div class="col-md-4">
+                    <div class="box-simple">
+                        <div class="icon">
+                            <i class="{{ .Icon }}"></i>
+                        </div>
+                        <h3>{{t $element.Name }}</h3>
+                        <p>{{t $element.Description }}</p>
+                    </div>
+                </div>
+		{{ if or (eq (mod $index 3) 2) (eq $index (sub (len $.Features) 1 )) }}
+			</div>
+		</div>
+		{{ end }}
+        {{ end }}
+    </div>
+</section>

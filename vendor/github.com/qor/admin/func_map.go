@@ -17,6 +17,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/cryptix/go/logging"
 	"github.com/jinzhu/gorm"
 	"github.com/jinzhu/inflection"
 	"github.com/qor/qor"
@@ -70,21 +71,27 @@ func (context *Context) FuncMap() template.FuncMap {
 			}
 		},
 
-		"render":      context.Render,
-		"render_text": context.renderText,
-		"render_with": context.renderWith,
-		"render_form": context.renderForm,
+		"render":                context.Render,
+		"render_text":           context.renderText,
+		"render_with":           context.renderWith,
+		"render_form":           context.renderForm,
+		"render_form_templates": context.renderFormTemplates,
 		"render_meta": func(value interface{}, meta *Meta, types ...string) template.HTML {
 			var (
 				result = bytes.NewBufferString("")
 				typ    = "index"
 			)
 
-			for _, t := range types {
+			prefix := []string{}
+			for i, t := range types {
 				typ = t
+				if i == 0 {
+					prefix = append(prefix, t)
+				}
 			}
 
-			context.renderMeta(meta, value, []string{}, typ, result)
+			// why was prefix not passed here?
+			context.renderMeta(meta, value, prefix, typ, result)
 			return template.HTML(result.String())
 		},
 		"render_filter": context.renderFilter,
@@ -434,6 +441,12 @@ func (context *Context) renderForm(value interface{}, sections []*Section) templ
 	return template.HTML(result.String())
 }
 
+func (context *Context) renderFormTemplates(value interface{}, sections []*Section) map[string]template.HTML {
+	templ := make(map[string]template.HTML)
+	context.renderSectionTemplates(value, sections, []string{"QorResource"}, templ, "form")
+	return templ
+}
+
 func (context *Context) renderSections(value interface{}, sections []*Section, prefix []string, writer *bytes.Buffer, kind string) {
 	for _, section := range sections {
 		var rows []struct {
@@ -472,6 +485,27 @@ func (context *Context) renderSections(value interface{}, sections []*Section, p
 	}
 }
 
+func (context *Context) renderSectionTemplates(value interface{}, sections []*Section, prefix []string, templ map[string]template.HTML, kind string) {
+	var ref string
+	for _, section := range sections {
+		var columnsHTML bytes.Buffer
+		ref = section.Title
+		for _, column := range section.Rows {
+			for _, col := range column {
+				meta := section.Resource.GetMeta(col)
+				if meta != nil {
+					var metaHTML bytes.Buffer
+					metaRef := meta.Name
+					context.renderMeta(meta, value, prefix, kind, &metaHTML)
+					templ[metaRef] = template.HTML(string(metaHTML.Bytes()))
+					context.renderMeta(meta, value, prefix, kind, &columnsHTML)
+				}
+			}
+		}
+		templ[ref] = template.HTML(string(columnsHTML.Bytes()))
+	}
+}
+
 func (context *Context) renderFilter(filter *Filter) template.HTML {
 	var (
 		err     error
@@ -481,9 +515,10 @@ func (context *Context) renderFilter(filter *Filter) template.HTML {
 
 	defer func() {
 		if r := recover(); r != nil {
-			fmt.Println(r)
-			debug.PrintStack()
-			result.WriteString(fmt.Sprintf("Get error when render template for filter %v (%v): %v", filter.Name, filter.Type, r))
+			// TODO: use improved recover/panic logger
+			l := logging.FromContext(context.Request.Context())
+			l.Log("event", "recover", "func", "renderFilter", "r", r, "stack", debug.Stack())
+			fmt.Fprintf(result, "Get error when render template for filter %v (%v): %v", filter.Name, filter.Type, r)
 		}
 	}()
 
@@ -544,6 +579,8 @@ func (context *Context) renderMeta(meta *Meta, value interface{}, prefix []strin
 
 	defer func() {
 		if r := recover(); r != nil {
+			l := logging.FromContext(context.Request.Context())
+			l.Log("event", "recover", "func", "renderMeta", "r", r, "stack", debug.Stack())
 			writer.WriteString(fmt.Sprintf("Get error when render template for meta %v (%v): %v", meta.Name, meta.Type, r))
 		}
 	}()
@@ -726,8 +763,8 @@ func (context *Context) getMenus() (menus []*menu) {
 			}
 		}
 	}
-
-	addMenu(globalMenu, context.Admin.GetMenus())
+	matchedRoles := roles.MatchedRoles(context.Request, context.CurrentUser)
+	addMenu(globalMenu, context.Admin.GetMenus(matchedRoles))
 
 	if context.Action != "search_center" && mostMatchedMenu != nil {
 		mostMatchedMenu.Active = true

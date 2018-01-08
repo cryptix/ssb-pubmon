@@ -12,6 +12,7 @@ a botpage that periodically pings [secure scuttlebutt](https://www.scuttlebutt.n
 * overwrite auth template
 * instantiate own middleware
 * don't use global default cookie secret
+* go to address > try to change pub: dropdown has no names?
 
 # Fork of QOR example application
 

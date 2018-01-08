@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"path/filepath"
 
+	"github.com/pkg/errors"
 	"github.com/qor/assetfs"
 	"github.com/qor/qor/utils"
 )
@@ -53,27 +54,36 @@ func New(config *Config, viewPaths ...string) *Render {
 }
 
 // RegisterViewPath register view path
-func (render *Render) RegisterViewPath(paths ...string) {
+func (render *Render) RegisterViewPath(paths ...string) error {
 	for _, pth := range paths {
 		if filepath.IsAbs(pth) {
 			render.ViewPaths = append(render.ViewPaths, pth)
-			render.AssetFileSystem.RegisterPath(pth)
+			if err := render.AssetFileSystem.RegisterPath(pth); err != nil {
+				return errors.Wrapf(err, "failed finding abs ViewPath:%s", pth)
+			}
 		} else {
 			if absPath, err := filepath.Abs(pth); err == nil && isExistingDir(absPath) {
 				render.ViewPaths = append(render.ViewPaths, absPath)
-				render.AssetFileSystem.RegisterPath(absPath)
+				if err := render.AssetFileSystem.RegisterPath(absPath); err != nil {
+					return errors.Wrapf(err, "failed finding isExists ViewPath:%s", pth)
+				}
 			} else if isExistingDir(filepath.Join(utils.AppRoot, "vendor", pth)) {
-				render.AssetFileSystem.RegisterPath(filepath.Join(utils.AppRoot, "vendor", pth))
+				if err := render.AssetFileSystem.RegisterPath(filepath.Join(utils.AppRoot, "vendor", pth)); err != nil {
+					return errors.Wrapf(err, "failed finding appRot/vendor ViewPath:%s", pth)
+				}
 			} else {
 				for _, gopath := range utils.GOPATH() {
 					if p := filepath.Join(gopath, "src", pth); isExistingDir(p) {
 						render.ViewPaths = append(render.ViewPaths, p)
-						render.AssetFileSystem.RegisterPath(p)
+						if err := render.AssetFileSystem.RegisterPath(p); err != nil {
+							return errors.Wrapf(err, "failed finding appRot/vendor ViewPath:%s", pth)
+						}
 					}
 				}
 			}
 		}
 	}
+	return nil
 }
 
 // PrependViewPath prepend view path

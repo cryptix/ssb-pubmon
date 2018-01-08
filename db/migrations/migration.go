@@ -12,7 +12,7 @@ import (
 	"github.com/cryptix/ssb-pubmon/models"
 )
 
-func init() {
+func Migrate() {
 	AutoMigrate(&asset_manager.AssetManager{})
 
 	AutoMigrate(&models.Setting{})
@@ -36,6 +36,6 @@ var check = logging.CheckFatal
 
 func AutoMigrate(values ...interface{}) {
 	for _, value := range values {
-		check(db.DB.AutoMigrate(value).Error)
+		check(db.GetBase().AutoMigrate(value).Error)
 	}
 }
