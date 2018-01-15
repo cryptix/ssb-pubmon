@@ -1,0 +1,22 @@
+<main role="main">
+  <!-- Main jumbotron for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">Hello, world!</h1>
+      <p>This is a fork of <a href="https://github.com/qor/qor-example">qor-example</a>. It exercises a small list of features and it's application is to check the livlyness of <a href="https://www.scuttlebutt.nz/">Secure-Scuttlebutt (SSB)</a> public servers.</p>
+      <!--<p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>-->
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Example row of columns -->
+    <div class="row">
+      <h2>Key?</h2>
+      <p>Please enter the <a href="https://www.scuttlebutt.nz/concepts/identity.html">public key</a> of the peer you seek info about:</p>
+      <form method="GET" action="/alive">
+	      <input type="text" name="key">
+	      <input type="submit">
+      </form>
+    </div>
+  </div> <!-- /container -->
+</main>

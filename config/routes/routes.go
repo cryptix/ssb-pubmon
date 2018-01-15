@@ -40,8 +40,10 @@ func Router(l logging.Interface) *http.ServeMux {
 			})
 		})
 
-		router.Get("/", controllers.HomeIndex)
-		router.Get("/hexagen", controllers.Hexagen)
+		router.Get("/", wwe(l, controllers.Index))
+		router.Get("/overview", wwe(l, controllers.Overview))
+		router.Get("/alive", wwe(l, controllers.Alive))
+		router.Get("/hexagen", wwe(l, controllers.Hexagen))
 		router.Get("/switch_locale", controllers.SwitchLocale)
 
 		router.With(auth.Authority.Authorize()).Route("/account", func(r chi.Router) {
@@ -63,4 +65,26 @@ func Router(l logging.Interface) *http.ServeMux {
 		WildcardRouter.AddHandler(router)
 	}
 	return rootMux
+}
+
+type myHandler func(w http.ResponseWriter, req *http.Request) error
+
+func wwe(log logging.Interface, fn myHandler) http.HandlerFunc {
+	return func(w http.ResponseWriter, req *http.Request) {
+		err := fn(w, req)
+		if err != nil {
+			if _, ok := err.(*controllers.BadReqError); ok {
+				w.WriteHeader(http.StatusBadRequest)
+			} else {
+				w.WriteHeader(http.StatusInternalServerError)
+			}
+			if l := logging.FromContext(req.Context()); l != nil {
+				log = l
+			}
+			log.Log("event", "error", "msg", "view execution failed",
+				"path", req.URL.Path,
+				"err", err)
+			fmt.Fprint(w, err)
+		}
+	}
 }
