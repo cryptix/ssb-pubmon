@@ -40,6 +40,7 @@ func Init() {
 			SessionName:    "_auth_session",
 			SessionManager: config.SessionManager,
 			SigningMethod:  jwt.SigningMethodHS256,
+			SignedString:   config.Config.SessionSecret,
 		},
 	})
 	logging.CheckFatal(err)

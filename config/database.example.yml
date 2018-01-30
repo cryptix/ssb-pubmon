@@ -1,3 +1,6 @@
+sessionsecret: changeMeThisIsntASecret
+cookiesecret: 55VJ/prjH3wWxNnauLo4sFBmncq+i7e+Ko+P882cP9YBoB/rxS1wBX1IAnLqzkt26hvKIYzcvBZBv484X6QPpA==
+
 db:
   adapter: sqlite
   name: ./pubmon.db

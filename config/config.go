@@ -28,10 +28,11 @@ type SMTPConfig struct {
 }
 
 type MainConfig struct {
-	CookieSecret string `env:"COOKIESecret"` // dd if=/dev/urandom bs=1 count=64 | base64 -w0
-	Locale       string `default:"de-DE"`
-	HTTPHost     string `default:":7000"`
-	DB           struct {
+	SessionSecret string `env:"SESSIONSecret"`
+	CookieSecret  string `env:"COOKIESecret"` // dd if=/dev/urandom bs=1 count=64 | base64 -w0
+	Locale        string `default:"de-DE"`
+	HTTPHost      string `default:":7000"`
+	DB            struct {
 		Name    string `env:"DBName" default:"ssbpub.db"`
 		Adapter string
 	}
@@ -70,6 +71,10 @@ func Init(log logging.Interface) {
 		Name:    "recovery",
 		Handler: logging.RecoveryHandler(),
 	})
+
+	if Config.SessionSecret == "" {
+		panic("session secret not set")
+	}
 
 	cookieSecret, err := base64.StdEncoding.DecodeString(Config.CookieSecret)
 	check(err)
