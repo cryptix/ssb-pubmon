@@ -2,9 +2,7 @@ package controllers
 
 import (
 	"fmt"
-	"image/png"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/pkg/errors"
@@ -13,7 +11,6 @@ import (
 
 	"github.com/cryptix/ssb-pubmon/config"
 	sbmutils "github.com/cryptix/ssb-pubmon/config/utils"
-	"github.com/cryptix/ssb-pubmon/hexagen"
 	"github.com/cryptix/ssb-pubmon/models"
 )
 
@@ -71,28 +68,6 @@ func Alive(w http.ResponseWriter, req *http.Request) error {
 		return errors.Wrap(err, "alive: worked qry failed")
 	}
 	fmt.Fprintf(w, "%v", p)
-	return nil
-}
-
-func Hexagen(w http.ResponseWriter, req *http.Request) error {
-	width, err := strconv.ParseFloat(req.URL.Query().Get("width"), 64)
-	if err != nil {
-		return &BadReqError{req: req, field: "width", msg: " illegal width value"}
-	}
-	if width < 0 || width > 2048 {
-		width = 512
-	}
-
-	key := req.URL.Query().Get("key")
-	g, err := hexagen.Generate(key, width)
-	if err != nil {
-		return errors.Wrap(err, "hexagen: failed to generate image")
-	}
-
-	w.Header().Set("Content-Type", "image/png")
-	if err := png.Encode(w, g); err != nil {
-		return errors.Wrap(err, "hexagen: png encoding failed")
-	}
 	return nil
 }
 

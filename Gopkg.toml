@@ -11,6 +11,10 @@
   branch = "master"
   name = "github.com/cryptix/go-muxrpc"
 
+[[override]]
+  name = "cryptoscope.co/go/hexagen"
+  source = "http://jymslegna3xmlrdk.onion:7718/%251jSkm2ziiZ9FbO%2FkyhRyd3gtn9UtbJQLzYf13HgRO4E%3D.sha256"
+
 [[constraint]]
   name = "github.com/go-chi/chi"
   version = "3.3.0"
