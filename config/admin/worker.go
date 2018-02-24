@@ -9,8 +9,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"cryptoscope.co/go/errors"
 	"github.com/agl/ed25519"
+	"github.com/pkg/errors"
 	"github.com/qor/media/oss"
 	"github.com/qor/worker"
 

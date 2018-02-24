@@ -3,8 +3,8 @@ package ssb
 import (
 	"encoding/base64"
 
-	"github.com/cryptix/secretstream"
-	"github.com/cryptix/secretstream/secrethandshake"
+	"cryptoscope.co/go/secretstream"
+	"cryptoscope.co/go/secretstream/secrethandshake"
 )
 
 var SHSClient *secretstream.Client
