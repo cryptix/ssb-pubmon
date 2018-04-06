@@ -19,7 +19,7 @@ func Migrate() {
 
 	AutoMigrate(&models.User{})
 
-	AutoMigrate(&models.Pub{}, &models.Address{})
+	AutoMigrate(&models.Pub{}, &models.Address{}, &models.Check{})
 
 	AutoMigrate(&transition.StateChangeLog{})
 

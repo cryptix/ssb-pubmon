@@ -72,6 +72,7 @@ func Init(log logging.Interface) {
 		Type:   "password",
 		Valuer: func(interface{}, *qor.Context) interface{} { return "" },
 		Setter: func(resource interface{}, metaValue *resource.MetaValue, context *qor.Context) {
+			// TODO: compare passwd
 			if newPassword := utils.ToString(metaValue.Value); newPassword != "" {
 				bcryptPassword, err := bcrypt.GenerateFromPassword([]byte(newPassword), bcrypt.DefaultCost)
 				if err != nil {
@@ -152,18 +153,12 @@ func Init(log logging.Interface) {
 			Title: "Basic Information",
 			Rows: [][]string{
 				{"Addr", "Pub"},
-				{"LastTry", "Failures", "Took"},
+				{},
 			},
 		},
 	)
-	pubAddr.EditAttrs(
-		&admin.Section{
-			Title: "Basic Information",
-			Rows: [][]string{
-				{"LastTry"},
-			},
-		},
-	)
+
+	Admin.AddResource(&models.Check{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"SSB Pubs"}})
 
 	// Add Translations
 	Admin.AddResource(i18n.I18n, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"Site Management"}, Priority: 1})
