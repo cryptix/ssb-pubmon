@@ -29,10 +29,6 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/jinzhu/now"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/jteeuwen/go-bindata"
 
 [[constraint]]
@@ -53,10 +49,6 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/qor/exchange"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/qor/filebox"
 
 [[constraint]]
@@ -73,10 +65,6 @@
 
 [[constraint]]
   branch = "master"
-  name = "github.com/qor/location"
-
-[[constraint]]
-  branch = "master"
   name = "github.com/qor/media"
 
 [[constraint]]
@@ -90,10 +78,6 @@
 [[constraint]]
   branch = "master"
   name = "github.com/qor/roles"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/qor/slug"
 
 [[constraint]]
   branch = "master"
@@ -118,10 +102,6 @@
 [[constraint]]
   branch = "master"
   name = "golang.org/x/crypto"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/prasannavl/go-errors"
 
 # use forks
 [[override]]
