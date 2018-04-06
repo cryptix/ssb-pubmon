@@ -1,19 +1,11 @@
 [metadata.heroku]
   root-package = "github.com/cryptix/ssb-pubmon"
-  go-version = "go1.9.2"
+  go-version = "go1.10.1"
   install = [ "github.com/cryptix/ssb-pubmon" ]
 
 [[constraint]]
   name = "github.com/cryptix/go"
-  version = "1.0.0"
-
-[[constraint]]
-  branch = "master"
-  name = "github.com/cryptix/go-muxrpc"
-
-[[override]]
-  name = "cryptoscope.co/go/hexagen"
-  source = "http://jymslegna3xmlrdk.onion:7718/%251jSkm2ziiZ9FbO%2FkyhRyd3gtn9UtbJQLzYf13HgRO4E%3D.sha256"
+  version = "^1.2.0"
 
 [[constraint]]
   name = "github.com/go-chi/chi"
@@ -173,3 +165,7 @@
 [[override]]
   branch = "master"
   name = "github.com/qor/publish"
+
+[[constraint]]
+  name = "cryptoscope.co/go/hexagen"
+  version = "0.1.0"

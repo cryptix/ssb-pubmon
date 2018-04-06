@@ -8,6 +8,27 @@
   revision = "49c6610208020b408a52a9c7bc23ebee0a12e6ec"
 
 [[projects]]
+  name = "cryptoscope.co/go/hexagen"
+  packages = ["."]
+  revision = "594634137055031fb541337a069a575cd6a4ba87"
+  version = "v0.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "cryptoscope.co/go/luigi"
+  packages = ["."]
+  revision = "c97d75a8bb565a660fa1074f3c262cd42928354f"
+
+[[projects]]
+  name = "cryptoscope.co/go/muxrpc"
+  packages = [
+    ".",
+    "codec"
+  ]
+  revision = "427f96addc4171bc968bb6852217ce0e232d2b93"
+  version = "v2.0.0"
+
+[[projects]]
   name = "github.com/BurntSushi/toml"
   packages = ["."]
   revision = "b26d9c308763d68093482582cea63d69be07a0f0"
@@ -32,20 +53,12 @@
 [[projects]]
   name = "github.com/cryptix/go"
   packages = [
+    "debug",
     "goutils",
     "logging"
   ]
-  revision = "c8ed48a26147d732aa261d3751677f61b038abaa"
-  version = "v1"
-
-[[projects]]
-  name = "github.com/cryptix/go-muxrpc"
-  packages = [
-    ".",
-    "codec"
-  ]
-  revision = "49af695da95c79ff48003a6bff213f5af3f9db33"
-  version = "v1.0"
+  revision = "a855c948f383e4411616f573db5e973a93d236b9"
+  version = "v1.2.0"
 
 [[projects]]
   branch = "master"
@@ -68,6 +81,12 @@
   packages = ["."]
   revision = "dd50a3ee9985ccd313a2f03c398fcaedc96dc707"
   version = "v1.2.4"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/dustin/go-humanize"
+  packages = ["."]
+  revision = "bb3d318650d48840a39aa21a027c6630e198e626"
 
 [[projects]]
   name = "github.com/go-chi/chi"
@@ -196,6 +215,12 @@
   name = "github.com/microcosm-cc/bluemonday"
   packages = ["."]
   revision = "68fecaef60268522d2ac3f0123cec9d3bcab7b6e"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/miolini/datacounter"
+  packages = ["."]
+  revision = "fd4e42a1d5e0d2714f16caf92f9c64215bf957ce"
 
 [[projects]]
   name = "github.com/pkg/errors"
@@ -499,6 +524,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "12a71fac6e9a831d1f4a5611f5a6a68625171537884ed79408cb187192c4da68"
+  inputs-digest = "c645472ff18b537517f81e10a2850e017d91176d3798e1ac56e47aa6d457cca6"
   solver-name = "gps-cdcl"
   solver-version = 1

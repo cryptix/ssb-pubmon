@@ -1,15 +1,18 @@
 package models
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"strings"
 	"time"
 
 	"cryptoscope.co/go/muxrpc"
-	"cryptoscope.co/go/muxrpc/codec"
 	"github.com/agl/ed25519"
+	"github.com/cryptix/go/debug"
 	"github.com/cryptix/go/logging"
+	humanize "github.com/dustin/go-humanize"
+	kitlog "github.com/go-kit/kit/log"
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	"github.com/qor/notification"
@@ -121,6 +124,8 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 		errc = make(chan error)
 	)
 
+	ctx := context.TODO()
+
 	for i, a := range addrs {
 		var checkAddr = func(a Address) error {
 			var check Check
@@ -143,45 +148,33 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 			}
 			check.State = KeyExchanged
 
-			p := muxrpc.NewPacker(c)
-			if true { //verboseLogging {
-				p = muxrpc.NewPacker(codec.Wrap(kitlog.With(log, "id", id), c))
-			}
-			handler := sbotCheckhandler{id}
-			rpc = muxrpc.Handle(p, handler)
+			counter := debug.WrapCounter(c)
+			p := muxrpc.NewPacker(counter)
+			handler := ssb.NewTryHandler(pub.Key, kitlog.With(log, "id", pub.Key))
+			rpc := muxrpc.Handle(p, handler)
 
 			log.Log("msg", "new rpc client", "addr", a.Addr)
 
-			go serveRpc(ctx, start, id, rpc, counter)
-
-			/* TODO
-			wait := make(chan struct{})
-
-			rpc.HandleCall("gossip.ping", func(msg json.RawMessage) interface{} {
-				wait <- struct{}{}
-				return nil
-			})
-
-			rpc.HandleSource("blobs.createWants", func(msg json.RawMessage) chan interface{} {
-				wait <- struct{}{}
-				return nil
-			})
-
-			rpc.HandleSource("createHistoryStream", func(msg json.RawMessage) chan interface{} {
-				wait <- struct{}{}
-				return nil
-			})
-
-			<-wait
 			go func() {
-				<-wait
-				<-wait
+				err := rpc.(muxrpc.Server).Serve(ctx)
+				log.Log("event", "connection done",
+					"id", pub.Key,
+					"err", err,
+					"took", time.Since(start),
+					"sent", humanize.Bytes(counter.Cw.Count()),
+					"rcvd", humanize.Bytes(counter.Cr.Count()),
+				)
 			}()
 
-			if err = rpc.Close(); err != nil {
-				return errors.Wrapf(err, "close(%d) - %s:%s", i, pub.Key, a.Addr)
+			<-handler.Wait
+			go func() {
+				<-handler.Wait
+				<-handler.Wait
+			}()
+
+			if err = rpc.Terminate(); err != nil {
+				return errors.Wrapf(err, "terminate(%d) - %s:%s", i, pub.Key, a.Addr)
 			}
-			*/
 
 			check.State = Muxed
 			return nil
@@ -196,8 +189,7 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 		var success bool
 		var errs []error
 		for e := range errc {
-			switch {
-			case e == nil:
+			if e == nil {
 				pub.LastSuccess = time.Now()
 				pub.SetState("worked")
 				success = true
