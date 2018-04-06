@@ -29,20 +29,41 @@ type Pub struct {
 	transition.Transition
 }
 
-type Address struct {
-	/* Composite primary keys can't be created on SQLite tables
-	    https://github.com/jinzhu/gorm/issues/1037
+/* Composite primary keys can't be created on SQLite tables
+    https://github.com/jinzhu/gorm/issues/1037
 
-	   	Host  string `gorm:"primary_key"`
-	   	Port  int    `gorm:"primary_key"`
-	*/
+   	Host  string `gorm:"primary_key"`
+   	Port  int    `gorm:"primary_key"`
+*/
+type Address struct {
 	gorm.Model
-	Pub      Pub
-	PubID    uint
-	Addr     string
-	Took     time.Duration
-	Failures int
-	LastTry  string
+	Pub   Pub
+	PubID uint
+	Addr  string
+}
+
+//go:generate stringer -type=State
+
+type State uint
+
+const (
+	Unavailable  State = iota // means something like dns failure or connection refused
+	KeyExchanged              // dialed, past the SHS kex
+	Muxed                     // did a muxrpc exchange
+
+)
+
+type Check struct {
+	ID        uint `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	Pub       Pub
+	PubID     uint
+	Addr      Address
+	AddrID    uint
+	Took      time.Duration
+	State     State
+	Error     string
 }
 
 var (
@@ -56,11 +77,14 @@ func init() {
 	tryEvent.To("trying").From("worked").Before(checkPub)
 	tryEvent.To("trying").From("unchecked").Before(checkPub)
 	tryEvent.To("trying").From("trying").Before(func(value interface{}, tx *gorm.DB) (err error) {
+		return errors.New("TODO")
+		/* TODO: deduce from db
 		var pub = value.(*Pub)
 		if time.Since(pub.LastSuccess) < 2*time.Minute {
 			return errors.New("to soon")
 		}
 		return checkPub(value, tx)
+		*/
 	})
 }
 
@@ -99,22 +123,25 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 
 	for i, a := range addrs {
 		var checkAddr = func(a Address) error {
+			var check Check
+			check.PubID = a.PubID
+			check.AddrID = a.ID
 			log.Log("msg", "dialing", "addr", a.Addr)
 			dialStart := time.Now()
 			c, err := shsDialer("tcp", a.Addr)
 			defer func() {
 				if err != nil {
-					a.LastTry = err.Error()
-					a.Failures++
+					check.Error = err.Error()
 				}
-				a.Took = time.Since(dialStart)
-				if err = tx.Save(a).Error; err != nil {
+				check.Took = time.Since(dialStart)
+				if err = tx.Save(&check).Error; err != nil {
 					log.Log("event", "error", "err", err, "msg", "failed to update addresses", "aid", a.ID)
 				}
 			}()
 			if err != nil {
 				return errors.Wrapf(err, "dialer(%d) - %s:%s\n", i, pub.Key, a.Addr)
 			}
+			check.State = KeyExchanged
 
 			rpc := muxrpc.NewClient(log, c)
 			go rpc.Handle()
@@ -142,15 +169,13 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 			go func() {
 				<-wait
 				<-wait
-				close(wait)
 			}()
 
 			if err = rpc.Close(); err != nil {
 				return errors.Wrapf(err, "close(%d) - %s:%s", i, pub.Key, a.Addr)
 			}
+			check.State = Muxed
 
-			a.LastTry = "success"
-			a.Failures = 0
 			return nil
 		}
 
