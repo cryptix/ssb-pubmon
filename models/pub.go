@@ -2,16 +2,16 @@ package models
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"strings"
 	"time"
 
-	"cryptoscope.co/go/errors"
+	"cryptoscope.co/go/muxrpc"
+	"cryptoscope.co/go/muxrpc/codec"
 	"github.com/agl/ed25519"
-	"github.com/cryptix/go-muxrpc"
 	"github.com/cryptix/go/logging"
 	"github.com/jinzhu/gorm"
+	"github.com/pkg/errors"
 	"github.com/qor/notification"
 	"github.com/qor/qor"
 	"github.com/qor/transition"
@@ -116,11 +116,18 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 				return errors.Wrapf(err, "dialer(%d) - %s:%s\n", i, pub.Key, a.Addr)
 			}
 
-			rpc := muxrpc.NewClient(log, c)
-			go rpc.Handle()
+			p := muxrpc.NewPacker(c)
+			if true { //verboseLogging {
+				p = muxrpc.NewPacker(codec.Wrap(kitlog.With(log, "id", id), c))
+			}
+			handler := sbotCheckhandler{id}
+			rpc = muxrpc.Handle(p, handler)
 
 			log.Log("msg", "new rpc client", "addr", a.Addr)
 
+			go serveRpc(ctx, start, id, rpc, counter)
+
+			/* TODO
 			wait := make(chan struct{})
 
 			rpc.HandleCall("gossip.ping", func(msg json.RawMessage) interface{} {
@@ -148,6 +155,7 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 			if err = rpc.Close(); err != nil {
 				return errors.Wrapf(err, "close(%d) - %s:%s", i, pub.Key, a.Addr)
 			}
+			*/
 
 			a.LastTry = "success"
 			a.Failures = 0
