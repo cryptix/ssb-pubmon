@@ -1,0 +1,38 @@
+<main role="main">
+  <div class="jumbotron">
+    <div class="container">
+	<!--TODO: float left <img src="/hexagen?key={{.Pub.Key}}&width=256"/>-->
+	<h3 class="display-3">Details for Pub#{{.Pub.ID}}
+	</h3>
+	<small class="text-muted">{{.Pub.Key}}</small>
+	<p>This page list connection history for this single pub.</p>
+    </div>
+  </div>
+
+  <div class="container">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Addr</th>
+      <th scope="col">State</th>
+      <th scope="col">Saved</th>
+      <th scope="col">Took</th>
+      <th scope="col">Error</th>
+    </tr>
+  </thead>
+  <tbody>
+{{range $idx, $try := .Tries}}
+    <tr>
+	<th scope="row">{{$idx}}</th>
+	<td>{{$try.Addr.Addr}}</td>
+	<td>{{$try.State}}</td>
+	<td>{{call $.humanizeTime $try.CreatedAt}}</td>
+	<td>{{$try.Took}}</td>
+	<td>{{$try.Error}}</td>
+    </tr>
+{{end}}
+  </tbody>
+</table>
+  </div> <!-- /container -->
+</main>

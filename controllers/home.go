@@ -3,10 +3,9 @@ package controllers
 import (
 	"fmt"
 	"net/http"
-	"text/tabwriter"
 	"time"
 
-	humanize "github.com/dustin/go-humanize"
+	"github.com/dustin/go-humanize"
 	"github.com/pkg/errors"
 	"github.com/qor/qor"
 	qorutils "github.com/qor/qor/utils"
@@ -43,9 +42,6 @@ func LastChecks(w http.ResponseWriter, req *http.Request) error {
 
 	return config.View.Execute("lastchecks", map[string]interface{}{
 		"checks": checks,
-		"since": func(when time.Time) string {
-			return fmt.Sprintf("%v", time.Since(when))
-		},
 	}, req, w)
 }
 
@@ -66,20 +62,13 @@ func Alive(w http.ResponseWriter, req *http.Request) error {
 		return errors.Wrap(err, "alive: tries qry failed")
 	}
 
-	tw := tabwriter.NewWriter(w, 0, 0, '\t', ' ', 0)
-	fmt.Fprintln(tw, "#\tAddr\tState\tSaved\tTook\tError\t")
-	for i, try := range tries {
-		_, err := fmt.Fprintf(tw, "%d\t%s\t%s\t%s\t%s\t%s\n", i,
-			try.Addr.Addr,
-			try.State,
-			humanize.Time(try.CreatedAt),
-			try.Took,
-			try.Error)
-		if err != nil {
-			return errors.Wrap(err, "alive: printing tries failed")
-		}
-	}
-	return tw.Flush()
+	return config.View.Execute("pubalive", map[string]interface{}{
+		"Pub":   p,
+		"Tries": tries,
+		"humanizeTime": func(when time.Time) string {
+			return humanize.Time(when)
+		},
+	}, req, w)
 }
 
 func SwitchLocale(w http.ResponseWriter, req *http.Request) {
