@@ -21,11 +21,11 @@ func loggingHandler(l logging.Interface) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 			ctx := req.Context()
-			l = kitlog.With(l, "urlPath", req.URL.Path)
+			newL := kitlog.With(l, "urlPath", req.URL.Path)
 			if u := auth.Auth.GetCurrentUser(req); u != nil {
-				l = kitlog.With(l, "user", u.(*models.User).ID)
+				newL = kitlog.With(newL, "user", u.(*models.User).ID)
 			}
-			ctx = logging.NewContext(ctx, l)
+			ctx = logging.NewContext(ctx, newL)
 			next.ServeHTTP(w, req.WithContext(ctx))
 		})
 	}
