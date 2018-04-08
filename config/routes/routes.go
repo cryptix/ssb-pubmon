@@ -41,7 +41,7 @@ func Router(l logging.Interface) *http.ServeMux {
 		})
 
 		router.Get("/", wwe(l, controllers.Index))
-		router.Get("/overview", wwe(l, controllers.Overview))
+		router.Get("/last", wwe(l, controllers.LastChecks))
 		router.Get("/alive", wwe(l, controllers.Alive))
 		router.Get("/hexagen", wwe(l, controllers.Hexagen))
 		router.Get("/switch_locale", controllers.SwitchLocale)

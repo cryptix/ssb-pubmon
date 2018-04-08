@@ -9,14 +9,30 @@
   </div>
 
   <div class="container">
-    <!-- Example row of columns -->
-    <div class="row">
+	<!-- Example row of columns -->
+<div class="row">
+  <div class="col-md-12">
       <h2>Key?</h2>
-      <p>Please enter the <a href="https://www.scuttlebutt.nz/concepts/identity.html">public key</a> of the peer you seek info about:</p>
-      <form method="GET" action="/alive">
-	      <input type="text" name="key">
-	      <input type="submit">
-      </form>
+      <p>Please enter the 
+	      <a href="https://www.scuttlebutt.nz/concepts/identity.html">public key</a> 
+	      of the peer you seek info about:</p>
+	<form method="GET" action="/alive">
+	  <div class="form-row align-items-center">
+	    <div class="col-auto">
+	      <label class="sr-only" for="inlineFormInputGroup">@pub.ed25519</label>
+	      <div class="input-group mb-2">
+		<div class="input-group-prepend">
+		  <div class="input-group-text">PubKey</div>
+		</div>
+		<input type="text" class="form-control" id="inlineFormInputGroup" placeholder="@pub.ed25519">
+	      </div>
+	    </div>
+	    <div class="col-auto">
+	      <button type="submit" class="btn btn-primary mb-2">Lookup</button>
+	    </div>
+	  </div>
+	</form>
+      </div>
     </div>
   </div> <!-- /container -->
 </main>

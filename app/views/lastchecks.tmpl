@@ -1,0 +1,38 @@
+<main role="main">
+  <div class="jumbotron">
+    <div class="container">
+      <h1 class="display-3">Some recent overview</h1>
+      <p>This page list the last 25 attempts that this page has made to other peers.</p>
+    </div>
+  </div>
+
+  <div class="container">
+	{{ range .checks }}
+    	<div class="row">
+	<div class="col-md-12">
+		<h2>
+		  <a href="/alive?key={{.Pub.Key}}">
+		    Pub#{{.Pub.ID}}
+		    <small class="text-muted">{{.Pub.Key}}</small>
+		  </a>
+		</h2>
+	</div>
+	</div>
+    	<div class="row">
+	<div class="col-md-2">
+		<img src="/hexagen?key={{.Pub.Key}}&width=128"/>
+	</div>
+	<div class="col-md-8">
+		<ul class="list-group">
+		  <li class="list-group-item">Dialed: {{.Addr.Addr}}</li>
+		  <li class="list-group-item">State: {{.State}}</li>
+		  <li class="list-group-item">Took: {{.Took}}</li>
+		{{ if ne .State 2 }}
+		  <li class="list-group-item">Err:{{.Error}}</li>
+		{{ end }}
+		</ul>
+	</div>
+	</div>
+	{{ end }}
+  </div> <!-- /container -->
+</main>

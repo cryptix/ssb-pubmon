@@ -33,30 +33,20 @@ func Index(w http.ResponseWriter, req *http.Request) error {
 	return nil
 }
 
-func Overview(w http.ResponseWriter, req *http.Request) error {
+func LastChecks(w http.ResponseWriter, req *http.Request) error {
 	db := sbmutils.GetDB(req)
 
-	var worked []models.Pub
-	if err := db.Limit(5).Order("last_success desc").Where("state = ?", "worked").Find(&worked).Error; err != nil {
-		return errors.Wrap(err, "overview: worked qry failed")
+	var checks []models.Check
+	if err := db.Preload("Pub").Preload("Addr").Limit(25).Order("created_at desc").Find(&checks).Error; err != nil {
+		return errors.Wrap(err, "lastchecks: checks qry failed")
 	}
 
-	var failing []models.Address
-	if err := db.Preload("Pub").Limit(5).Order("failures desc").Find(&failing).Error; err != nil {
-		return errors.Wrap(err, "overview: failing qry failed")
-	}
-
-	err := config.View.Execute("overview", map[string]interface{}{
-		"worked": worked,
+	return config.View.Execute("lastchecks", map[string]interface{}{
+		"checks": checks,
 		"since": func(when time.Time) string {
 			return fmt.Sprintf("%v", time.Since(when))
 		},
-		"failing": failing,
 	}, req, w)
-	if err != nil {
-		return errors.Wrap(err, "overview: tmpl execute failed")
-	}
-	return nil
 }
 
 func Alive(w http.ResponseWriter, req *http.Request) error {

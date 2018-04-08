@@ -1,17 +1,24 @@
-<footer id="footer">
-  <div class="container">
-    <div class="col-md-4 col-sm-6">
-      <h4>{{ t "aboutUs" }}</h4>
-      <hr class="hidden-md hidden-lg hidden-sm">
+<div class="container">
+<footer class="pt-4 my-md-5 pt-md-5 border-top">
+  <div class="row">
+    <div class="col-6 col-md">
+      <h4>{{ t "about" }}</h4>
+      <p>TODO</p>
+    <small class="d-block mb-3 text-muted">cryptix 2018.</small>
     </div>
 
-    <div class="col-md-4 col-sm-6">
-      <h4>{{ t "suggestedPubs" }}</h4>
+    <div class="col-6 col-md">
+      <h5>{{ t "suggestedPubs" }}</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">TODO</a></li>
+        <li><a class="text-muted" href="#">TODO</a></li>
+        <li><a class="text-muted" href="#">TODO</a></li>
+        <li><a class="text-muted" href="#">TODO</a></li>
+      </ul>
     </div>
 
-    <div class="col-md-4 col-sm-6">
+    <div class="col-6 col-md">
       <h4>{{ t "chooseLanguage" }}</h4>
-      <hr class="hidden-md hidden-lg">
       <select onchange="sysChangeLocale()" id="selectOpt">
         <option {{ if (eq current_locale "de-DE") }}selected{{end}} value="/switch_locale?locale=de-DE">Deutsch</option>
         <option {{ if (eq current_locale "en-US") }}selected{{end}} value="/switch_locale?locale=en-US">English</option>
@@ -23,20 +30,7 @@
           window.location = myselect.options[myselect.selectedIndex].value;
         }
       </script>
-      <hr class="hidden-md hidden-lg hidden-sm">
-
     </div>
   </div>
 </footer>
-
-<div id="copyright">
-  <div class="container">
-    <div class="col-md-12">
-      <p class="pull-left">cryptix 2017</p>
-      <p class="pull-right">
-        {{ t "templateBy" }} <a href="http://bootstrapious.com/free-templates">Bootstrapious</a>.
-        <!-- Not removing this link is part of the licence conditions of the template. Thanks for understanding :) -->
-      </p>
-    </div>
-  </div>
 </div>

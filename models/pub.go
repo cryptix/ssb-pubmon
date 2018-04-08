@@ -26,9 +26,8 @@ import (
 
 type Pub struct {
 	gorm.Model
-	Key         string `gorm:"unique_index"`
-	Addresses   []Address
-	LastSuccess time.Time
+	Key       string `gorm:"unique_index"`
+	Addresses []Address
 	transition.Transition
 }
 
@@ -190,7 +189,6 @@ func checkPub(value interface{}, tx *gorm.DB) (err error) {
 		var errs []error
 		for e := range errc {
 			if e == nil {
-				pub.LastSuccess = time.Now()
 				pub.SetState("worked")
 				success = true
 			}
