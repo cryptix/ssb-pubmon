@@ -1,3 +1,7 @@
+# Warning
+
+**this repository is not maintained. Questions or suggestions can be posted [here](https://github.com/jteeuwen/discussions/issues).**
+
 ## bindata
 
 This package converts any file into managable Go source code. Useful for

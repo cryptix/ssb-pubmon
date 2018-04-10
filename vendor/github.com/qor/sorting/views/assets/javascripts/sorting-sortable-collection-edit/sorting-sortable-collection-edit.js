@@ -28,6 +28,17 @@
         CLASS_ITEM_FILTER = '.is-delete,.qor-fieldset--new',
         IS_LOADED = 'sortable-collection-loaded';
 
+    function moveArrPos(arr, from, to) {
+        if (to >= arr.length) {
+            var k = to - arr.length;
+            while (k-- + 1) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(to, 0, arr.splice(from, 1)[0]);
+        return arr;
+    }
+
     function QorCollectionSortable(element, options) {
         this.$element = $(element);
         this.options = $.extend({}, QorCollectionSortable.DEFAULTS, $.isPlainObject(options) && options);
@@ -47,10 +58,16 @@
                 .on(EVENT_CLICK, CLASS_BUTTON_MOVE, this.moveItem.bind(this))
                 .on(EVENT_CLICK, CLASS_BUTTON_DONE, this.finishMoveItem.bind(this))
                 .on(EVENT_CLICK, CLASS_BUTTON_CHANGE, this.startMoveItem.bind(this));
+
+            $(document).on('added.qor.replicator.sortableCollection', this.resetOrderArr.bind(this));
         },
 
         unbind: function() {
-            this.$element.off(EVENT_CLICK, CLASS_BUTTON_MOVE).off(EVENT_CLICK, CLASS_BUTTON_DONE).off(EVENT_CLICK, CLASS_BUTTON_CHANGE);
+            this.$element
+                .off(EVENT_CLICK, CLASS_BUTTON_MOVE)
+                .off(EVENT_CLICK, CLASS_BUTTON_DONE)
+                .off(EVENT_CLICK, CLASS_BUTTON_CHANGE);
+            $(document).off('added.qor.replicator.sortableCollection');
         },
 
         initItemOrder: function(resetResource) {
@@ -61,8 +78,11 @@
                 return;
             }
 
+            this.$item = $item;
+
             let $select = $item.find(CLASS_ACTION).find(CLASS_ACTION_POSITION),
                 orderData = {},
+                orderArr = [],
                 itemTotal = $item.length,
                 template = $item.first().html(),
                 fullResourceName,
@@ -86,10 +106,12 @@
 
             $item.each(function() {
                 let $this = $(this),
-                    $action = $this.find(CLASS_ACTION);
+                    $action = $this.find(CLASS_ACTION),
+                    itemIndex = parseInt($this.attr('order-index'));
 
                 orderData.itemTotal = itemTotal;
-                orderData.itemIndex = parseInt($this.attr('order-index'));
+                orderData.itemIndex = itemIndex;
+                orderArr.push(itemIndex);
 
                 $action.prepend('<select class="qor-sortable__action-position"></select>');
 
@@ -97,8 +119,8 @@
                     let renderData = {},
                         isSelected;
 
-                    orderData.itemIndex + 1 == i ? (isSelected = true) : (isSelected = false);
-                    renderData = $.extend({}, orderData, { selectorPosition: i, isSelected: isSelected });
+                    itemIndex + 1 == i ? (isSelected = true) : (isSelected = false);
+                    renderData = $.extend({}, orderData, {selectorPosition: i, isSelected: isSelected});
 
                     $action.find('select').append(window.Mustache.render(QorCollectionSortable.OPTION_HTML, renderData));
                 }
@@ -118,7 +140,7 @@
                     $resource.each(function() {
                         resourceName = $(this).prop('name');
                         resourceNameEnd = resourceName.match(/\.\w+$/);
-                        newPosition = `[${orderData.itemIndex}]`;
+                        newPosition = `[${itemIndex}]`;
 
                         if (hasPrefixPosition) {
                             // fullResourceName = QorResource.SerializableMeta.Sections[0].Items[0(this number is the position)].Name
@@ -135,21 +157,43 @@
 
                 $this.data(orderData);
             });
+            this.itemOrderArr = this.itemOrderArr || orderArr;
+        },
+
+        resetOrderArr: function(e, $item) {
+            let orderIndex = parseInt($item.attr('order-index'));
+            if (!orderIndex) {
+                return;
+            }
+
+            this.itemOrderArr = this.itemOrderArr || [];
+            this.itemOrderArr.push(orderIndex);
+            this.$item = this.$element.find(CLASS_CHILDREN_ITEM).not(CLASS_ITEM_FILTER);
         },
 
         moveItem: function(e) {
             let $current = $(e.target).closest(CLASS_ITEM),
                 currentPosition = $current.data().itemIndex,
-                targetPosition = $current.find(CLASS_ACTION_POSITION).val() - 1,
-                $target = this.$element.find('[order-index="' + targetPosition + '"]');
+                targetPosition = parseInt($current.find(CLASS_ACTION_POSITION).val()) - 1,
+                $item = this.$item,
+                newPosArr = [];
 
             if (targetPosition == currentPosition) {
                 return;
             }
 
-            $target.attr('order-index', currentPosition).css('order', currentPosition);
-            $current.attr('order-index', targetPosition).css('order', targetPosition);
+            newPosArr = moveArrPos(this.itemOrderArr, currentPosition, targetPosition);
 
+            newPosArr.forEach(function(arr) {
+                let index = newPosArr.indexOf(arr);
+
+                $item
+                    .filter(`[order-item="item_${arr}"]`)
+                    .attr('order-index', index)
+                    .css('order', index);
+            });
+
+            this.itemOrderArr = newPosArr;
             this.initItemOrder(true);
         },
 
@@ -198,8 +242,7 @@
 
     QorCollectionSortable.DEFAULTS = {};
 
-    QorCollectionSortable.OPTION_HTML =
-        '<option value="[[selectorPosition]]" [[#isSelected]]selected[[/isSelected]]>[[selectorPosition]] of [[itemTotal]]</option>';
+    QorCollectionSortable.OPTION_HTML = '<option value="[[selectorPosition]]" [[#isSelected]]selected[[/isSelected]]>[[selectorPosition]] of [[itemTotal]]</option>';
 
     QorCollectionSortable.plugin = function(options) {
         return this.each(function() {

@@ -5,7 +5,7 @@
   branch = "master"
   name = "cryptoscope.co/go/errors"
   packages = ["."]
-  revision = "49c6610208020b408a52a9c7bc23ebee0a12e6ec"
+  revision = "44593f7ba1fb2a371ebcc08573474cf3ee733e1b"
 
 [[projects]]
   name = "cryptoscope.co/go/hexagen"
@@ -29,6 +29,16 @@
   version = "v2.0.0"
 
 [[projects]]
+  name = "cryptoscope.co/go/secretstream"
+  packages = [
+    ".",
+    "boxstream",
+    "secrethandshake"
+  ]
+  revision = "a805f0923fd9340ebbd4f10744e526e9a9e236a3"
+  version = "v0.9.1"
+
+[[projects]]
   name = "github.com/BurntSushi/toml"
   packages = ["."]
   revision = "b26d9c308763d68093482582cea63d69be07a0f0"
@@ -47,8 +57,8 @@
 [[projects]]
   name = "github.com/asaskevich/govalidator"
   packages = ["."]
-  revision = "521b25f4b05fd26bec69d9dedeb8f9c9a83939a8"
-  version = "v8"
+  revision = "ccb8e960c48f04d6935e72476ae4a51028f9e22f"
+  version = "v9"
 
 [[projects]]
   name = "github.com/cryptix/go"
@@ -61,26 +71,16 @@
   version = "v1.2.0"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/cryptix/secretstream"
-  packages = [
-    ".",
-    "boxstream",
-    "secrethandshake"
-  ]
-  revision = "a77274a95470349072b27e2d2a20933c38bd246b"
-
-[[projects]]
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
-  revision = "dbeaa9332f19a944acb5736b4456cfcc02140e29"
-  version = "v3.1.0"
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
 
 [[projects]]
   name = "github.com/disintegration/imaging"
   packages = ["."]
-  revision = "dd50a3ee9985ccd313a2f03c398fcaedc96dc707"
-  version = "v1.2.4"
+  revision = "fd34ef7671b12cdf1b024d98c6b327b2770d32c4"
+  version = "v1.4.1"
 
 [[projects]]
   branch = "master"
@@ -91,8 +91,8 @@
 [[projects]]
   name = "github.com/go-chi/chi"
   packages = ["."]
-  revision = "687d2792aedd8e8ac3bbd8592cf55b91d7ea8ce9"
-  version = "v3.3.1"
+  revision = "e83ac2304db3c50cf03d96a2fcd39009d458bc35"
+  version = "v3.3.2"
 
 [[projects]]
   name = "github.com/go-kit/kit"
@@ -121,8 +121,8 @@
 [[projects]]
   name = "github.com/gorilla/securecookie"
   packages = ["."]
-  revision = "667fe4e3466a040b780561fe9b51a83a3753eefc"
-  version = "v1.1"
+  revision = "e59506cc896acb7f7bf732d4fdf5e25f7ccd8983"
+  version = "v1.1.1"
 
 [[projects]]
   name = "github.com/gorilla/sessions"
@@ -140,13 +140,13 @@
   branch = "master"
   name = "github.com/jinzhu/configor"
   packages = ["."]
-  revision = "6ecfe629230f24c2e92c7894c6ab21b83b757a39"
+  revision = "ec34f328956f53dfbd06e9f5306e37e6943443c3"
 
 [[projects]]
   branch = "master"
   name = "github.com/jinzhu/copier"
   packages = ["."]
-  revision = "db4671f3a9b8df855e993f7c94ec5ef1ffb0a23b"
+  revision = "7e38e58719c33e0d44d585c4ab477a30f8cb82dd"
 
 [[projects]]
   branch = "master"
@@ -156,25 +156,25 @@
     "dialects/postgres",
     "dialects/sqlite"
   ]
-  revision = "0a51f6cdc55d1650d9ed3b4c13026cfa9133b01e"
+  revision = "52c5c8127cf4aeffde3e0aa9222640832075a90f"
 
 [[projects]]
   branch = "master"
   name = "github.com/jinzhu/inflection"
   packages = ["."]
-  revision = "1c35d901db3da928c72a72d8458480cc9ade058f"
+  revision = "04140366298a54a039076d798123ffa108fff46c"
 
 [[projects]]
   branch = "master"
   name = "github.com/jinzhu/now"
   packages = ["."]
-  revision = "d939ba741945c047cac69c329c5fb0d6b4a06520"
+  revision = "b7dfa9a2450405d4ee01eb238dcb873b3dc5336c"
 
 [[projects]]
   branch = "master"
   name = "github.com/jteeuwen/go-bindata"
   packages = ["."]
-  revision = "a0ff2567cfb70903282db057e799fd826784d41d"
+  revision = "6025e8de665b31fa74ab1a66f2cddd8c0abf887e"
 
 [[projects]]
   branch = "master"
@@ -202,19 +202,19 @@
     "hstore",
     "oid"
   ]
-  revision = "83612a56d3dd153a94a629cd64925371c9adad78"
+  revision = "d34b9ff171c21ad295489235aec8b6626023cd04"
 
 [[projects]]
   name = "github.com/mattn/go-sqlite3"
   packages = ["."]
-  revision = "ed69081a91fd053f17672236b0dd52ba7485e1a3"
-  version = "v1.4.0"
+  revision = "6c771bb9887719704b210e87e934f08be014bdb1"
+  version = "v1.6.0"
 
 [[projects]]
   branch = "master"
   name = "github.com/microcosm-cc/bluemonday"
   packages = ["."]
-  revision = "68fecaef60268522d2ac3f0123cec9d3bcab7b6e"
+  revision = "995366fdf961d03629cd17361bddd32745718e2c"
 
 [[projects]]
   branch = "master"
@@ -256,7 +256,7 @@
   branch = "master"
   name = "github.com/qor/audited"
   packages = ["."]
-  revision = "b7dc1e8737980ab1a3dd41851a764a983f247960"
+  revision = "b52c9c2f0571fc6e56dcdf2b7d3ae36d124602d4"
 
 [[projects]]
   name = "github.com/qor/auth"
@@ -308,13 +308,13 @@
     "exchange_actions",
     "inline_edit"
   ]
-  revision = "07ca0134e3fd5f7a20d35e884bf16f27faeee072"
+  revision = "05c1410442e98ca000ba87e9ad7fda109143bf8f"
 
 [[projects]]
   branch = "master"
   name = "github.com/qor/l10n"
   packages = ["."]
-  revision = "f4a4ff00f7ca8b8dcfae13fac05e1cb2f45857ad"
+  revision = "ace6ea40bbe988d843ab4859328ca46d93f4af0b"
 
 [[projects]]
   name = "github.com/qor/mailer"
@@ -334,7 +334,7 @@
     "media_library",
     "oss"
   ]
-  revision = "8edd457135d14aceab7c5378548c72ad0ff01e7d"
+  revision = "a9f7ec77a39fd0cd65d8cf919673245b49dfbc4f"
 
 [[projects]]
   name = "github.com/qor/middlewares"
@@ -358,7 +358,7 @@
     ".",
     "filesystem"
   ]
-  revision = "87696afb9c128d2ce6964771c1bc5ec4a7e8dc0f"
+  revision = "1f3aedac18be515a3743e64245cc0623d7d509e4"
 
 [[projects]]
   branch = "master"
@@ -374,7 +374,7 @@
     "resource",
     "utils"
   ]
-  revision = "1c17696527773fa844a809b0ff06f79559f4d336"
+  revision = "4edb7e0a3d43973fd4aa81e9eae2f7dbab71432f"
 
 [[projects]]
   name = "github.com/qor/redirect_back"
@@ -419,7 +419,7 @@
   branch = "master"
   name = "github.com/qor/sorting"
   packages = ["."]
-  revision = "6340c42f7ccf0005b5f2dd1af0990885436d0e6a"
+  revision = "8308410fca545a341c40f3513328be4f9646fc45"
 
 [[projects]]
   branch = "master"
@@ -431,7 +431,7 @@
   branch = "master"
   name = "github.com/qor/validations"
   packages = ["."]
-  revision = "404d5a9c34adc6f6a3a7b6c82faa15337e1fdd00"
+  revision = "f364bca61b46bd48a5e32552a37758864fdf005d"
 
 [[projects]]
   branch = "master"
@@ -443,7 +443,7 @@
   branch = "master"
   name = "github.com/qor/worker"
   packages = ["."]
-  revision = "02469c87080f303b5b271708368349f54cfe77a6"
+  revision = "61267fc978aa9177939c5d68d2ba87028d89191b"
 
 [[projects]]
   branch = "master"
@@ -459,15 +459,6 @@
 
 [[projects]]
   branch = "master"
-  name = "go4.org"
-  packages = [
-    "reflectutil",
-    "sort"
-  ]
-  revision = "034d17a462f7b2dcd1a4a73553ec5357ff6e6c6e"
-
-[[projects]]
-  branch = "master"
   name = "golang.org/x/crypto"
   packages = [
     "bcrypt",
@@ -478,7 +469,7 @@
     "poly1305",
     "salsa20/salsa"
   ]
-  revision = "94eea52f7b742c7cbe0b03b22f0c4c8631ece122"
+  revision = "f70185d77e8278766928032ee1355e3da47e7181"
 
 [[projects]]
   branch = "master"
@@ -488,42 +479,35 @@
     "tiff",
     "tiff/lzw"
   ]
-  revision = "f7e31b4ea2e3413ab91b4e7d2dc83e5f8d19a44c"
+  revision = "f315e440302883054d0c2bd85486878cb4f8572c"
 
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
   packages = [
-    "context",
     "html",
     "html/atom"
   ]
-  revision = "a8b9294777976932365dabb6640cf1468d95c70f"
+  revision = "61147c48b25b599e5b561d2e9c4f3e1ef489ca41"
 
 [[projects]]
-  branch = "master"
   name = "golang.org/x/text"
   packages = [
     "internal/gen",
     "unicode/cldr"
   ]
-  revision = "b7c1ddf508b976c3764e2950e11f3e3d7ccc0c34"
+  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
+  version = "v0.3.0"
 
 [[projects]]
-  branch = "v1"
-  name = "gopkg.in/errgo.v1"
-  packages = ["."]
-  revision = "442357a80af5c6bf9b6d51ae791a39c3421004f3"
-
-[[projects]]
-  branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
-  revision = "287cf08546ab5e7e37d55a84f7ed3fd1db036de5"
+  revision = "5420a8b6744d3b0345ab293f6fcba19c978f1183"
+  version = "v2.2.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c645472ff18b537517f81e10a2850e017d91176d3798e1ac56e47aa6d457cca6"
+  inputs-digest = "0c29afad79fd1a1c2304519d1dfc03d9285b02b7114a6c7b89bd0d01cc104dc6"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -67,8 +67,9 @@ func (b *Base) Scan(data interface{}) (err error) {
 		b.FileHeader, b.FileName = values, values.Filename
 	case []*multipart.FileHeader:
 		if len(values) > 0 {
-			file := values[0]
-			b.FileHeader, b.FileName = file, file.Filename
+			if file := values[0]; file.Size > 0 {
+				b.FileHeader, b.FileName = file, file.Filename
+			}
 		}
 	case []byte:
 		if string(values) != "" {
@@ -138,7 +139,13 @@ func (b Base) String() string {
 
 // GetFileName get file's name
 func (b Base) GetFileName() string {
-	return b.FileName
+	if b.FileName != "" {
+		return b.FileName
+	}
+	if b.Url != "" {
+		return filepath.Base(b.Url)
+	}
+	return ""
 }
 
 // GetFileHeader get file's header, this value only exists when saving files

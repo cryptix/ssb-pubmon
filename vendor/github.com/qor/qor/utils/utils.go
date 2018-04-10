@@ -11,9 +11,8 @@ import (
 	"regexp"
 	"runtime"
 	"runtime/debug"
+	"sort"
 	"time"
-
-	"go4.org/sort"
 
 	"github.com/gosimple/slug"
 	"github.com/jinzhu/gorm"
@@ -365,4 +364,18 @@ func Indirect(v reflect.Value) reflect.Value {
 		v = reflect.Indirect(v)
 	}
 	return v
+}
+
+// SliceUniq removes duplicate values in given slice
+func SliceUniq(s []string) []string {
+	for i := 0; i < len(s); i++ {
+		for i2 := i + 1; i2 < len(s); i2++ {
+			if s[i] == s[i2] {
+				// delete
+				s = append(s[:i2], s[i2+1:]...)
+				i2--
+			}
+		}
+	}
+	return s
 }

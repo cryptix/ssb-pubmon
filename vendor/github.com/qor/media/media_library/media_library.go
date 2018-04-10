@@ -49,17 +49,17 @@ type MediaOption struct {
 }
 
 func (mediaLibrary *MediaLibrary) ScanMediaOptions(mediaOption MediaOption) error {
-	if bytes, err := json.Marshal(mediaOption); err == nil {
+	bytes, err := json.Marshal(mediaOption)
+	if err == nil {
 		return mediaLibrary.File.Scan(bytes)
-	} else {
-		return err
 	}
+	return err
 }
 
 func (mediaLibrary *MediaLibrary) GetMediaOption() MediaOption {
 	return MediaOption{
 		Video:        mediaLibrary.File.Video,
-		FileName:     mediaLibrary.File.FileName,
+		FileName:     mediaLibrary.File.GetFileName(),
 		URL:          mediaLibrary.File.URL(),
 		OriginalURL:  mediaLibrary.File.URL("original"),
 		CropOptions:  mediaLibrary.File.CropOptions,
@@ -114,25 +114,27 @@ func (mediaLibraryStorage *MediaLibraryStorage) Scan(data interface{}) (err erro
 		if mediaLibraryStorage.Sizes == nil {
 			mediaLibraryStorage.Sizes = map[string]*media.Size{}
 		}
-		if mediaLibraryStorage.CropOptions == nil {
-			mediaLibraryStorage.CropOptions = map[string]*media.CropOption{}
-		}
-		cropOptions := mediaLibraryStorage.CropOptions
+		// cropOptions := mediaLibraryStorage.CropOptions
 		sizeOptions := mediaLibraryStorage.Sizes
 
 		if string(values) != "" {
 			mediaLibraryStorage.Base.Scan(values)
-
 			if err = json.Unmarshal(values, mediaLibraryStorage); err == nil {
-				for key, value := range cropOptions {
-					if _, ok := mediaLibraryStorage.CropOptions[key]; !ok {
-						mediaLibraryStorage.CropOptions[key] = value
-					}
+				if mediaLibraryStorage.CropOptions == nil {
+					mediaLibraryStorage.CropOptions = map[string]*media.CropOption{}
 				}
 
+				// for key, value := range cropOptions {
+				// 	if _, ok := mediaLibraryStorage.CropOptions[key]; !ok {
+				// 		mediaLibraryStorage.CropOptions[key] = value
+				// 	}
+				// }
+
 				for key, value := range sizeOptions {
-					if _, ok := mediaLibraryStorage.Sizes[key]; !ok {
-						mediaLibraryStorage.Sizes[key] = value
+					if key != "original" {
+						if _, ok := mediaLibraryStorage.Sizes[key]; !ok {
+							mediaLibraryStorage.Sizes[key] = value
+						}
 					}
 				}
 
@@ -216,7 +218,9 @@ func (mediaBox MediaBox) ConfigureQorMeta(metaor resource.Metaor) {
 
 		if meta.FormattedValuer == nil {
 			meta.FormattedValuer = func(record interface{}, context *qor.Context) interface{} {
-				if mediaBox, ok := meta.GetValuer()(record, context).(*MediaBox); ok {
+				if mediaBox, ok := meta.GetValuer()(record, context).(interface {
+					URL(styles ...string) string
+				}); ok {
 					return mediaBox.URL()
 				}
 				return ""

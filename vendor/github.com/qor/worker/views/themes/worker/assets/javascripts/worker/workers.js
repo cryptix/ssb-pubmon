@@ -25,6 +25,10 @@
         CLASS_TABLE = '.qor-js-table',
         CLASS_SELECT = '.is-selected';
 
+    function updateProgress(progress) {
+        document.querySelector('#qor-worker--progress').MaterialProgress.setProgress(progress);
+    }
+
     function QorWorker(element, options) {
         this.$element = $(element);
         this.options = $.extend({}, QorWorker.DEFAULTS, $.isPlainObject(options) && options);
@@ -41,17 +45,19 @@
                 this.formOpened = true;
             }
 
+            updateProgress($('#qor-worker--progress').data('progress'));
+
             if (!$('.qor-slideout').is(':visible')) {
                 $.fn.qorSliderAfterShow.updateWorkerProgress();
             }
         },
 
         bind: function() {
-            this.$element.on(EVENT_CLICK, CLASS_NEW_WORKER, $.proxy(this.showForm, this)).on(EVENT_CLICK, CLASS_BUTTON_BACK, $.proxy(this.hideForm, this));
+            this.$element.on(EVENT_CLICK, CLASS_NEW_WORKER, this.showForm.bind(this)).on(EVENT_CLICK, CLASS_BUTTON_BACK, this.hideForm.bind(this));
         },
 
         unbind: function() {
-            this.$element.off(EVENT_CLICK, CLASS_NEW_WORKER, this.showForm, this).off(EVENT_CLICK, CLASS_BUTTON_BACK, this.hideForm, this);
+            this.$element.off(EVENT_CLICK);
         },
 
         hideForm: function(e) {
@@ -190,7 +196,6 @@
 
         if (progressData.progress >= 100) {
             window.clearInterval(QorWorker.getWorkerProgressIntervId);
-            document.querySelector('#qor-worker--progress').MaterialProgress.setProgress(100);
             QorWorker.updateTableStatus(progressData.status);
             $('.qor-workers-abort').addClass('hidden');
             $('.qor-workers-rerun').removeClass('hidden');
@@ -207,13 +212,18 @@
             let $html = $(html),
                 contentData = $html.find(CLASS_WORKER_PROGRESS).data(),
                 currentStatus = contentData.progress,
-                progressStatusStatus = contentData.status;
+                progressStatusStatus = contentData.status,
+                isNotNormalStatus = status.indexOf(progressStatusStatus) != -1;
 
             $progressValue.html(currentStatus);
             $progressStatusStatus.html(progressStatusStatus);
 
+            if (isNotNormalStatus) {
+                $progressStatusStatus.addClass('highlight');
+            }
+
             // set status progress
-            document.querySelector('#qor-worker--progress').MaterialProgress.setProgress(currentStatus);
+            updateProgress(currentStatus);
 
             // update process log
             let log = $.trim($html.find('.workers-log-output').html()),
@@ -233,7 +243,7 @@
                 QorWorker.updateTableStatus(progressStatusStatus);
             }
 
-            if (currentStatus >= 100) {
+            if (currentStatus >= 100 || isNotNormalStatus) {
                 window.clearInterval(QorWorker.getWorkerProgressIntervId);
                 $('.qor-workers-abort').addClass('hidden');
                 $('.qor-workers-rerun').removeClass('hidden');

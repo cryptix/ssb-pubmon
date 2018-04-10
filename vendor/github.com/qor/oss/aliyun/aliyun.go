@@ -22,11 +22,14 @@ type Client struct {
 
 // Config Aliyun client config
 type Config struct {
-	AccessID  string
-	AccessKey string
-	Region    string
-	Bucket    string
-	Endpoint  string
+	AccessID      string
+	AccessKey     string
+	Region        string
+	Bucket        string
+	Endpoint      string
+	ACL           aliyun.ACLType
+	ClientOptions []aliyun.ClientOption
+	UseCname      bool
 }
 
 // New initialize Aliyun storage
@@ -40,7 +43,15 @@ func New(config *Config) *Client {
 		config.Endpoint = "oss-cn-hangzhou.aliyuncs.com"
 	}
 
-	Aliyun, err := aliyun.New(config.Endpoint, config.AccessID, config.AccessKey)
+	if config.ACL == "" {
+		config.ACL = aliyun.ACLPublicRead
+	}
+
+	if config.UseCname {
+		config.ClientOptions = append(config.ClientOptions, aliyun.UseCname(config.UseCname))
+	}
+
+	Aliyun, err := aliyun.New(config.Endpoint, config.AccessID, config.AccessKey, config.ClientOptions...)
 
 	if err == nil {
 		client.Bucket, err = Aliyun.Bucket(config.Bucket)
@@ -58,7 +69,7 @@ func (client Client) Get(path string) (file *os.File, err error) {
 	readCloser, err := client.GetStream(path)
 
 	if err == nil {
-		if file, err = ioutil.TempFile("/tmp", "s3"); err == nil {
+		if file, err = ioutil.TempFile("/tmp", "ali"); err == nil {
 			defer readCloser.Close()
 			_, err = io.Copy(file, readCloser)
 			file.Seek(0, 0)
@@ -79,7 +90,7 @@ func (client Client) Put(urlPath string, reader io.Reader) (*oss.Object, error) 
 		seeker.Seek(0, 0)
 	}
 
-	err := client.Bucket.PutObject(client.ToRelativePath(urlPath), reader)
+	err := client.Bucket.PutObject(client.ToRelativePath(urlPath), reader, aliyun.ACL(client.Config.ACL))
 	now := time.Now()
 
 	return &oss.Object{
@@ -118,6 +129,9 @@ func (client Client) List(path string) ([]*oss.Object, error) {
 // GetEndpoint get endpoint, FileSystem's endpoint is /
 func (client Client) GetEndpoint() string {
 	if client.Config.Endpoint != "" {
+		if strings.HasSuffix(client.Config.Endpoint, "aliyuncs.com") {
+			return client.Config.Bucket + "." + client.Config.Endpoint
+		}
 		return client.Config.Endpoint
 	}
 
@@ -144,5 +158,8 @@ func (client Client) ToRelativePath(urlPath string) string {
 
 // GetURL get public accessible URL
 func (client Client) GetURL(path string) (url string, err error) {
-	return client.Bucket.SignURL(client.ToRelativePath(path), aliyun.HTTPGet, 60*60) // 1 hour
+	if client.Config.ACL == aliyun.ACLPrivate {
+		return client.Bucket.SignURL(client.ToRelativePath(path), aliyun.HTTPGet, 60*60) // 1 hour
+	}
+	return path, nil
 }

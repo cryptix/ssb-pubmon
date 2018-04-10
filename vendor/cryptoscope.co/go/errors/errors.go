@@ -15,7 +15,7 @@
    along with errors.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package errors
+package errors // import "cryptoscope.co/go/errors"
 
 import (
 	"errors"

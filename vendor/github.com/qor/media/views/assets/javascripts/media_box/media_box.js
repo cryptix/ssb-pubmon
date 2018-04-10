@@ -109,7 +109,7 @@
 
         imageCrop: function(e) {
             var $parent = $(e.target).closest(CLASS_ITEM);
-            this.syncImageCrop($parent);
+            this.syncImageCrop($parent, this.resetImages);
         },
 
         openBottomSheets: function(e) {
@@ -129,8 +129,8 @@
             data.url = data.mediaboxUrl;
 
             // select many templates
-            this.SELECT_MANY_SELECTED_ICON = $('[name="select-many-selected-icon"]').html();
-            this.SELECT_MANY_HINT = $('[name="select-many-hint"]').html();
+            this.SELECT_MANY_SELECTED_ICON = $('[name="media-box-select-many-selected-icon"]').html();
+            this.SELECT_MANY_HINT = $('[name="media-box-select-many-hint"]').html();
 
             this.TEMPLATE_IMAGE = $parent.find('[name="media-box-template"]').html();
             this.TEMPLATE_FILE = $parent.find('[name="media-box-file-template"]').html();
@@ -197,21 +197,20 @@
         },
 
         getSelectedItemData: function($ele) {
-            var $selectFeild = $ele ? $ele : this.$selectFeild,
+            let $selectFeild = $ele ? $ele : this.$selectFeild,
                 $items = $selectFeild.find(CLASS_ITEM).not('.' + CLASS_DELETE),
-                files = [],
-                item;
+                files = [];
 
             if ($items.length) {
                 $items.each(function() {
-                    item = $(this).data();
+                    let data = $(this).data();
 
                     files.push({
-                        ID: item.primaryKey,
-                        Url: item.originalUrl.replace(/.original.(\w+)$/, '.$1'),
-                        Description: item.description,
-                        FileName: item.fileName,
-                        VideoLink: item.videolink
+                        ID: data.primaryKey,
+                        Url: data.originalUrl.replace(/.original.(\w+)$/, '.$1'),
+                        Description: data.description,
+                        FileName: data.fileName,
+                        VideoLink: data.videolink
                     });
                 });
             }
@@ -261,6 +260,7 @@
         syncImageCrop: function($ele, callback) {
             let item = JSON.parse($ele.find(CLASS_CROPPER_OPTIONS).val()),
                 url = $ele.data().mediaLibraryUrl,
+                _this = this,
                 syncData = {},
                 sizes = ['Width', 'Height'],
                 sizeResolutionData,
@@ -289,6 +289,8 @@
 
             syncData.MediaOption = JSON.stringify(item);
 
+            this.addMediaLoading($ele);
+
             $.ajax({
                 type: 'PUT',
                 url: url,
@@ -297,11 +299,15 @@
                 dataType: 'json',
                 success: function(data) {
                     syncData.MediaOption = JSON.parse(data.MediaOption);
-                    $ele.attr('data-original-url', syncData.MediaOption.OriginalURL);
+                    $ele.data().originalUrl = syncData.MediaOption.OriginalURL;
+                    _this.updateMediaLibraryData($ele.closest(CLASS_LISTS), syncData);
 
                     if (callback && $.isFunction(callback)) {
                         callback(syncData, $ele);
                     }
+                },
+                complete: function() {
+                    $ele.find('.qor-media-loading').remove();
                 }
             });
         },
@@ -449,6 +455,8 @@
                 });
             }
 
+            this.$bottomsheets.find('.qor-media-loading').remove();
+
             if (isNewData || maxItem == 1) {
                 setTimeout(function() {
                     _this.$bottomsheets.remove();
@@ -484,8 +492,9 @@
 
         handleSelectMany: function($bottomsheets) {
             let options = {
-                onSelect: this.onSelectResults.bind(this), // render selected item after click item lists
-                onSubmit: this.onSubmitResults.bind(this) // render new items after new item form submitted
+                loading: this.addMediaLoading,
+                onSelect: this.onSelectResults.bind(this),
+                onSubmit: this.onSubmitResults.bind(this)
             };
 
             $bottomsheets.qorSelectCore(options).addClass(CLASS_MEDIABOX);
@@ -525,6 +534,12 @@
                 this.removeItem(data);
             }
             this.updateDatas(data);
+        },
+
+        addMediaLoading: function($ele) {
+            $('<div class="qor-media-loading"><div class="mdl-spinner mdl-spinner--single-color mdl-js-spinner is-active"></div></div>')
+                .appendTo($ele)
+                .trigger('enable.qor.material');
         },
 
         updateDatas: function(data) {
