@@ -2,7 +2,11 @@
 
 a botpage that periodically pings [secure scuttlebutt](https://www.scuttlebutt.nz/) pubs to monitor their livelyness.
 
-![](screenshot.png)
+Last checks:
+![](screenshot_last.png)
+
+Alive?:
+![](screenshot_alive.png)
 
 # TODO
 
