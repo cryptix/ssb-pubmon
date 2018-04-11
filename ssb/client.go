@@ -3,23 +3,25 @@ package ssb
 import (
 	"encoding/base64"
 
+	"github.com/pkg/errors"
+
 	"cryptoscope.co/go/secretstream"
 	"cryptoscope.co/go/secretstream/secrethandshake"
 )
 
 var SHSClient *secretstream.Client
 
-func init() {
-	ssbAppKey, err := base64.StdEncoding.DecodeString("1KHLiKZvAvjbY1ziZEHMXawbCEIM6qwjCDm3VYRan/s=")
+func InitClient(fname string) error {
+	ssbAppKey, err := base64.StdEncoding.DecodeString("1KHLiKZvAvjbY1ziZEHMXawbCEIM6qwjCDm3VYRan/s=") // default appKey
 	if err != nil {
-		panic(err)
+		return errors.Wrap(err, "ssb appkey?!")
 	}
-	kp, err := secrethandshake.GenEdKeyPair(nil)
+
+	kp, err := secrethandshake.LoadSSBKeyPair(fname)
 	if err != nil {
-		panic(err)
+		return errors.Wrap(err, "load ssb keyPair")
 	}
+
 	SHSClient, err = secretstream.NewClient(*kp, ssbAppKey)
-	if err != nil {
-		panic(err)
-	}
+	return errors.Wrap(err, "ssb NewClient")
 }

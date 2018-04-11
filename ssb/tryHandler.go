@@ -28,7 +28,6 @@ func (h TryHandler) HandleCall(ctx context.Context, req *muxrpc.Request) {
 	}
 
 	m := strings.Join(req.Method, ".")
-	h.log.Log("TryHandler", "incoming call", "method", m, "args", fmt.Sprintf("%+v", req.Args))
 	switch m {
 	case "gossip.ping":
 		fallthrough
@@ -41,6 +40,7 @@ func (h TryHandler) HandleCall(ctx context.Context, req *muxrpc.Request) {
 		req.Stream.Close()
 
 	default:
+		h.log.Log("TryHandler", "unhandled call", "method", m, "args", fmt.Sprintf("%+v", req.Args))
 		req.Stream.CloseWithError(errors.Errorf("unhandled call"))
 	}
 }
@@ -53,5 +53,5 @@ func (h TryHandler) HandleConnect(ctx context.Context, e muxrpc.Endpoint) {
 		return
 	}
 	*/
-	h.log.Log("TryHandler", "connect", "Hello", h.remoteID)
+	h.log.Log("TryHandler", "connect")
 }

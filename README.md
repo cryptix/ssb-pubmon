@@ -6,15 +6,13 @@ a botpage that periodically pings [secure scuttlebutt](https://www.scuttlebutt.n
 
 # TODO
 
-* make a list of pubs
-* make a worker that iterates over them and attempt shs/muxrpc connections to them.
+* make nice pie chart about uptime (last day/30 days)
 
 ## QOR maintainance
 
 * overwrite auth template
 * instantiate own middleware
 * don't use global default cookie secret
-* go to address > try to change pub: dropdown has no names?
 
 # Fork of QOR example application
 
