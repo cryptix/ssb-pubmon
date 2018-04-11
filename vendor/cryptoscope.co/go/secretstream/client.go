@@ -18,8 +18,10 @@ along with secretstream.  If not, see <http://www.gnu.org/licenses/>.
 package secretstream // import "cryptoscope.co/go/secretstream"
 
 import (
+	"context"
 	"net"
 	"strings"
+	"time"
 
 	"cryptoscope.co/go/secretstream/boxstream"
 	"cryptoscope.co/go/secretstream/secrethandshake"
@@ -44,14 +46,16 @@ func NewClient(kp secrethandshake.EdKeyPair, appKey []byte) (*Client, error) {
 // NewDialer returns a net.Dial-esque dialer that does a secrethandshake key exchange
 // and wraps the underlying connection into a boxstream
 func (c *Client) NewDialer(pubKey [ed25519.PublicKeySize]byte) (Dialer, error) {
-	return func(n, a string) (net.Conn, error) {
+	var d net.Dialer
+	return func(ctx context.Context, n, a string) (net.Conn, error) {
 		if !strings.HasPrefix(n, "tcp") {
 			return nil, ErrOnlyTCP
 		}
-		conn, err := net.Dial(n, a)
+		conn, err := d.DialContext(ctx, n, a)
 		if err != nil {
 			return nil, err
 		}
+		conn.SetDeadline(time.Now().Add(30 * time.Second))
 		state, err := secrethandshake.NewClientState(c.appKey, c.kp, pubKey)
 		if err != nil {
 			return nil, err
@@ -64,6 +68,7 @@ func (c *Client) NewDialer(pubKey [ed25519.PublicKeySize]byte) (Dialer, error) {
 		enKey, enNonce := state.GetBoxstreamEncKeys()
 		deKey, deNonce := state.GetBoxstreamDecKeys()
 
+		conn.SetDeadline(time.Now().Add(time.Hour))
 		boxed := Conn{
 			Reader: boxstream.NewUnboxer(conn, &deNonce, &deKey),
 			Writer: boxstream.NewBoxer(conn, &enNonce, &enKey),

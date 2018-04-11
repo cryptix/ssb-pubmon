@@ -18,6 +18,7 @@ along with secretstream.  If not, see <http://www.gnu.org/licenses/>.
 package secretstream
 
 import (
+	"context"
 	"errors"
 	"net"
 )
@@ -26,7 +27,7 @@ import (
 var ErrOnlyTCP = errors.New("secretstream: only TCP is supported")
 
 // Dialer is the same signature as net.Dial, there is no expoted interface for this
-type Dialer func(net, addr string) (net.Conn, error)
+type Dialer func(ctx context.Context, net, addr string) (net.Conn, error)
 
 // Listener can accept secret handshakes
 type Listener struct {
