@@ -55,6 +55,7 @@ func (c *Client) NewDialer(pubKey [ed25519.PublicKeySize]byte) (Dialer, error) {
 		if err != nil {
 			return nil, err
 		}
+		// TODO: tune
 		conn.SetDeadline(time.Now().Add(30 * time.Second))
 		state, err := secrethandshake.NewClientState(c.appKey, c.kp, pubKey)
 		if err != nil {
