@@ -45,10 +45,14 @@ func main() {
 	logging.SetupLogging(io.MultiWriter(os.Stderr, logFile))
 	log = logging.Logger("ssb-pubmon")
 
+	var h = sbmhttp.InitServ(log, Revision)
+	if *flagCompileTemplates { // QOR leftover..
+		bindatafs.AssetFS.Compile()
+		return
+	}
+
 	err = ssb.InitClient(*flagKeyfile)
 	logging.CheckFatal(err)
-
-	var h = sbmhttp.InitServ(log, Revision)
 
 	ticker := time.NewTicker(15 * time.Second)
 	go func() {
@@ -82,10 +86,6 @@ func main() {
 		}
 	}()
 
-	if *flagCompileTemplates {
-		bindatafs.AssetFS.Compile()
-		return
-	}
 	log.Log("event", "init", "msg", "http listen", "addr", config.Config.HTTPHost, "version", Revision)
 	check(http.ListenAndServe(config.Config.HTTPHost, h))
 }
