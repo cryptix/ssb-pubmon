@@ -5,8 +5,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"cryptoscope.co/go/secretstream"
-	"cryptoscope.co/go/secretstream/secrethandshake"
+	"go.cryptoscope.co/secretstream"
+	"go.cryptoscope.co/secretstream/secrethandshake"
 )
 
 var SHSClient *secretstream.Client

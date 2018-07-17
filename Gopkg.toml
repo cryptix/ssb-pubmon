@@ -167,5 +167,5 @@
   name = "github.com/qor/publish"
 
 [[constraint]]
-  name = "cryptoscope.co/go/hexagen"
+  name = "go.cryptoscope.co/hexagen"
   version = "0.1.0"

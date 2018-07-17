@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"cryptoscope.co/go/muxrpc"
+	"go.cryptoscope.co/muxrpc"
 	kitlog "github.com/go-kit/kit/log"
 	"github.com/pkg/errors"
 )

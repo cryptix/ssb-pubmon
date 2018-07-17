@@ -3,24 +3,24 @@
 
 [[projects]]
   branch = "master"
-  name = "cryptoscope.co/go/errors"
+  name = "go.cryptoscope.co/errors"
   packages = ["."]
   revision = "44593f7ba1fb2a371ebcc08573474cf3ee733e1b"
 
 [[projects]]
-  name = "cryptoscope.co/go/hexagen"
+  name = "go.cryptoscope.co/hexagen"
   packages = ["."]
   revision = "594634137055031fb541337a069a575cd6a4ba87"
   version = "v0.1.0"
 
 [[projects]]
   branch = "master"
-  name = "cryptoscope.co/go/luigi"
+  name = "go.cryptoscope.co/luigi"
   packages = ["."]
   revision = "c97d75a8bb565a660fa1074f3c262cd42928354f"
 
 [[projects]]
-  name = "cryptoscope.co/go/muxrpc"
+  name = "go.cryptoscope.co/muxrpc"
   packages = [
     ".",
     "codec"
@@ -29,7 +29,7 @@
   version = "v2.0.0"
 
 [[projects]]
-  name = "cryptoscope.co/go/secretstream"
+  name = "go.cryptoscope.co/secretstream"
   packages = [
     ".",
     "boxstream",

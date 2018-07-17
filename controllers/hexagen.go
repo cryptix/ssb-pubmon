@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"cryptoscope.co/go/hexagen"
+	"go.cryptoscope.co/hexagen"
 	"github.com/pkg/errors"
 )
 

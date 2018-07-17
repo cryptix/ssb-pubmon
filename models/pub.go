@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"cryptoscope.co/go/muxrpc"
+	"go.cryptoscope.co/muxrpc"
 	"github.com/agl/ed25519"
 	"github.com/cryptix/go/debug"
 	"github.com/cryptix/go/logging"
