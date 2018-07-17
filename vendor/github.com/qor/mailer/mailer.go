@@ -1,6 +1,8 @@
 package mailer
 
 import (
+	"log"
+
 	"github.com/pkg/errors"
 	"github.com/qor/assetfs"
 	"github.com/qor/render"
@@ -35,7 +37,9 @@ func New(config *Config) (*Mailer, error) {
 	}
 
 	if err := config.AssetFS.RegisterPath("app/views/auth/mail"); err != nil {
-		return nil, errors.Wrap(err, "Mailer: could not registerPath")
+		err = errors.Wrap(err, "Mailer: could not registerPath")
+		log.Println("WARNING:", err)
+		// TODO: asset handling return nil, err
 	}
 
 	if config.Render == nil {

@@ -12,8 +12,11 @@ import (
 	"github.com/qor/auth/auth_identity"
 	"github.com/qor/auth/claims"
 	"github.com/qor/mailer"
+	"github.com/qor/qor"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
+
+	"github.com/cryptix/ssb-pubmon/config/i18n"
 )
 
 var (
@@ -36,6 +39,7 @@ var (
 // DefaultConfirmationMailer default confirm mailer
 var DefaultConfirmationMailer = func(email string, context *auth.Context, claims *claims.Claims, currentUser interface{}) error {
 	claims.Subject = "confirm"
+	locale := utils.GetLocale(&qor.Context{Request: context.Request})
 
 	return context.Auth.Mailer.Send(
 		mailer.Email{
@@ -57,6 +61,9 @@ var DefaultConfirmationMailer = func(email string, context *auth.Context, claims
 				qry.Set("token", context.SessionStorer.SignedToken(claims))
 				confirmURL.RawQuery = qry.Encode()
 				return confirmURL.String()
+			},
+			"t": func(key string, value string, args ...interface{}) template.HTML {
+				return i18n.I18n.Default(value).T(locale, key, args...)
 			},
 		}))
 }
