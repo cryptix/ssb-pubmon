@@ -1,0 +1,26 @@
+os: linux
+
+addons:
+  apt:
+    packages:
+      - rpm
+
+language: go
+
+go: "1.10.x"
+
+go_import_path: github.com/cryptix/ssb-pubmon
+
+install: go get -t -v github.com/cryptix/ssb-pubmon/...
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  # maybe update curl -sL https://git.io/goreleaser > .goreleaser.sh
+  script: bash .goreleaser.sh
+  on:
+    tags: true
+    go: "1.10.x"
+
+
+# food for thought: complex example: https://github.com/tsuru/tsuru/blob/master/.travis.yml

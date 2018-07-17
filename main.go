@@ -24,7 +24,7 @@ var (
 	log   logging.Interface
 	check = logging.CheckFatal
 
-	Revision string = "undefined"
+	version, commit, buildDate string = "snapshot", "undefined", "today"
 
 	flagCompileTemplates = flag.Bool("compile-templates", false, "Compile Templates")
 	flagKeyfile          = flag.String("keyfile", "secret", "ssb keypair file (#json)")
@@ -45,7 +45,7 @@ func main() {
 	logging.SetupLogging(io.MultiWriter(os.Stderr, logFile))
 	log = logging.Logger("ssb-pubmon")
 
-	var h = sbmhttp.InitServ(log, Revision)
+	var h = sbmhttp.InitServ(log, version)
 	if *flagCompileTemplates { // QOR leftover..
 		bindatafs.AssetFS.Compile()
 		return
@@ -86,6 +86,6 @@ func main() {
 		}
 	}()
 
-	log.Log("event", "init", "msg", "http listen", "addr", config.Config.HTTPHost, "version", Revision)
+	log.Log("event", "init", "msg", "http listen", "addr", config.Config.HTTPHost, "version", version, "commit", commit, "build", buildDate)
 	check(http.ListenAndServe(config.Config.HTTPHost, h))
 }

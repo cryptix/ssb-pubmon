@@ -1,0 +1,18 @@
+builds:
+  - binary: ssb-pubmon
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - heroku # makes it use bindatafs
+    goos:
+      - freebsd
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - 386
+archive:
+  format_overrides:
+    - goos: windows
+      format: zip
