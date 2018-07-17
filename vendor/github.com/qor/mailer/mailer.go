@@ -34,11 +34,9 @@ func New(config *Config) (*Mailer, error) {
 		config.AssetFS = assetfs.AssetFS().NameSpace("mailer")
 	}
 
-	/*
-		if err := config.AssetFS.RegisterPath("app/views/auth/mail"); err != nil {
-			return nil, errors.Wrap(err, "Mailer: could not registerPath")
-		}
-	*/
+	if err := config.AssetFS.RegisterPath("app/views/auth/mail"); err != nil {
+		return nil, errors.Wrap(err, "Mailer: could not registerPath")
+	}
 
 	if config.Render == nil {
 		config.Render = render.New(nil)

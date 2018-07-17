@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/agl/ed25519"
+	"github.com/pkg/errors"
 	"github.com/qor/media/oss"
 	"github.com/qor/worker"
-	"go.cryptoscope.co/errors"
 
 	"github.com/cryptix/ssb-pubmon/db"
 	"github.com/cryptix/ssb-pubmon/models"

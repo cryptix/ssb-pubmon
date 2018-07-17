@@ -3,10 +3,10 @@ package models
 import (
 	"context"
 	"encoding/base64"
+	"net"
 	"strings"
 	"time"
 
-	"go.cryptoscope.co/muxrpc"
 	"github.com/agl/ed25519"
 	"github.com/cryptix/go/debug"
 	"github.com/cryptix/go/logging"
@@ -15,6 +15,8 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/pkg/errors"
 	"github.com/qor/transition"
+	"go.cryptoscope.co/muxrpc"
+	"go.cryptoscope.co/netwrap"
 
 	"github.com/cryptix/ssb-pubmon/ssb"
 )
@@ -102,11 +104,6 @@ func CheckPub(value interface{}, tx *gorm.DB) (err error) {
 	}
 	copy(pubKey[:], pk)
 
-	shsDialer, err := ssb.SHSClient.NewDialer(pubKey)
-	if err != nil {
-		return errors.Wrapf(err, "creating dialer for pubkey failed: %q", pub.Key)
-	}
-
 	if err := tx.Model(value).Association("Addresses").Find(&addrs).Error; err != nil {
 		return errors.Wrap(err, "failed to assoc pub with addresses")
 	}
@@ -127,7 +124,11 @@ func CheckPub(value interface{}, tx *gorm.DB) (err error) {
 			check.AddrID = a.ID
 			//log.Log("msg", "dialing", "addr", a.Addr)
 			dialStart := time.Now()
-			c, err := shsDialer(ctx, "tcp", a.Addr)
+			plainAddr, err := net.ResolveTCPAddr("tcp", a.Addr)
+			if err != nil {
+				return errors.Wrapf(err, "dialer(%d) - %s:%s: resolve failure", i, pub.Key, a.Addr)
+			}
+			c, err := netwrap.Dial(plainAddr, ssb.SHSClient.ConnWrapper(pubKey))
 			counter := debug.WrapCounter(c)
 			defer func() {
 				if err != nil {
@@ -142,7 +143,7 @@ func CheckPub(value interface{}, tx *gorm.DB) (err error) {
 				}
 			}()
 			if err != nil {
-				return errors.Wrapf(err, "dialer(%d) - %s:%s\n", i, pub.Key, a.Addr)
+				return errors.Wrapf(err, "dialer(%d) - %s:%s", i, pub.Key, a.Addr)
 			}
 			check.State = KeyExchanged
 

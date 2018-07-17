@@ -14,8 +14,6 @@ import (
 	"github.com/qor/mailer"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
-
-	"github.com/cryptix/ssb-pubmon/config/i18n"
 )
 
 var (
@@ -59,9 +57,6 @@ var DefaultConfirmationMailer = func(email string, context *auth.Context, claims
 				qry.Set("token", context.SessionStorer.SignedToken(claims))
 				confirmURL.RawQuery = qry.Encode()
 				return confirmURL.String()
-			},
-			"t": func(key string, value string, args ...interface{}) template.HTML {
-				return i18n.I18n.Default(value).T("en-EN", key, args...)
 			},
 		}))
 }

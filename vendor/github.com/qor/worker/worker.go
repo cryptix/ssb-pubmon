@@ -106,6 +106,16 @@ func (worker *Worker) ConfigureQorResourceBeforeInitialize(res resource.Resource
 					return db.Where("kind IS NULL")
 				}
 
+				{
+					var jobNames []string
+					for _, job := range worker.Jobs {
+						jobNames = append(jobNames, job.Name)
+					}
+					if len(jobNames) > 0 {
+						return db.Where("kind IN (?)", jobNames)
+					}
+				}
+
 				return db
 			},
 			Default: true,
@@ -153,7 +163,7 @@ func (worker *Worker) ConfigureQorResource(res resource.Resourcer) {
 		}
 
 		// register view funcmaps
-		worker.Admin.RegisterFuncMap("get_grouped_jobs", func(context *admin.Context) map[string][]*Job {
+		worker.Admin.RegisterFuncMap("get_grouped_jobs", func(worker *Worker, context *admin.Context) map[string][]*Job {
 			var groupedJobs = map[string][]*Job{}
 			var groupName = context.Request.URL.Query().Get("group")
 			var jobName = context.Request.URL.Query().Get("job")
@@ -241,7 +251,7 @@ func (worker *Worker) AddJob(qorJob QorJobInterface) error {
 func (worker *Worker) RunJob(jobID string) error {
 	qorJob, err := worker.GetJob(jobID)
 
-	if err == nil {
+	if qorJob != nil && err == nil {
 		defer func() {
 			if r := recover(); r != nil {
 				qorJob.AddLog(string(debug.Stack()))
