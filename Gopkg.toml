@@ -173,3 +173,7 @@
 [[constraint]]
   branch = "master"
   name = "go.cryptoscope.co/netwrap"
+
+[[constraint]]
+  name = "go.cryptoscope.co/muxrpc"
+  version = "3.0.0"

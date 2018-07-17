@@ -17,12 +17,14 @@ along with go-muxrpc.  If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
+/*
 import (
 	"os"
 
-	"scuttlebot.io/go/muxrpc"
 	"github.com/cryptix/go/logging"
 	"github.com/cryptix/go/proc"
+
+	"go.cryptoscope.co/muxrpc"
 )
 
 func main() {
@@ -44,3 +46,8 @@ func main() {
 	// logging.CheckFatal(err)
 	logging.CheckFatal(c.Close())
 }
+
+*/
+
+func main() {}
+

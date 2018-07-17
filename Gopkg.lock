@@ -42,14 +42,6 @@
   version = "v1.3.0"
 
 [[projects]]
-  digest = "1:e169dac8969d83a12896e7334a12c437d73ad6c94e3600134ae230f967fc36fc"
-  name = "github.com/cryptix/go-muxrpc"
-  packages = ["codec"]
-  pruneopts = ""
-  revision = "427f96addc4171bc968bb6852217ce0e232d2b93"
-  version = "v2.0.0"
-
-[[projects]]
   digest = "1:2426da75f49e5b8507a6ed5d4c49b06b2ff795f4aec401c106b7db8fb2625cd7"
   name = "github.com/dgrijalva/jwt-go"
   packages = ["."]
@@ -559,12 +551,23 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:b8dc43676fcce2ce1602ee66863b1fe124a996e1e620b64bf5b4da147f1a33a9"
-  name = "go.cryptoscope.co/muxrpc"
+  branch = "master"
+  digest = "1:0690433aca45923e42a5fa89445639f884344ffb5f3af64c8955c2dfadfc8116"
+  name = "go.cryptoscope.co/luigi"
   packages = ["."]
   pruneopts = ""
-  revision = "a73aed068d86c66f3a62ce916872c4815681b32d"
-  version = "v1.0.1"
+  revision = "13b962ae90190cff4879f6e0f8cdc40ce1d2e2ff"
+
+[[projects]]
+  digest = "1:0435a534cc58ceaf8d0249371400e8e8a63f7cd6372c8431e730be9bf1f4eeb1"
+  name = "go.cryptoscope.co/muxrpc"
+  packages = [
+    ".",
+    "codec",
+  ]
+  pruneopts = ""
+  revision = "092a9b184f20c2a3aa28ff11f4eca2e0dae593ab"
+  version = "v3.0.0"
 
 [[projects]]
   branch = "master"

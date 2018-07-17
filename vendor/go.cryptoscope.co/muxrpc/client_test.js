@@ -22,13 +22,36 @@ var toPull = require('stream-to-pull-stream')
 
 var api = {
   hello: 'async',
+  callme: {
+    'async': 'async',
+    'source': 'async',
+  },
+  object: 'async',
   stuff: 'source'
 }
 
-var server = MRPC(null, api)({
+var server = MRPC(api, api)({
   hello: function (name, name2, cb) {
     console.error('hello:ok')
     cb(null, 'hello, ' + name + ' and ' + name2 + '!')
+  },
+   callme: {
+	'source': function(cb) {
+		pull(server.stuff(), pull.collect(function(err,vals) {
+			console.error('callme:source:ok vals:',vals)
+			cb(err, "call done")
+		}))
+	},
+	'async': function (cb) {
+	  server.hello(function(err, greet) {
+	    console.error('callme:async:ok')
+	    cb(err, "call done")
+	  })
+	}
+  },
+  object: function (cb) {
+    console.error('object:ok')
+    cb(null, {with:'fields!'})
   },
   stuff: function () {
     console.error('stuff called')
