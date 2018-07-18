@@ -32,7 +32,7 @@ type Language struct {
 
 type User struct {
 	gorm.Model
-	Name         string
+	Name         string `gorm:"size:50"`
 	Age          uint
 	Role         string
 	Active       bool

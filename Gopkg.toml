@@ -103,27 +103,27 @@
 [[override]]
   name = "github.com/qor/admin"
   source = "github.com/cryptix/qor_admin"
-  revision = "e73aa4543e56cafc7a46027d3353f69b64ca91f4"
+  revision = "e72a44dd2596abcc07601c57443b926d5f7a3c2f"
 
 [[override]]
   name = "github.com/qor/assetfs"
   source = "github.com/cryptix/qor_assetfs"
-  revision = "0690e5426d85d229d6e9c919d9637120347058d8"
+  revision = "900db3d01271f64bae1a2451782e4bcb925ee30e"
 
 [[override]]
   name = "github.com/qor/auth"
   source = "github.com/cryptix/qor_auth"
-  revision = "35f1d6dea9a2cc13b571e6f6c557437f55655a08"
+  revision = "51df8661f918f139505589f2cc5903878b9900f8"
 
 [[override]]
   name = "github.com/qor/auth_themes"
   source = "github.com/cryptix/qor_auth_themes"
-  revision = "45a77b9ec82d221cb11936397565ed00150d1c7a"
+  revision = "184919abca5bfa58a8df3ce2e56012fff3c46ce3"
 
 [[override]]
   name = "github.com/qor/mailer"
   source = "github.com/cryptix/qor_mailer"
-  revision = "2d5b212956cc0e7c81aa0e4834bfffad8c4ab6ac"
+  revision = "96d1c82834f0d360e883da6eabb82447995777a4"
 
 [[override]]
   name = "github.com/qor/middlewares"
@@ -138,7 +138,7 @@
 [[override]]
   name = "github.com/qor/render"
   source = "github.com/cryptix/qor_render"
-  revision="e7333e0f2548d73d4773f912e6f2c793d28f38ce"
+  revision="8962536fb5b62ae6297c2ca496737ab8d4bea682"
 
 [[override]]
   name = "github.com/qor/session"

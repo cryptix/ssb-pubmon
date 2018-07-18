@@ -78,8 +78,8 @@
         // exec qorSliderAfterShow after script loaded
         var qorSliderAfterShow = $.fn.qorSliderAfterShow;
         for (var name in qorSliderAfterShow) {
-            if (qorSliderAfterShow.hasOwnProperty(name) && !qorSliderAfterShow[name]['isLoaded']) {
-                qorSliderAfterShow[name]['isLoaded'] = true;
+            if (qorSliderAfterShow.hasOwnProperty(name) && !qorSliderAfterShow[name]['isLoadedInBottomSheet']) {
+                qorSliderAfterShow[name]['isLoadedInBottomSheet'] = true;
                 qorSliderAfterShow[name].call(this, url, response);
             }
         }
@@ -145,7 +145,6 @@
     function QorBottomSheets(element, options) {
         this.$element = $(element);
         this.options = $.extend({}, QorBottomSheets.DEFAULTS, $.isPlainObject(options) && options);
-        this.disabled = false;
         this.resourseData = {};
         this.init();
     }
@@ -183,12 +182,10 @@
 
         unbind: function() {
             this.$bottomsheets
-                .off(EVENT_SUBMIT, 'form', this.submit.bind(this))
-                .off(EVENT_CLICK, '[data-dismiss="bottomsheets"]', this.hide.bind(this))
-                .off(EVENT_CLICK, '.qor-pagination a', this.pagination.bind(this))
-                .off(EVENT_CLICK, CLASS_BOTTOMSHEETS_BUTTON, this.search.bind(this))
-                .off('selectorChanged.qor.selector', this.selectorChanged.bind(this))
-                .off('filterChanged.qor.filter', this.filterChanged.bind(this));
+                .off(EVENT_SUBMIT, 'form')
+                .off(EVENT_CLICK)
+                .off('selectorChanged.qor.selector')
+                .off('filterChanged.qor.filter');
         },
 
         bindActionData: function(actiondData) {
@@ -318,21 +315,17 @@
 
         addLoading: function($element) {
             $element.html('');
-            var $loading = $(QorBottomSheets.TEMPLATE_LOADING).appendTo($element);
-            window.componentHandler.upgradeElement($loading.children()[0]);
+            $(QorBottomSheets.TEMPLATE_LOADING)
+                .appendTo($element)
+                .trigger('enable.qor.material');
         },
 
         loadExtraResource: function(data) {
             let styleDiff = compareLinks(data.$links),
                 scriptDiff = compareScripts(data.$scripts);
 
-            if (styleDiff.length) {
-                loadStyles(styleDiff);
-            }
-
-            if (scriptDiff.length) {
-                loadScripts(scriptDiff, data);
-            }
+            styleDiff.length && loadStyles(styleDiff);
+            scriptDiff.length && loadScripts(scriptDiff, data);
         },
 
         loadMedialibraryJS: function($response) {
@@ -347,7 +340,7 @@
                     var script = document.createElement('script');
                     script.src = src;
                     document.body.appendChild(script);
-                    _this.scriptAdded = true;
+                    _this.mediaScriptAdded = true;
                 }
             });
         },
@@ -527,7 +520,9 @@
 
                             if (data.selectDefaultCreating) {
                                 this.$title.append(
-                                    `<button class="mdl-button mdl-button--primary" type="button" data-load-inline="true" data-select-nohint="${data.selectNohint}" data-select-modal="${data.selectModal}" data-select-listing-url="${data.selectListingUrl}">${data.selectBacktolistTitle}</button>`
+                                    `<button class="mdl-button mdl-button--primary" type="button" data-load-inline="true" data-select-nohint="${
+                                        data.selectNohint
+                                    }" data-select-modal="${data.selectModal}" data-select-listing-url="${data.selectListingUrl}">${data.selectBacktolistTitle}</button>`
                                 );
                             }
 
@@ -540,7 +535,7 @@
                                 if (selectModal != 'one' && !data.selectNohint && (typeof resourseData.maxItem === 'undefined' || resourseData.maxItem != '1')) {
                                     $body.addClass('has-hint');
                                 }
-                                if (selectModal == 'mediabox' && !this.scriptAdded) {
+                                if (selectModal == 'mediabox' && !this.mediaScriptAdded) {
                                     this.loadMedialibraryJS($response);
                                 }
                             }

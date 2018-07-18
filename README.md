@@ -1,4 +1,4 @@
-# ssb-pubmon
+# ssb-pubmon [![Build Status](https://travis-ci.org/cryptix/ssb-pubmon.svg?branch=master)](https://travis-ci.org/cryptix/ssb-pubmon) [![Go Report Card](https://goreportcard.com/badge/github.com/cryptix/ssb-pubmon)](https://goreportcard.com/report/github.com/cryptix/ssb-pubmon)
 
 a botpage that periodically pings [secure scuttlebutt](https://www.scuttlebutt.nz/) pubs to monitor their livelyness.
 

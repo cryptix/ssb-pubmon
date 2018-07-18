@@ -13,7 +13,7 @@
 }
 
 .qor-page__header {
-    .select2-container {
+    .select2-container:not(.qor-advanced-filter .select2-container) {
         width: 100% !important;
         max-width: 260px;
         .select2-dropdown--below {

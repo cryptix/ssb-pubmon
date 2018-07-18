@@ -71,6 +71,6 @@
       </select>
     {{end}}
 
-    <input type="hidden" name="{{.InputName}}" value="">
+    {{if has_change_permission .Meta}}<input type="hidden" name="{{.InputName}}" value="">{{end}}
   </div>
 </div>

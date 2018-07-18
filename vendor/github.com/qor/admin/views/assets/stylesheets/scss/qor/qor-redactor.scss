@@ -15,6 +15,10 @@
     pre {
         white-space: normal;
     }
+    // fix edit image hard to find cursor bug
+    figure {
+        z-index: 1;
+    }
     figure,
     h1,
     h2,
@@ -27,6 +31,26 @@
     pre {
         font-family: 'Roboto', Helvetica, Arial, sans-serif !important;
         position: relative;
+    }
+
+    // redactor display mode plugin style
+    #redactor-image-displaymode {
+        position: absolute;
+        z-index: 5;
+        top: 50%;
+        left: 55%;
+        margin-top: -11px;
+        line-height: 1;
+        background-color: rgba(0, 0, 0, 0.9);
+        border-radius: 3px;
+        color: rgb(255, 255, 255);
+        font-size: 12px;
+        padding: 7px 10px;
+        cursor: pointer;
+        margin-left: -120px;
+        & + #redactor-image-editter {
+            left: 57%;
+        }
     }
 }
 

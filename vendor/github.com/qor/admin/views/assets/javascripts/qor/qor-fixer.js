@@ -36,8 +36,8 @@
             if (this.isNeedBuild()) {
                 return;
             }
-            this.$thead = $this.find('thead');
-            this.$tbody = $this.find('tbody');
+            this.$thead = $this.find('> thead');
+            this.$tbody = $this.find('> tbody');
 
             this.$header = $(options.header);
             this.$subHeader = $(options.subHeader);
@@ -78,7 +78,9 @@
                 $items = this.$tbody.find('> tr:first').children();
 
             $items.each(function() {
-                headerWidth.push($(this).outerWidth());
+                let tdWidth = $(this).outerWidth();
+                $(this).outerWidth(tdWidth);
+                headerWidth.push(tdWidth);
             });
 
             this.$thead

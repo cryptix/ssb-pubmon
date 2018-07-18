@@ -51,12 +51,12 @@ func Init(log logging.Interface) {
 	Admin.NewResource(notify.Sender)
 
 	// Add Dashboard
-	Admin.AddMenu([]string{"admin"}, &admin.Menu{Name: "Dashboard", Link: "/admin"})
+	Admin.AddMenu(&admin.Menu{Name: "Dashboard", Link: "/admin"})
 
 	// Add Media Library
 	Admin.AddResource(&media_library.MediaLibrary{}, &admin.Config{
-		ShowMenu: []string{"admin"},
-		Menu:     []string{"Site Management"}})
+
+		Menu: []string{"Site Management"}})
 
 	// Add Asset Manager, for rich editor
 	assetManager := Admin.AddResource(&asset_manager.AssetManager{}, &admin.Config{Invisible: true})
@@ -66,7 +66,7 @@ func Init(log logging.Interface) {
 	Help.GetMeta("Body").Config = &admin.RichEditorConfig{AssetManager: assetManager}
 
 	// Add User
-	user := Admin.AddResource(&models.User{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"User Management"}})
+	user := Admin.AddResource(&models.User{}, &admin.Config{Menu: []string{"User Management"}})
 	user.Meta(&admin.Meta{Name: "Role", Config: &admin.SelectOneConfig{Collection: []string{"Admin", "Maintainer", "Member"}}})
 	user.Meta(&admin.Meta{Name: "Password",
 		Type:   "password",
@@ -119,7 +119,7 @@ func Init(log logging.Interface) {
 	user.EditAttrs(user.ShowAttrs())
 
 	// pub
-	pubRes := Admin.AddResource(&models.Pub{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"SSB Pubs"}})
+	pubRes := Admin.AddResource(&models.Pub{}, &admin.Config{Menu: []string{"SSB Pubs"}})
 	pubRes.Action(&admin.Action{
 		Name: "Try",
 		Handler: func(argument *admin.ActionArgument) error {
@@ -147,7 +147,7 @@ func Init(log logging.Interface) {
 	})
 	activity.Register(pubRes)
 
-	pubAddr := Admin.AddResource(&models.Address{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"SSB Pubs"}})
+	pubAddr := Admin.AddResource(&models.Address{}, &admin.Config{Menu: []string{"SSB Pubs"}})
 	pubAddr.ShowAttrs(
 		&admin.Section{
 			Title: "Basic Information",
@@ -158,18 +158,18 @@ func Init(log logging.Interface) {
 		},
 	)
 
-	Admin.AddResource(&models.Check{}, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"SSB Pubs"}})
+	Admin.AddResource(&models.Check{}, &admin.Config{Menu: []string{"SSB Pubs"}})
 
 	// Add Translations
-	Admin.AddResource(i18n.I18n, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"Site Management"}, Priority: 1})
+	Admin.AddResource(i18n.I18n, &admin.Config{Menu: []string{"Site Management"}, Priority: 1})
 
 	// Add Worker
 	Worker := getWorker()
 	exchange_actions.RegisterExchangeJobs(i18n.I18n, Worker)
-	Admin.AddResource(Worker, &admin.Config{ShowMenu: []string{"admin"}, Menu: []string{"Site Management"}})
+	Admin.AddResource(Worker, &admin.Config{Menu: []string{"Site Management"}})
 
 	// Add Setting
-	Admin.AddResource(&models.Setting{}, &admin.Config{ShowMenu: []string{"admin"}, Name: "Site Managment", Singleton: true})
+	Admin.AddResource(&models.Setting{}, &admin.Config{Name: "Site Managment", Singleton: true})
 
 	// Add Search Center Resources
 	Admin.AddSearchResource(user)

@@ -2,10 +2,8 @@ package admin
 
 import (
 	"errors"
-	"time"
 
 	"github.com/qor/qor"
-	"github.com/qor/qor/utils"
 )
 
 // metaConfig meta config
@@ -19,50 +17,16 @@ func (metaConfig) GetTemplate(context *Context, metaType string) ([]byte, error)
 
 var defaultMetaConfigorMaps = map[string]func(*Meta){
 	"date": func(meta *Meta) {
-		if meta.FormattedValuer == nil {
-			meta.SetFormattedValuer(func(value interface{}, context *qor.Context) interface{} {
-				switch date := meta.GetValuer()(value, context).(type) {
-				case *time.Time:
-					if date == nil {
-						return ""
-					}
-					if date.IsZero() {
-						return ""
-					}
-					return utils.FormatTime(*date, "2006-01-02", context)
-				case time.Time:
-					if date.IsZero() {
-						return ""
-					}
-					return utils.FormatTime(date, "2006-01-02", context)
-				default:
-					return date
-				}
-			})
+		if _, ok := meta.Config.(*DatetimeConfig); !ok || meta.Config == nil {
+			meta.Config = &DatetimeConfig{}
+			meta.Config.ConfigureQorMeta(meta)
 		}
 	},
 
 	"datetime": func(meta *Meta) {
-		if meta.FormattedValuer == nil {
-			meta.SetFormattedValuer(func(value interface{}, context *qor.Context) interface{} {
-				switch date := meta.GetValuer()(value, context).(type) {
-				case *time.Time:
-					if date == nil {
-						return ""
-					}
-					if date.IsZero() {
-						return ""
-					}
-					return utils.FormatTime(*date, "2006-01-02 15:04", context)
-				case time.Time:
-					if date.IsZero() {
-						return ""
-					}
-					return utils.FormatTime(date, "2006-01-02 15:04", context)
-				default:
-					return date
-				}
-			})
+		if _, ok := meta.Config.(*DatetimeConfig); !ok || meta.Config == nil {
+			meta.Config = &DatetimeConfig{ShowTime: true}
+			meta.Config.ConfigureQorMeta(meta)
 		}
 	},
 

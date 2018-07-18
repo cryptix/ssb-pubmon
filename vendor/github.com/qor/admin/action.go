@@ -178,6 +178,7 @@ func (actionArgument *ActionArgument) FindSelectedRecords() []interface{} {
 
 	if len(sqls) > 0 {
 		clone.SetDB(clone.GetDB().Where(strings.Join(sqls, " OR "), sqlParams...))
+		clone.Searcher.Pagination.CurrentPage = -1
 	}
 	results, _ := clone.FindMany()
 

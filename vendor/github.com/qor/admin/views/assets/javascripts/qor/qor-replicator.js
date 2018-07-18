@@ -293,7 +293,10 @@
             // add order property for sortable fieldset
             if (this.isSortable) {
                 let order = $element.find('> .qor-field__block > .qor-sortable__item').not('.qor-fieldset--new').length;
-                $item.attr('order-index', order).css('order', order);
+                $item
+                    .attr('order-index', order)
+                    .attr('order-item', `item_${order}`)
+                    .css('order', order);
             }
 
             $item.data('itemIndex', this.index).removeClass('qor-fieldset--new');

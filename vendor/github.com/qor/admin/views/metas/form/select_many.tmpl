@@ -34,6 +34,7 @@
 
     <script name="select-many-hint" type="x-tmpl-mustache">
       <div class="qor-selectmany__hint clearfix">
+        <span class="qor-selectmany__selectall">{{marshal (t "qor_admin.form.select_many_selectall" "select all")}}</span>
         <span>[[ selectedNum ]] {{marshal (t "qor_admin.form.select_many_hint" "item(s) selected")}}</span>
         <a href="#" data-dismiss="bottomsheets">{{t "qor_admin.form.select_many_hint_button" "DONE"}}</a>
       </div>
@@ -66,7 +67,7 @@
         {{t "qor_admin.form.add_items" "ADD ITEMS"}}
       </a>
 
-      <select class="qor-field__input qor-field__selectmany-input hidden" id="{{.InputId}}" name="{{.InputName}}" multiple {{if  (not (has_change_permission .Meta)) }}disabled{{end}}>
+      <select class="qor-field__input qor-field__selectmany-input hidden" id="{{.InputId}}" data-init-data="{{range $value := $current_values}}{{primary_key_of $value}},{{end}}" name="{{.InputName}}" multiple {{if  (not (has_change_permission .Meta)) }}disabled{{end}}>
         {{range $value := $current_values}}
           <option value="{{primary_key_of $value}}" selected>{{stringify $value}}</option>
         {{end}}
@@ -89,6 +90,6 @@
       </select>
     {{end}}
 
-    <input type="hidden" name="{{.InputName}}" value="">
+    {{if has_change_permission .Meta}}<input type="hidden" name="{{.InputName}}" value="">{{end}}
   </div>
 </div>

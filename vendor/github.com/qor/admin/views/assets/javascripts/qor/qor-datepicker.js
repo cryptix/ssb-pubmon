@@ -12,15 +12,14 @@
 })(function($) {
     'use strict';
 
-    var NAMESPACE = 'qor.datepicker';
-    var EVENT_ENABLE = 'enable.' + NAMESPACE;
-    var EVENT_DISABLE = 'disable.' + NAMESPACE;
-    var EVENT_CHANGE = 'pick.' + NAMESPACE;
-    var EVENT_CLICK = 'click.' + NAMESPACE;
-
-    var CLASS_EMBEDDED = '.qor-datepicker__embedded';
-    var CLASS_SAVE = '.qor-datepicker__save';
-    var CLASS_PARENT = '[data-picker-type]';
+    let NAMESPACE = 'qor.datepicker',
+        EVENT_ENABLE = 'enable.' + NAMESPACE,
+        EVENT_DISABLE = 'disable.' + NAMESPACE,
+        EVENT_CHANGE = 'pick.' + NAMESPACE,
+        EVENT_CLICK = 'click.' + NAMESPACE,
+        CLASS_EMBEDDED = '.qor-datepicker__embedded',
+        CLASS_SAVE = '.qor-datepicker__save',
+        CLASS_PARENT = '[data-picker-type]';
 
     function replaceText(str, data) {
         if (typeof str === 'string') {
@@ -41,17 +40,15 @@
         this.formatDate = null;
         this.built = false;
         this.pickerData = this.$element.data();
+        this.$parent = this.$element.closest(CLASS_PARENT);
+        this.isDateTimePicker = this.$parent.data('picker-type') == 'datetime';
+        this.$targetInput = this.$parent.find(this.pickerData.targetInput || (this.isDateTimePicker ? '.qor-datetimepicker__input' : '.qor-datepicker__input'));
         this.init();
     }
 
     QorDatepicker.prototype = {
         init: function() {
-            if (
-                this.$element
-                    .closest(CLASS_PARENT)
-                    .find(this.pickerData.targetInput)
-                    .is(':disabled')
-            ) {
+            if (this.$targetInput.is(':disabled')) {
                 this.$element.remove();
                 return;
             }
@@ -69,26 +66,26 @@
         build: function() {
             let $modal,
                 $ele = this.$element,
-                data = this.pickerData,
-                date = $ele.val() ? new Date($ele.val()) : new Date(),
+                $targetInput = this.$targetInput,
+                defaultDate = $targetInput.val(),
                 datepickerOptions = {
-                    date: date,
+                    date: new Date(),
                     inline: true
-                },
-                parent = $ele.closest(CLASS_PARENT),
-                $targetInput = parent.find(data.targetInput);
+                };
 
             if (this.built) {
                 return;
             }
 
-            this.$modal = $modal = $(replaceText(QorDatepicker.TEMPLATE, this.options.text)).appendTo('body');
-
-            if ($targetInput.length) {
-                datepickerOptions.date = $targetInput.val() ? new Date($targetInput.val()) : new Date();
+            if ($ele.is(':input') && Date.parse($ele.val())) {
+                datepickerOptions.date = new Date($ele.val());
+            } else if (defaultDate && Date.parse(defaultDate)) {
+                datepickerOptions.date = new Date(defaultDate);
             }
 
-            if (data.targetInput && $targetInput.data('start-date')) {
+            this.$modal = $modal = $(replaceText(QorDatepicker.TEMPLATE, this.options.text)).appendTo('body');
+
+            if ($targetInput.data('start-date')) {
                 datepickerOptions.startDate = new Date();
             }
 
@@ -144,14 +141,10 @@
         },
 
         pick: function() {
-            let targetInputClass = this.pickerData.targetInput,
-                $element = this.$element,
-                $parent = $element.closest(CLASS_PARENT),
-                $targetInput = targetInputClass ? $parent.find(targetInputClass) : $element,
-                pickerType = $parent.data('picker-type'),
+            let $targetInput = this.$targetInput,
                 newValue = this.formatDate;
 
-            if (pickerType === 'datetime') {
+            if (this.isDateTimePicker) {
                 var regDate = /^\d{4}-\d{1,2}-\d{1,2}/;
                 var oldValue = $targetInput.val();
                 var hasDate = regDate.test(oldValue);

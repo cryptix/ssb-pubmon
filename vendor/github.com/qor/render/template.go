@@ -139,8 +139,9 @@ func (tmpl *Template) Execute(templateName string, obj interface{}, req *http.Re
 		w.WriteHeader(http.StatusInternalServerError)
 		// TODO: better error 500 template
 		fmt.Fprint(w, "Internal Server Error")
-		log := logging.FromContext(req.Context())
-		log.Log("event", "error", "where", "tmpl.Execute", "err", err)
+		if log := logging.FromContext(req.Context()); log != nil {
+			log.Log("event", "error", "where", "tmpl.Execute", "err", err)
+		}
 		return err
 	}
 

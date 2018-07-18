@@ -19,6 +19,12 @@ type Filter struct {
 	Config     FilterConfigInterface
 }
 
+// SavedFilter saved filter settings
+type SavedFilter struct {
+	Name string
+	URL  string
+}
+
 // FilterConfigInterface filter config interface
 type FilterConfigInterface interface {
 	ConfigureQORAdminFilter(*Filter)
@@ -37,6 +43,18 @@ func (res *Resource) Filter(filter *Filter) {
 
 	if filter.Label == "" {
 		filter.Label = utils.HumanizeString(filter.Name)
+	}
+
+	if meta := res.GetMeta(filter.Name); meta != nil {
+		if filter.Type == "" {
+			filter.Type = meta.Type
+		}
+
+		if filter.Config == nil {
+			if filterConfig, ok := meta.Config.(FilterConfigInterface); ok {
+				filter.Config = filterConfig
+			}
+		}
 	}
 
 	if filter.Config != nil {

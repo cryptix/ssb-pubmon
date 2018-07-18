@@ -70,7 +70,13 @@ func (context *Context) FuncMap() template.FuncMap {
 				return template.JS(byt)
 			}
 		},
-
+		"to_map": func(values ...interface{}) map[string]interface{} {
+			results := map[string]interface{}{}
+			for i := 0; i < len(values)-1; i += 2 {
+				results[fmt.Sprint(values[i])] = values[i+1]
+			}
+			return results
+		},
 		"render":                context.Render,
 		"render_text":           context.renderText,
 		"render_with":           context.renderWith,
@@ -95,7 +101,17 @@ func (context *Context) FuncMap() template.FuncMap {
 			return template.HTML(result.String())
 		},
 		"render_filter": context.renderFilter,
-		"page_title":    context.pageTitle,
+		"saved_filters": context.savedFilters,
+		"has_filter": func() bool {
+			query := context.Request.URL.Query()
+			for key := range query {
+				if regexp.MustCompile("filter[(\\w+)]").MatchString(key) && query.Get(key) != "" {
+					return true
+				}
+			}
+			return false
+		},
+		"page_title": context.pageTitle,
 		"meta_label": func(meta *Meta) template.HTML {
 			key := fmt.Sprintf("%v.attributes.%v", meta.baseResource.ToParam(), meta.Label)
 			return context.Admin.T(context.Context, key, meta.Label)
@@ -405,6 +421,9 @@ func (context *Context) valueOf(valuer func(interface{}, *qor.Context) interface
 	if valuer != nil {
 		reflectValue := reflect.ValueOf(value)
 		if reflectValue.Kind() != reflect.Ptr {
+			if !reflectValue.IsValid() {
+				return nil
+			}
 			reflectPtr := reflect.New(reflectValue.Type())
 			reflectPtr.Elem().Set(reflectValue)
 			value = reflectPtr.Interface()
@@ -472,14 +491,16 @@ func (context *Context) renderSections(value interface{}, sections []*Section, p
 			})
 		}
 
-		var data = map[string]interface{}{
-			"Section": section,
-			"Title":   template.HTML(section.Title),
-			"Rows":    rows,
-		}
-		if content, err := context.Asset("metas/section.tmpl"); err == nil {
-			if tmpl, err := template.New("section").Funcs(context.FuncMap()).Parse(string(content)); err == nil {
-				tmpl.Execute(writer, data)
+		if len(rows) > 0 {
+			var data = map[string]interface{}{
+				"Section": section,
+				"Title":   template.HTML(section.Title),
+				"Rows":    rows,
+			}
+			if content, err := context.Asset("metas/section.tmpl"); err == nil {
+				if tmpl, err := template.New("section").Funcs(context.FuncMap()).Parse(string(content)); err == nil {
+					tmpl.Execute(writer, data)
+				}
 			}
 		}
 	}
@@ -544,6 +565,11 @@ func (context *Context) renderFilter(filter *Filter) template.HTML {
 	return template.HTML(result.String())
 }
 
+func (context *Context) savedFilters() (filters []SavedFilter) {
+	context.Admin.SettingsStorage.Get("saved_filters", &filters, context)
+	return
+}
+
 func (context *Context) renderMeta(meta *Meta, value interface{}, prefix []string, metaType string, writer *bytes.Buffer) {
 	var (
 		err      error
@@ -575,6 +601,12 @@ func (context *Context) renderMeta(meta *Meta, value interface{}, prefix []strin
 		}
 	}
 
+	funcsMap["has_change_permission"] = func(permissioner HasPermissioner) bool {
+		if context.GetDB().NewScope(value).PrimaryKeyZero() {
+			return context.hasCreatePermission(permissioner)
+		}
+		return context.hasUpdatePermission(permissioner)
+	}
 	funcsMap["render_nested_form"] = generateNestedRenderSections("form")
 
 	defer func() {
@@ -646,6 +678,10 @@ func (context *Context) renderMeta(meta *Meta, value interface{}, prefix []strin
 
 func (context *Context) isEqual(value interface{}, hasValue interface{}) bool {
 	var result string
+
+	if (value == nil || hasValue == nil) && (value != hasValue) {
+		return false
+	}
 
 	if reflect.Indirect(reflect.ValueOf(hasValue)).Kind() == reflect.Struct {
 		scope := &gorm.Scope{Value: hasValue}
@@ -765,8 +801,8 @@ func (context *Context) getMenus() (menus []*menu) {
 			}
 		}
 	}
-	matchedRoles := roles.MatchedRoles(context.Request, context.CurrentUser)
-	addMenu(globalMenu, context.Admin.GetMenus(matchedRoles))
+
+	addMenu(globalMenu, context.Admin.GetMenus())
 
 	if context.Action != "search_center" && mostMatchedMenu != nil {
 		mostMatchedMenu.Active = true
@@ -1151,7 +1187,7 @@ func (context *Context) AllowedActions(actions []*Action, mode string, records .
 	var allowedActions []*Action
 	for _, action := range actions {
 		for _, m := range action.Modes {
-			if m == mode {
+			if m == mode || (m == "index" && mode == "batch") {
 				var permission = roles.Update
 				switch strings.ToUpper(action.Method) {
 				case "POST":

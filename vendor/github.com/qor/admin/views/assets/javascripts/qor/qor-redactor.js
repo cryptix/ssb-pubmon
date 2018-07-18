@@ -321,7 +321,6 @@
                     imageUpload: $this.data('uploadUrl'),
                     fileUpload: $this.data('uploadUrl'),
                     imageResizable: true,
-                    imagePosition: true,
                     toolbarFixed: false,
                     buttons: editorButtons,
 
@@ -414,23 +413,25 @@
                                 this.link.linkUrlText = $(ID_REDACTOR_LINK_TEXT).val();
                                 this.link.description = $(ID_REDACTOR_LINK_TITLE).val();
 
-                                $(ID_REDACTOR_LINK_TITLE).off(EVENT_KEYUP);
-                                $(ID_REDACTOR_LINK_TEXT).off(EVENT_KEYUP);
-                                $(ID_REDACTOR_MODAL_BUTTON_CANCEL).off(EVENT_CLICK);
+                                $(ID_REDACTOR_MODAL_BUTTON_CANCEL)
+                                    .off(EVENT_CLICK)
+                                    .on(EVENT_CLICK, function() {
+                                        _this.link.clickCancel = true;
+                                    });
 
-                                $(ID_REDACTOR_MODAL_BUTTON_CANCEL).on(EVENT_CLICK, function() {
-                                    _this.link.clickCancel = true;
-                                });
+                                $(ID_REDACTOR_LINK_TITLE)
+                                    .off(EVENT_KEYUP)
+                                    .on(EVENT_KEYUP, function() {
+                                        _this.link.valueChanged = true;
+                                        _this.link.description = escapeHTML($(this).val());
+                                    });
 
-                                $(ID_REDACTOR_LINK_TITLE).on(EVENT_KEYUP, function() {
-                                    _this.link.valueChanged = true;
-                                    _this.link.description = escapeHTML($(this).val());
-                                });
-
-                                $(ID_REDACTOR_LINK_TEXT).on(EVENT_KEYUP, function() {
-                                    _this.link.valueChanged = true;
-                                    _this.link.linkUrlText = escapeHTML($(this).val());
-                                });
+                                $(ID_REDACTOR_LINK_TEXT)
+                                    .off(EVENT_KEYUP)
+                                    .on(EVENT_KEYUP, function() {
+                                        _this.link.valueChanged = true;
+                                        _this.link.linkUrlText = escapeHTML($(this).val());
+                                    });
                             }
                         },
 
@@ -445,6 +446,8 @@
                                     $linkHtml.prop('title', this.link.linkUrlText);
                                 }
                             }
+
+                            $('#redactor-image-displaymode').remove();
 
                             this.link.description = '';
                             this.link.linkUrlText = '';

@@ -11,19 +11,26 @@
 {{end}}
 
 {{$value := .Filter.Config.FilterValue .Filter .Context}}
-<select data-toggle="qor.chooser" {{if $value}}chooser-selected="true"{{end}} data-placeholder="{{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}" name="{{.InputNamePrefix}}.Value" data-allow-clear="true" {{if .Filter.Config.RemoteDataResource}}data-remote-data="true" data-ajax--url="{{url_for .Filter.Config.RemoteDataResource}}"{{end}}>
-  {{if .Filter.Config.RemoteDataResource}}
-    {{if $value}}
-      <option value="{{primary_key_of $value}}" selected>{{stringify $value}}</option>
-    {{end}}
-  {{else}}
-    <option></option>
-    {{range $values := (.Filter.Config.GetCollection nil .Context)}}
-      {{if (is_equal $value (index $values 0))}}
-        <option value="{{index $values 0}}" selected>{{index $values 1}}</option>
+<advanced-filter-group type="filter-selectone" class="clearfix">
+    <label class="qor-field__label">
+      {{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}
+  </label>
+  <select data-toggle="qor.chooser" {{if $value}}chooser-selected="true"{{end}} data-placeholder="{{t (printf "%v.filter.%v" .Resource.ToParam .Filter.Label) .Filter.Label}}" name="{{.InputNamePrefix}}.Value" data-allow-clear="true" {{if .Filter.Config.RemoteDataResource}}data-remote-data="true" data-ajax--url="{{url_for .Filter.Config.RemoteDataResource}}"{{end}} filter-required>
+    {{if .Filter.Config.RemoteDataResource}}
+      {{if $value}}
+        <option value="{{primary_key_of $value}}" selected>{{stringify $value}}</option>
       {{else}}
-        <option value="{{index $values 0}}">{{index $values 1}}</option>
+      <option></option>
+      {{end}}
+    {{else}}
+      <option></option>
+      {{range $values := (.Filter.Config.GetCollection nil .Context)}}
+        {{if (is_equal $value (index $values 0))}}
+          <option value="{{index $values 0}}" selected>{{index $values 1}}</option>
+        {{else}}
+          <option value="{{index $values 0}}">{{index $values 1}}</option>
+        {{end}}
       {{end}}
     {{end}}
-  {{end}}
-</select>
+  </select>
+</advanced-filter-group>

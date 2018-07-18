@@ -229,9 +229,14 @@ table {
 }
 
 .qor-table-fixed-header {
-    thead {
+    > thead {
         position: fixed;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         padding-bottom: 0;
+        z-index: 20;
     }
+}
+
+.mdl-data-table td .mdl-data-table__select.mdl-checkbox {
+    margin-bottom: 22px;
 }

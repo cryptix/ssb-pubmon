@@ -74,7 +74,7 @@ func main() {
 
 ## Documentation
 
-<https://doc.getqor.com/chapter2/setup.html>
+<https://doc.getqor.com/admin>
 
 ## License
 

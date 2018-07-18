@@ -197,6 +197,11 @@ func (serveMux *serveMux) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	// Parse Request Form
 	req.ParseMultipartForm(2 * 1024 * 1024)
+	defer func() {
+		if req.MultipartForm != nil {
+			req.MultipartForm.RemoveAll()
+		}
+	}()
 
 	// Set Request Method
 	if method := req.Form.Get("_method"); method != "" {

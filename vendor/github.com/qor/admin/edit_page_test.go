@@ -168,11 +168,11 @@ Registered At
 <input class="mdl-textfield__input qor-datetimepicker__input" placeholder=" YYYY-MM-DD HH:MM " type="text" id="user_1_registered_at" name="QorResource.RegisteredAt" value="" >
 
 <div>
-  <button data-toggle="qor.datepicker" data-target-input=".qor-datetimepicker__input" class="mdl-button mdl-js-button mdl-button--icon qor-action__datepicker" type="button">
+	<button data-toggle="qor.datepicker" class="mdl-button mdl-js-button mdl-button--icon qor-action__datepicker" type="button">
 	<i class="material-icons">date_range</i>
   </button>
 
-  <button data-toggle="qor.timepicker" data-target-input=".qor-datetimepicker__input" class="mdl-button mdl-js-button mdl-button--icon qor-action__timepicker" type="button">
+  <button data-toggle="qor.timepicker" class="mdl-button mdl-js-button mdl-button--icon qor-action__timepicker" type="button">
 	<i class="material-icons">access_time</i>
   </button>
 </div>

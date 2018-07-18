@@ -207,6 +207,37 @@ func (s *Searcher) parseContext(withDefaultScope bool) *qor.Context {
 				}
 			}
 		}
+
+		if savingName := context.Request.Form.Get("filter_saving_name"); savingName != "" {
+			var filters []SavedFilter
+			requestURL := context.Request.URL
+			requestURLQuery := context.Request.URL.Query()
+			requestURLQuery.Del("filter_saving_name")
+			requestURL.RawQuery = requestURLQuery.Encode()
+			newFilters := []SavedFilter{{Name: savingName, URL: requestURL.String()}}
+			if context.AddError(searcher.Admin.SettingsStorage.Get("saved_filters", &filters, searcher.Context)); !context.HasError() {
+				for _, filter := range filters {
+					if filter.Name != savingName {
+						newFilters = append(newFilters, filter)
+					}
+				}
+
+				context.AddError(searcher.Admin.SettingsStorage.Save("saved_filters", newFilters, searcher.Resource, context.CurrentUser, searcher.Context))
+			}
+		}
+
+		if savingName := context.Request.Form.Get("delete_saved_filter"); savingName != "" {
+			var filters, newFilters []SavedFilter
+			if context.AddError(searcher.Admin.SettingsStorage.Get("saved_filters", &filters, searcher.Context)); !context.HasError() {
+				for _, filter := range filters {
+					if filter.Name != savingName {
+						newFilters = append(newFilters, filter)
+					}
+				}
+
+				context.AddError(searcher.Admin.SettingsStorage.Save("saved_filters", newFilters, searcher.Resource, context.CurrentUser, searcher.Context))
+			}
+		}
 	}
 
 	searcher.filterData(context, withDefaultScope)
@@ -329,9 +360,21 @@ func filterResourceByFields(res *Resource, filterFields []filterField, keyword s
 
 			appendString := func(field *gorm.Field) {
 				switch filterfield.Operation {
-				case "equal":
+				case "equal", "eq":
 					conditions = append(conditions, fmt.Sprintf("upper(%v.%v) = upper(?)", tableName, scope.Quote(field.DBName)))
 					keywords = append(keywords, keyword)
+				case "start_with":
+					conditions = append(conditions, fmt.Sprintf("upper(%v.%v) like upper(?)", tableName, scope.Quote(field.DBName)))
+					keywords = append(keywords, keyword+"%")
+				case "end_with":
+					conditions = append(conditions, fmt.Sprintf("upper(%v.%v) like upper(?)", tableName, scope.Quote(field.DBName)))
+					keywords = append(keywords, "%"+keyword)
+				case "present":
+					conditions = append(conditions, fmt.Sprintf("%v.%v <> ?", tableName, scope.Quote(field.DBName)))
+					keywords = append(keywords, "")
+				case "blank":
+					conditions = append(conditions, fmt.Sprintf("%v.%v = ? OR %v.%v IS NULL", tableName, scope.Quote(field.DBName), tableName, scope.Quote(field.DBName)))
+					keywords = append(keywords, "")
 				default:
 					conditions = append(conditions, fmt.Sprintf("upper(%v.%v) like upper(?)", tableName, scope.Quote(field.DBName)))
 					keywords = append(keywords, "%"+keyword+"%")
@@ -339,16 +382,34 @@ func filterResourceByFields(res *Resource, filterFields []filterField, keyword s
 			}
 
 			appendInteger := func(field *gorm.Field) {
-				if _, err := strconv.Atoi(keyword); err == nil {
-					conditions = append(conditions, fmt.Sprintf("%v.%v = ?", tableName, scope.Quote(field.DBName)))
-					keywords = append(keywords, keyword)
+				if num, err := strconv.Atoi(keyword); err == nil {
+					keywords = append(keywords, num)
+					switch filterfield.Operation {
+					case "gt":
+						conditions = append(conditions, fmt.Sprintf("%v.%v > ?", tableName, scope.Quote(field.DBName)))
+					case "lt":
+						conditions = append(conditions, fmt.Sprintf("%v.%v < ?", tableName, scope.Quote(field.DBName)))
+					case "present":
+						conditions = append(conditions, fmt.Sprintf("%v.%v IS NOT NULL", tableName, scope.Quote(field.DBName)))
+					case "blank":
+						conditions = append(conditions, fmt.Sprintf("%v.%v IS NULL", tableName, scope.Quote(field.DBName)))
+					default:
+						conditions = append(conditions, fmt.Sprintf("%v.%v = ?", tableName, scope.Quote(field.DBName)))
+					}
 				}
 			}
 
 			appendFloat := func(field *gorm.Field) {
-				if _, err := strconv.ParseFloat(keyword, 64); err == nil {
-					conditions = append(conditions, fmt.Sprintf("%v.%v = ?", tableName, scope.Quote(field.DBName)))
-					keywords = append(keywords, keyword)
+				if f, err := strconv.ParseFloat(keyword, 64); err == nil {
+					keywords = append(keywords, f)
+					switch filterfield.Operation {
+					case "gt":
+						conditions = append(conditions, fmt.Sprintf("%v.%v > ?", tableName, scope.Quote(field.DBName)))
+					case "lt":
+						conditions = append(conditions, fmt.Sprintf("%v.%v < ?", tableName, scope.Quote(field.DBName)))
+					default:
+						conditions = append(conditions, fmt.Sprintf("%v.%v = ?", tableName, scope.Quote(field.DBName)))
+					}
 				}
 			}
 
@@ -356,6 +417,13 @@ func filterResourceByFields(res *Resource, filterFields []filterField, keyword s
 				if value, err := strconv.ParseBool(keyword); err == nil {
 					conditions = append(conditions, fmt.Sprintf("%v.%v = ?", tableName, scope.Quote(field.DBName)))
 					keywords = append(keywords, value)
+				} else {
+					switch keyword {
+					case "present":
+						conditions = append(conditions, fmt.Sprintf("%v.%v IS NOT NULL", tableName, scope.Quote(field.DBName)))
+					case "blank":
+						conditions = append(conditions, fmt.Sprintf("%v.%v IS NULL", tableName, scope.Quote(field.DBName)))
+					}
 				}
 			}
 

@@ -12,21 +12,15 @@
 })(function($) {
     'use strict';
 
-    var location = window.location;
-    var NAMESPACE = 'qor.filter';
-    var EVENT_FILTER_CHANGE = 'filterChanged.' + NAMESPACE;
-    var EVENT_ENABLE = 'enable.' + NAMESPACE;
-    var EVENT_DISABLE = 'disable.' + NAMESPACE;
-    var EVENT_CLICK = 'click.' + NAMESPACE;
-    var EVENT_CHANGE = 'change.' + NAMESPACE;
-    var CLASS_IS_ACTIVE = 'is-active';
-    var CLASS_BOTTOMSHEETS = '.qor-bottomsheets';
-
-    function QorFilter(element, options) {
-        this.$element = $(element);
-        this.options = $.extend({}, QorFilter.DEFAULTS, $.isPlainObject(options) && options);
-        this.init();
-    }
+    let location = window.location,
+        NAMESPACE = 'qor.filter',
+        EVENT_FILTER_CHANGE = 'filterChanged.' + NAMESPACE,
+        EVENT_ENABLE = 'enable.' + NAMESPACE,
+        EVENT_DISABLE = 'disable.' + NAMESPACE,
+        EVENT_CLICK = 'click.' + NAMESPACE,
+        EVENT_CHANGE = 'change.' + NAMESPACE,
+        CLASS_IS_ACTIVE = 'is-active',
+        CLASS_BOTTOMSHEETS = '.qor-bottomsheets';
 
     function encodeSearch(data, detached) {
         var search = decodeURI(location.search);
@@ -90,6 +84,12 @@
         return data;
     }
 
+    function QorFilter(element, options) {
+        this.$element = $(element);
+        this.options = $.extend({}, QorFilter.DEFAULTS, $.isPlainObject(options) && options);
+        this.init();
+    }
+
     QorFilter.prototype = {
         constructor: QorFilter,
 
@@ -109,16 +109,16 @@
         },
 
         toggle: function(e) {
-            var $target = $(e.currentTarget);
-            var data = [];
-            var params;
-            var param;
-            var search;
-            var name;
-            var value;
-            var index;
-            var matched;
-            var paramName;
+            let $target = $(e.currentTarget),
+                data = [],
+                params,
+                param,
+                search,
+                name,
+                value,
+                index,
+                matched,
+                paramName;
 
             if ($target.is('select')) {
                 params = decodeSearch(decodeURI(location.search));

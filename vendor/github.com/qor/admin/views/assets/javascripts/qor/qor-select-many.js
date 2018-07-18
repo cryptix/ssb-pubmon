@@ -28,6 +28,7 @@
         CLASS_SELECT_INPUT = '.qor-field__selectmany-input',
         CLASS_SELECT_ICON = '.qor-select__select-icon',
         CLASS_SELECT_HINT = '.qor-selectmany__hint',
+        CLASS_SELECT_ALL = '.qor-selectmany__selectall',
         CLASS_PARENT = '.qor-field__selectmany',
         CLASS_SELECTED = 'is_selected',
         CLASS_MANY = 'qor-bottomsheets__select-many';
@@ -244,8 +245,20 @@
             };
 
             $bottomsheets.qorSelectCore(options).addClass(CLASS_MANY);
+            $bottomsheets.on(EVENT_CLICK, CLASS_SELECT_ALL, this.handleSelectAll.bind(this));
             this.$bottomsheets = $bottomsheets;
             this.initItems();
+        },
+
+        handleSelectAll: function() {
+            let $trs = this.$bottomsheets.find('.qor-table tbody tr'),
+                $trsHasUnselected = $trs.not('.is_selected');
+
+            if ($trsHasUnselected.length) {
+                $trsHasUnselected.click();
+            } else {
+                $trs.click();
+            }
         },
 
         onSelectResults: function(data) {
