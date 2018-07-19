@@ -7,7 +7,17 @@ addons:
 
 language: go
 
-go: "1.10.x"
+env:
+ - GO111MODULE=on
+
+go:
+  - "1.10.x"
+  - master
+
+matrix:
+  allow_failures:
+    - go: master
+
 
 go_import_path: github.com/cryptix/ssb-pubmon
 
