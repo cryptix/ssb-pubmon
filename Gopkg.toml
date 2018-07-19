@@ -103,47 +103,47 @@
 [[override]]
   name = "github.com/qor/admin"
   source = "github.com/cryptix/qor_admin"
-  revision = "e72a44dd2596abcc07601c57443b926d5f7a3c2f"
+  revision = "v0.0.3-cryptix"
 
 [[override]]
   name = "github.com/qor/assetfs"
   source = "github.com/cryptix/qor_assetfs"
-  revision = "900db3d01271f64bae1a2451782e4bcb925ee30e"
+  revision = "v0.0.1-cryptix"
 
 [[override]]
   name = "github.com/qor/auth"
   source = "github.com/cryptix/qor_auth"
-  revision = "51df8661f918f139505589f2cc5903878b9900f8"
+  revision = "v0.0.3-cryptix"
 
 [[override]]
   name = "github.com/qor/auth_themes"
   source = "github.com/cryptix/qor_auth_themes"
-  revision = "184919abca5bfa58a8df3ce2e56012fff3c46ce3"
+  revision = "v0.0.0-cryptix"
 
 [[override]]
   name = "github.com/qor/mailer"
   source = "github.com/cryptix/qor_mailer"
-  revision = "96d1c82834f0d360e883da6eabb82447995777a4"
+  revision = "v1.2.0-cryptix"
 
 [[override]]
   name = "github.com/qor/middlewares"
   source = "github.com/cryptix/qor_middlewares"
-  revision = "18127115fc91fd180a122c3a8e6c85078b0624e6"
+  revision = "v0.0.0-cryptix"
 
 [[override]]
   name = "github.com/qor/redirect_back"
   source = "github.com/cryptix/qor_redirect_back"
-  revision = "275539f5ccf24815c8ac88ec932c1f49fd3f8c83"
+  revision = "v0.0.0-cryptix"
 
 [[override]]
   name = "github.com/qor/render"
   source = "github.com/cryptix/qor_render"
-  revision="8962536fb5b62ae6297c2ca496737ab8d4bea682"
+  revision="v1.1.3-cryptix"
 
 [[override]]
   name = "github.com/qor/session"
   source = "github.com/cryptix/qor_session"
-  revision = "33f14a897a1f40d1ba043b67e49b4070948f10c0"
+  revision = "v0.0.1-cryptix"
 
 # old version tags
 [[override]]
@@ -168,7 +168,7 @@
 
 [[constraint]]
   name = "go.cryptoscope.co/hexagen"
-  version = "1.0.0"
+  version = "v1.0.0"
 
 [[constraint]]
   branch = "master"
@@ -176,4 +176,4 @@
 
 [[constraint]]
   name = "go.cryptoscope.co/muxrpc"
-  version = "3.0.0"
+  version = "v1.0.1"

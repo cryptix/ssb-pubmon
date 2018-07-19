@@ -270,7 +270,7 @@
   name = "github.com/qor/admin"
   packages = ["."]
   pruneopts = ""
-  revision = "e72a44dd2596abcc07601c57443b926d5f7a3c2f"
+  revision = "v0.0.3-cryptix"
   source = "github.com/cryptix/qor_admin"
 
 [[projects]]
@@ -278,7 +278,7 @@
   name = "github.com/qor/assetfs"
   packages = ["."]
   pruneopts = ""
-  revision = "900db3d01271f64bae1a2451782e4bcb925ee30e"
+  revision = "v0.0.1-cryptix"
   source = "github.com/cryptix/qor_assetfs"
 
 [[projects]]
@@ -290,7 +290,7 @@
   revision = "b52c9c2f0571fc6e56dcdf2b7d3ae36d124602d4"
 
 [[projects]]
-  digest = "1:dd46fd7752c575390cf37f11b74dca7fba50c91e0e063294f34c4fa6e21fd682"
+  digest = "1:71026e39161c303b9e55bb50d5db729c21fc09dbecc3a26155f9b66b23edac57"
   name = "github.com/qor/auth"
   packages = [
     ".",
@@ -302,7 +302,7 @@
     "providers/password/encryptor/bcrypt_encryptor",
   ]
   pruneopts = ""
-  revision = "51df8661f918f139505589f2cc5903878b9900f8"
+  revision = "v0.0.3-cryptix"
   source = "github.com/cryptix/qor_auth"
 
 [[projects]]
@@ -310,7 +310,7 @@
   name = "github.com/qor/auth_themes"
   packages = ["clean"]
   pruneopts = ""
-  revision = "184919abca5bfa58a8df3ce2e56012fff3c46ce3"
+  revision = "v0.0.0-cryptix"
   source = "github.com/cryptix/qor_auth_themes"
 
 [[projects]]
@@ -369,7 +369,7 @@
     "logger",
   ]
   pruneopts = ""
-  revision = "96d1c82834f0d360e883da6eabb82447995777a4"
+  revision = "v1.2.0-cryptix"
   source = "github.com/cryptix/qor_mailer"
 
 [[projects]]
@@ -390,7 +390,7 @@
   name = "github.com/qor/middlewares"
   packages = ["."]
   pruneopts = ""
-  revision = "18127115fc91fd180a122c3a8e6c85078b0624e6"
+  revision = "v0.0.0-cryptix"
   source = "github.com/cryptix/qor_middlewares"
 
 [[projects]]
@@ -440,15 +440,15 @@
   name = "github.com/qor/redirect_back"
   packages = ["."]
   pruneopts = ""
-  revision = "275539f5ccf24815c8ac88ec932c1f49fd3f8c83"
+  revision = "v0.0.0-cryptix"
   source = "github.com/cryptix/qor_redirect_back"
 
 [[projects]]
-  digest = "1:a2e240b7cb8ef382087d1a609bf112e64318ae22a9bbc2e48b771f2dc7c7aa14"
+  digest = "1:714d1d50c07fb6c88fa779fabcb9ae424abd0789a6b36191edd3e161ac76e0e4"
   name = "github.com/qor/render"
   packages = ["."]
   pruneopts = ""
-  revision = "8962536fb5b62ae6297c2ca496737ab8d4bea682"
+  revision = "v1.1.3-cryptix"
   source = "github.com/cryptix/qor_render"
 
 [[projects]]
@@ -476,14 +476,14 @@
   revision = "5fd8542db4170c6ce0f8d669b521803b87eb0a99"
 
 [[projects]]
-  digest = "1:851900f10ca67dca4ad85c92a22fbb70be3ba05054f87a0162ada42ab9010d1a"
+  digest = "1:e61d081666a361f7f67de9ced3aefdb031cb8b4925d1ff2a515770397801ef05"
   name = "github.com/qor/session"
   packages = [
     ".",
     "gorilla",
   ]
   pruneopts = ""
-  revision = "33f14a897a1f40d1ba043b67e49b4070948f10c0"
+  revision = "v0.0.1-cryptix"
   source = "github.com/cryptix/qor_session"
 
 [[projects]]
@@ -551,23 +551,23 @@
   version = "v1.0.0"
 
 [[projects]]
-  branch = "master"
   digest = "1:0690433aca45923e42a5fa89445639f884344ffb5f3af64c8955c2dfadfc8116"
   name = "go.cryptoscope.co/luigi"
   packages = ["."]
   pruneopts = ""
   revision = "13b962ae90190cff4879f6e0f8cdc40ce1d2e2ff"
+  version = "v0.0.1"
 
 [[projects]]
-  digest = "1:0435a534cc58ceaf8d0249371400e8e8a63f7cd6372c8431e730be9bf1f4eeb1"
+  digest = "1:91ee3d63677cde10b21867735e522c2ede03cadb61332af0f96578f382c6bb28"
   name = "go.cryptoscope.co/muxrpc"
   packages = [
     ".",
     "codec",
   ]
   pruneopts = ""
-  revision = "092a9b184f20c2a3aa28ff11f4eca2e0dae593ab"
-  version = "v3.0.0"
+  revision = "5c545b6bb5dcd2288d296d71f327b22967c26b97"
+  version = "v1.0.1"
 
 [[projects]]
   branch = "master"
@@ -591,7 +591,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e79c3d6b195477b429f017aaa02af135249bbdff31c9acbd8a93bb37a4ef7d3b"
+  digest = "1:21100b2e8b6922303dd109da81b3134ed0eff05cb3402881eabde9cce8f4e5e6"
   name = "golang.org/x/crypto"
   packages = [
     "bcrypt",
@@ -604,7 +604,7 @@
     "salsa20/salsa",
   ]
   pruneopts = ""
-  revision = "a49355c7e3f8fe157a85be2f77e6e269a0f89602"
+  revision = "a2144134853fc9a27a7b1e3eb4f19f1a76df13c9"
 
 [[projects]]
   branch = "master"
@@ -620,14 +620,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:50a6b805181a9b3bf2c879fcad6e6ff4cc643fc2287c321c1fbfc751755ea7eb"
+  digest = "1:a5a5a3ea3a0401458df061fc520cf0af993ad72d2a791110ef945c4cf517ebc3"
   name = "golang.org/x/net"
   packages = [
     "html",
     "html/atom",
   ]
   pruneopts = ""
-  revision = "d0887baf81f4598189d4e12a37c6da86f0bba4d0"
+  revision = "81d44fd177a98d09fe3bc40a5a78d495d3f042ea"
 
 [[projects]]
   digest = "1:af9bfca4298ef7502c52b1459df274eed401a4f5498b900e9a92d28d3d87ac5a"
