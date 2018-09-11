@@ -30,7 +30,7 @@
   version = "v9"
 
 [[projects]]
-  digest = "1:8c96c17759100e1400499d70332a73da92f60e235d91728f7231a1e54cf320a4"
+  digest = "1:3fab0fd28fb3fffda8f5d8591dff8ceff278d245e932acf5919cc9f35c273d8e"
   name = "github.com/cryptix/go"
   packages = [
     "debug",
@@ -38,8 +38,8 @@
     "logging",
   ]
   pruneopts = ""
-  revision = "fd119c6156be5a70e4c954b78294a66168003769"
-  version = "v1.3.0"
+  revision = "e68d558da6792e4ebdd00114220df685668b5943"
+  version = "v1.3.2"
 
 [[projects]]
   digest = "1:2426da75f49e5b8507a6ed5d4c49b06b2ff795f4aec401c106b7db8fb2625cd7"
@@ -50,12 +50,12 @@
   version = "v3.2.0"
 
 [[projects]]
-  digest = "1:78d3620ee6a24cae7df4982d48b326383290da5dd5833f561e023fecf3f08dd4"
+  digest = "1:c066560c5666d2b358bbabe27681d300934c9ebceabcebb786c19e07c1703571"
   name = "github.com/disintegration/imaging"
   packages = ["."]
   pruneopts = ""
-  revision = "bbcee2f5c9d5e94ca42c8b50ec847fec64a6c134"
-  version = "v1.4.2"
+  revision = "0bd5694c78c9c3d9a3cd06a706a8f3c59296a9ac"
+  version = "v1.5.0"
 
 [[projects]]
   branch = "master"
@@ -66,12 +66,12 @@
   revision = "9f541cc9db5d55bce703bd99987c9d5cb8eea45e"
 
 [[projects]]
-  digest = "1:50a3039848bfb43b154ef538edcd3e0b5d5e36b89f273be04ca92b4c6641762a"
+  digest = "1:39812ccd533da4eaad8d53d150d8c551904c6f0092df2e34557a9f2698eee555"
   name = "github.com/go-chi/chi"
   packages = ["."]
   pruneopts = ""
-  revision = "e83ac2304db3c50cf03d96a2fcd39009d458bc35"
-  version = "v3.3.2"
+  revision = "b5294d10673813fac8558e7f47242bc9e61b4c25"
+  version = "v3.3.3"
 
 [[projects]]
   digest = "1:8bde347c11c0df9cb474b5927a7cdab415adb841247e5e8404adbd12249efb22"
@@ -90,12 +90,12 @@
   version = "v0.3.0"
 
 [[projects]]
-  digest = "1:9ca737b471693542351e112c9e86be9bf7385e42256893a09ecb2a98e2036f74"
+  digest = "1:a01080d20c45c031c13f3828c56e58f4f51d926a482ad10cc0316225097eb7ea"
   name = "github.com/go-stack/stack"
   packages = ["."]
   pruneopts = ""
-  revision = "259ab82a6cad3992b4e21ff5cac294ccb06474bc"
-  version = "v1.7.0"
+  revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
+  version = "v1.8.0"
 
 [[projects]]
   digest = "1:dbbeb8ddb0be949954c8157ee8439c2adfd8dc1c9510eb44a6e58cb68c3dce28"
@@ -114,20 +114,36 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:73a5fcb45a8eb1b1195fa8c1c18a7c7a874ec8f507cd7b39026ab255855b6506"
+  digest = "1:540198d4009d9a8b3f3c35b72fb263bfeaddcab3a6b7880e035cbe9625952b3d"
   name = "github.com/gorilla/sessions"
   packages = ["."]
   pruneopts = ""
-  revision = "03b6f63cc43ef9c7240a635a5e22b13180e822b8"
-  version = "v1.1.1"
+  revision = "81547393f870a35be888759a606ba7bf71dbe5c7"
+  version = "v1.1.2"
 
 [[projects]]
-  digest = "1:eaa18118b73be68b0be2410a9797fe172f5e386243b6bff16fd5da4d22c9d966"
+  digest = "1:09ee320e3d7c26151f91f835c6d9198ccb311f555f429f61bf9d441abf77e0cd"
   name = "github.com/gosimple/slug"
   packages = ["."]
   pruneopts = ""
-  revision = "e9f42fa127660e552d0ad2b589868d403a9be7c6"
-  version = "v1.1.1"
+  revision = "91d42f4c3433698e88e87b17a3efbfe40b67c323"
+  version = "v1.2.0"
+
+[[projects]]
+  digest = "1:8e3bd93036b4a925fe2250d3e4f38f21cadb8ef623561cd80c3c50c114b13201"
+  name = "github.com/hashicorp/errwrap"
+  packages = ["."]
+  pruneopts = ""
+  revision = "8a6fb523712970c966eefc6b39ed2c5e74880354"
+  version = "v1.0.0"
+
+[[projects]]
+  digest = "1:72308fdd6d5ef61106a95be7ca72349a5565809042b6426a3cfb61d99483b824"
+  name = "github.com/hashicorp/go-multierror"
+  packages = ["."]
+  pruneopts = ""
+  revision = "886a7fbe3eb1c874d46f623bfa70af45f425b3d1"
+  version = "v1.0.0"
 
 [[projects]]
   branch = "master"
@@ -147,7 +163,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:dae936e1fa2c500d967f66077add70428b3468aad65e2e54d2f4cd9865374bfb"
+  digest = "1:d03d97a6ee4ff02d931dbfb55d2a2af46eb6557271abdbb33fa5b063caae4ed1"
   name = "github.com/jinzhu/gorm"
   packages = [
     ".",
@@ -155,7 +171,7 @@
     "dialects/sqlite",
   ]
   pruneopts = ""
-  revision = "0fd395ab37aefd2d50854f0556a4311dccc6f45a"
+  revision = "123d4f50ef8a8209ee8434daa41c6045a9111864"
 
 [[projects]]
   branch = "master"
@@ -206,8 +222,7 @@
   version = "v0.1.0"
 
 [[projects]]
-  branch = "master"
-  digest = "1:6b8e4fbd48235132eb66a4adea7acb0a2bd1271f543d54415d0c3174823efa37"
+  digest = "1:11352d3d929e2895eb60ae63ade7279293d42893cb4acb0f9ecde5b8b101fafb"
   name = "github.com/lib/pq"
   packages = [
     ".",
@@ -215,7 +230,8 @@
     "oid",
   ]
   pruneopts = ""
-  revision = "90697d60dd844d5ef6ff15135d0203f65d2f53b8"
+  revision = "4ded0e9383f75c197b3a2aaa6d590ac52df6fd79"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:dad94a3d74862778314e0ef5f5e7d8dac64931bd5b5823b192b0fb043507e016"
@@ -227,11 +243,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:666aa9adea209a9df7267b3a0bfdaa802dcd470d6e1cb8e8b4ca14425b2024eb"
+  digest = "1:5cb4c45cbce8202f9bb09193e9baaa0f78927dbc8f8939d6bf0ccf7a5a26787a"
   name = "github.com/microcosm-cc/bluemonday"
   packages = ["."]
   pruneopts = ""
-  revision = "dafebb5b6ff2861a0d69af64991e10866c19be85"
+  revision = "82c7118e8ccf7403d4860175d97bb635e8e28239"
 
 [[projects]]
   branch = "master"
@@ -342,7 +358,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:d7cf3acd23051b142ff50aeb987b653e59fc782e2ff9cb3d85329b336595d9c9"
+  digest = "1:403c7786cf5c08643227c326d1a17274c7b3f93f7ce52ead02c7af337114a2e4"
   name = "github.com/qor/i18n"
   packages = [
     ".",
@@ -351,7 +367,7 @@
     "inline_edit",
   ]
   pruneopts = ""
-  revision = "05c1410442e98ca000ba87e9ad7fda109143bf8f"
+  revision = "399406033dd3645e859b0de4aead1c2a73064128"
 
 [[projects]]
   branch = "master"
@@ -374,7 +390,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0d322d4c0e7f8d0eb5018cd3f507c422d9044183fdfac5b13c264b1a7d886f63"
+  digest = "1:1c67c11e6ecbe5dc24bfbb6088b8c0c5383a9f5a0a02525f5d2202c82fcecd0c"
   name = "github.com/qor/media"
   packages = [
     ".",
@@ -383,7 +399,7 @@
     "oss",
   ]
   pruneopts = ""
-  revision = "03c15fd0c7b032d48bdb8cc28760d421b517dc82"
+  revision = "eb44a416187340241f0b9cf98fef509b2460d9a6"
 
 [[projects]]
   digest = "1:9b41326550227119cf506e9635f6af186af536c2ca43ca652211ccd7c902a5da"
@@ -417,11 +433,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:5c5079502fe11dffa1680770f67af37415a6cf9da478ba135da3f27339f1c77c"
+  digest = "1:beae021bbfc159de620e5812603900eee78ffb5ced00ca7f00758e2e4f9f2169"
   name = "github.com/qor/publish"
   packages = ["."]
   pruneopts = ""
-  revision = "36587c0844c8828339e5bb3cbf9d0b22bce3652b"
+  revision = "8e9ba72ef6e855b43e02361660bccded2d77a04d"
 
 [[projects]]
   branch = "master"
@@ -520,11 +536,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:cadf20b022d383962b0bca78cada3435d1414fb0aff1f2bea6e89ef7be8fb82d"
+  digest = "1:dc94f939b04b1bdd44d5431088f24ef86936123806edaba8664e71a2fe0c90fe"
   name = "github.com/qor/worker"
   packages = ["."]
   pruneopts = ""
-  revision = "bfb40cda691fb6aa1ee52a766ef64f3020dc2a06"
+  revision = "71c2b85f719a35ee1b21c4558af3da195f8b2c84"
 
 [[projects]]
   branch = "master"
@@ -543,43 +559,42 @@
   revision = "b97a4c2a76cf8ba21d1cb8ed2f4c8ee103371e2d"
 
 [[projects]]
-  digest = "1:f77eeece005e28cd42f477593f8e490585de060f93a8eb45861fcc48bd507f07"
+  digest = "1:7b217125fd241af181c1b418ae253a7207eb4cdf9879d912b21cd8a60f1b192b"
   name = "go.cryptoscope.co/hexagen"
   packages = ["."]
   pruneopts = ""
-  revision = "1c1c30d02473980541327919b7b5b131f4a38e3d"
-  version = "v1.0.0"
+  revision = "fdab769e2fe9ceca685555bdeccb296a4a454450"
+  version = "v1.0.1"
 
 [[projects]]
-  digest = "1:0690433aca45923e42a5fa89445639f884344ffb5f3af64c8955c2dfadfc8116"
+  digest = "1:546ed3907cab6f8be6318b17e7cdaea8bebb940d260e7aca51b57c3a48f56f0f"
   name = "go.cryptoscope.co/luigi"
   packages = ["."]
   pruneopts = ""
-  revision = "13b962ae90190cff4879f6e0f8cdc40ce1d2e2ff"
-  version = "v0.0.1"
+  revision = "33e91fd9c5a878ed56477a76ed7358e75140ae58"
+  version = "v0.2.0"
 
 [[projects]]
-  digest = "1:91ee3d63677cde10b21867735e522c2ede03cadb61332af0f96578f382c6bb28"
+  digest = "1:912f1c059a238210f44d7b318bd698d305606f0139ba804853a213c84673fdbd"
   name = "go.cryptoscope.co/muxrpc"
   packages = [
     ".",
     "codec",
   ]
   pruneopts = ""
-  revision = "5c545b6bb5dcd2288d296d71f327b22967c26b97"
-  version = "v1.0.1"
+  revision = "25cdace9585ed332a37dbad6c529e20630529d88"
+  version = "v1.2.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:803b296bd05f5436002bb7a6992ba228629aa6b3a50405009e25b4c94e09f015"
+  digest = "1:28d5b32d370bf9576d24c5713f59e223ffa53bdc4e72097fd8d6df994b60ce93"
   name = "go.cryptoscope.co/netwrap"
   packages = ["."]
   pruneopts = ""
-  revision = "dae5b5bc35c323cf1696f60dbd8afdc81bbca4f7"
+  revision = "aa93db95a0dd773980fc75340abdebc306eefc0c"
 
 [[projects]]
-  branch = "master"
-  digest = "1:6b43fd4c08f4effe246b3410f1f898ac4cbae2cd545fc3c956f69f6d19c4f571"
+  digest = "1:ee5933aab8cb9b700247b4c9cad171848657885560f175d85ca29a978c8f03ff"
   name = "go.cryptoscope.co/secretstream"
   packages = [
     ".",
@@ -587,11 +602,12 @@
     "secrethandshake",
   ]
   pruneopts = ""
-  revision = "def1de7d6a8bc8242c3c8521e8dc47ef85429f25"
+  revision = "36e8a2008ab9cbb91bcbfdacf8250da0b4bfc9e5"
+  version = "v1.1.0"
 
 [[projects]]
   branch = "master"
-  digest = "1:21100b2e8b6922303dd109da81b3134ed0eff05cb3402881eabde9cce8f4e5e6"
+  digest = "1:c7440071aa1c80fd099481375212142d70f9f9073caa8cfbc18e49367b75d5b7"
   name = "golang.org/x/crypto"
   packages = [
     "bcrypt",
@@ -604,7 +620,7 @@
     "salsa20/salsa",
   ]
   pruneopts = ""
-  revision = "a2144134853fc9a27a7b1e3eb4f19f1a76df13c9"
+  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
   branch = "master"
@@ -620,14 +636,14 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:a5a5a3ea3a0401458df061fc520cf0af993ad72d2a791110ef945c4cf517ebc3"
+  digest = "1:02feed0dbc44ce5bef5670a6e5ac9c2c4e3b879575a9d074199b487af1b7c4f9"
   name = "golang.org/x/net"
   packages = [
     "html",
     "html/atom",
   ]
   pruneopts = ""
-  revision = "81d44fd177a98d09fe3bc40a5a78d495d3f042ea"
+  revision = "161cd47e91fd58ac17490ef4d742dc98bb4cf60e"
 
 [[projects]]
   digest = "1:af9bfca4298ef7502c52b1459df274eed401a4f5498b900e9a92d28d3d87ac5a"

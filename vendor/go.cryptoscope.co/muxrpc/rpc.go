@@ -5,11 +5,10 @@ import (
 	"encoding/json"
 	"net"
 	"sync"
-	"time"
 
+	"github.com/pkg/errors"
 	"go.cryptoscope.co/luigi"
 	"go.cryptoscope.co/muxrpc/codec"
-	"github.com/pkg/errors"
 )
 
 var (
@@ -42,16 +41,23 @@ type rpc struct {
 // When a connection is established, HandleConnect is called.
 // When we are being called, HandleCall is called.
 type Handler interface {
-	HandleCall(ctx context.Context, req *Request)
-	HandleConnect(ctx context.Context, e Endpoint)
+	HandleCall(ctx context.Context, req *Request, edp Endpoint)
+	HandleConnect(ctx context.Context, edp Endpoint)
 }
 
 const bufSize = 5
-const rxTimeout time.Duration = 100 * time.Millisecond
 
 // Handle handles the connection of the packer using the specified handler.
 func Handle(pkr Packer, handler Handler) Endpoint {
-	return handle(pkr, handler, nil)
+	var raddr net.Addr
+
+	if pkr, ok := pkr.(*packer); ok {
+		if ra, ok := pkr.c.(interface{ RemoteAddr() net.Addr }); ok {
+			raddr = ra.RemoteAddr()
+		}
+	}
+
+	return handle(pkr, handler, raddr)
 }
 
 // HandleWithRemote also sets the remote address the endpoint is connected to
@@ -172,10 +178,11 @@ func (r *rpc) Terminate() error {
 	return r.pkr.Close()
 }
 
-func (r *rpc) finish(ctx context.Context, req int32) error {
-	delete(r.reqs, req)
-
-	err := r.pkr.Pour(ctx, newEndOkayPacket(req))
+func (r *rpc) finish(ctx context.Context, reqID int32) error {
+	req := r.reqs[reqID]
+	delete(r.reqs, reqID)
+	isStream := req.Type.Flags() != 0
+	err := r.pkr.Pour(ctx, newEndOkayPacket(reqID, isStream))
 	return errors.Wrap(err, "error pouring done message")
 }
 
@@ -278,7 +285,7 @@ func (r *rpc) fetchRequest(ctx context.Context, pkt *codec.Packet) (*Request, bo
 		}
 		r.reqs[pkt.Req] = req
 
-		go r.root.HandleCall(ctx, req)
+		go r.root.HandleCall(ctx, req, r)
 	}
 
 	return req, !ok, nil
@@ -373,10 +380,6 @@ func (r *rpc) Serve(ctx context.Context) (err error) {
 
 		// localize defer
 		err = func() error {
-			// pour may block so we need to time out.
-			// note that you can use buffers make this less probable
-			ctx, cancel := context.WithTimeout(ctx, rxTimeout)
-			defer cancel()
 
 			err := req.in.Pour(ctx, pkt)
 			return errors.Wrap(err, "error pouring data to handler")

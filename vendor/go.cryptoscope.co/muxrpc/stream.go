@@ -87,10 +87,17 @@ func (str *stream) Next(ctx context.Context) (interface{}, error) {
 
 	vpkt, err := str.pktSrc.Next(ctx)
 	if err != nil {
+		if err == (luigi.EOS{}) {
+			return nil, err
+		}
 		return nil, errors.Wrap(err, "error reading from packet source")
 	}
 
 	pkt := vpkt.(*codec.Packet)
+
+	if pkt.Flag.Get(codec.FlagEndErr) {
+		return nil, luigi.EOS{}
+	}
 
 	if pkt.Flag.Get(codec.FlagJSON) {
 		var (
@@ -155,7 +162,7 @@ func (str *stream) Pour(ctx context.Context, v interface{}) error {
 // Close closes the stream and sends the EndErr message.
 func (str *stream) Close() error {
 	str.closeOnce.Do(func() {
-		pkt := newEndOkayPacket(str.req)
+		pkt := newEndOkayPacket(str.req, str.inStream || str.outStream)
 		close(str.closeCh)
 
 		// call in goroutine because we get called from the Serve-loop and
@@ -246,12 +253,16 @@ func newJSONPacket(stream bool, req int32, v interface{}) (*codec.Packet, error)
 
 var trueBytes = []byte{'t', 'r', 'u', 'e'}
 
-func newEndOkayPacket(req int32) *codec.Packet {
-	return &codec.Packet{
+func newEndOkayPacket(req int32, stream bool) *codec.Packet {
+	pkt := codec.Packet{
 		Req:  req,
-		Flag: codec.FlagJSON | codec.FlagEndErr | codec.FlagStream,
+		Flag: codec.FlagJSON | codec.FlagEndErr,
 		Body: trueBytes,
 	}
+	if stream {
+		pkt.Flag |= codec.FlagStream
+	}
+	return &pkt
 }
 
 func newEndErrPacket(req int32, stream bool, err error) (*codec.Packet, error) {

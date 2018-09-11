@@ -10,6 +10,7 @@ import (
 	"github.com/pkg/errors"
 )
 
+// RecoveryHandler recovers handler panics and logs them using LogPanicWithStack
 func RecoveryHandler() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
@@ -27,6 +28,7 @@ func RecoveryHandler() func(http.Handler) http.Handler {
 	}
 }
 
+// LogPanicWithStack writes the passed value r, together with a debug.Stack to a tmpfile and logs its location
 func LogPanicWithStack(log Interface, location string, r interface{}) error {
 	var err error
 	switch t := r.(type) {
@@ -43,11 +45,11 @@ func LogPanicWithStack(log Interface, location string, r interface{}) error {
 		log.Log("event", "panic", "location", location, "err", err, "warning", "no temp file", "tmperr", tmpErr)
 		return errors.Wrapf(tmpErr, "LogPanic: failed to create httpRecovery log")
 	}
-
-	fmt.Fprintf(b, "warning! %s!\nError: %s\n", location, err)
-	fmt.Fprintf(b, "Stack:\n%s", debug.Stack())
+	fmt.Fprintf(b, "warning! %s!\nError:\n%+v\n", location, err)
+	fmt.Fprintf(b, "\n\nCall Stack:\n%s", debug.Stack())
 
 	log.Log("event", "panic", "location", location, "panicLog", b.Name())
+	fmt.Fprintf(os.Stderr, "panicWithStack: wrote %s\n", b.Name())
 
 	return errors.Wrap(b.Close(), "LogPanic: failed to close dump file")
 }

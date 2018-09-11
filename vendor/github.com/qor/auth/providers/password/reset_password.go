@@ -1,22 +1,20 @@
 package password
 
 import (
-	"html/template"
 	"net/mail"
 	"path"
 	"reflect"
 	"strings"
 	"time"
 
+	"html/template"
+
 	"github.com/qor/auth"
 	"github.com/qor/auth/auth_identity"
 	"github.com/qor/auth/claims"
 	"github.com/qor/mailer"
-	"github.com/qor/qor"
 	"github.com/qor/qor/utils"
 	"github.com/qor/session"
-
-	"github.com/cryptix/ssb-pubmon/config/i18n"
 )
 
 var (
@@ -33,7 +31,6 @@ var (
 // DefaultResetPasswordMailer default reset password mailer
 var DefaultResetPasswordMailer = func(email string, context *auth.Context, claims *claims.Claims, currentUser interface{}) error {
 	claims.Subject = "reset_password"
-	locale := utils.GetLocale(&qor.Context{Request: context.Request})
 
 	return context.Auth.Mailer.Send(
 		mailer.Email{
@@ -55,9 +52,6 @@ var DefaultResetPasswordMailer = func(email string, context *auth.Context, claim
 				qry.Set("token", context.SessionStorer.SignedToken(claims))
 				resetPasswordURL.RawQuery = qry.Encode()
 				return resetPasswordURL.String()
-			},
-			"t": func(key string, value string, args ...interface{}) template.HTML {
-				return i18n.I18n.Default(value).T(locale, key, args...)
 			},
 		}),
 	)
