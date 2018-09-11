@@ -575,15 +575,15 @@
   version = "v0.2.0"
 
 [[projects]]
-  digest = "1:912f1c059a238210f44d7b318bd698d305606f0139ba804853a213c84673fdbd"
+  branch = "debug-wrap"
+  digest = "1:9ad6dac77c1b4a4784751d01bb9d9028aeddb311f36a6bd532d14f164539814f"
   name = "go.cryptoscope.co/muxrpc"
   packages = [
     ".",
     "codec",
   ]
   pruneopts = ""
-  revision = "25cdace9585ed332a37dbad6c529e20630529d88"
-  version = "v1.2.0"
+  revision = "3dd4f8b89aeb7dc5223a90833aa5294ef455eb55"
 
 [[projects]]
   branch = "master"

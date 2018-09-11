@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"strings"
 
-	"go.cryptoscope.co/muxrpc"
 	kitlog "github.com/go-kit/kit/log"
 	"github.com/pkg/errors"
+	"go.cryptoscope.co/muxrpc"
 )
+
+var _ muxrpc.Handler = (*TryHandler)(nil)
 
 type TryHandler struct {
 	remoteID string
@@ -21,7 +23,7 @@ func NewTryHandler(key string, log kitlog.Logger) *TryHandler {
 	return &TryHandler{key, log, w}
 }
 
-func (h TryHandler) HandleCall(ctx context.Context, req *muxrpc.Request) {
+func (h TryHandler) HandleCall(ctx context.Context, req *muxrpc.Request, _ muxrpc.Endpoint) {
 	// TODO: push manifest check into muxrpc
 	if req.Type == "" {
 		req.Type = "async"
